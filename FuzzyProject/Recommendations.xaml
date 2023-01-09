@@ -1,0 +1,72 @@
+﻿<Window x:Class="FuzzyProject.Recommendations"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:FuzzyProject"
+        mc:Ignorable="d"
+        Title="Recommendations" Height="300" Width="500">
+    <Grid Background="#ffdadada">
+        <Border MinWidth="350" MinHeight="260" Margin="15" Background="White" VerticalAlignment="Center" Padding="30" CornerRadius="20">
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="30" Color="LightGray" ShadowDepth="0"/>
+            </Border.Effect>
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition MaxHeight="30"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="0" VerticalAlignment="Top" FontSize="18" FontWeight="Bold" Text="Рекомендации" Grid.ColumnSpan="2" Margin="0,0,140,0"/>
+                    <Button Grid.Column="2" Style="{DynamicResource MaterialDesignFlatLightButton}" Content="Выход"  Width="80" HorizontalAlignment="Right" VerticalAlignment="Top"/>
+                </Grid>
+
+                <Grid Grid.Row="1">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1.4*"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="0.2*"/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <Grid Grid.Row="0">
+                                <TextBlock Grid.Column="0" Text="Эталлонный образец"/>
+                            </Grid>
+                            <Grid Grid.Row="1">
+                                <Image Grid.Column="0" />
+                            </Grid>
+                        </Grid>
+                        
+                       
+                        
+                        <StackPanel Grid.Column="1">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="0.2*"/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                            </Grid>
+                            <Grid Row="0">
+                                <TextBlock Grid.Column="0" Text="Сообщение:"/>
+                            </Grid>
+                            <Grid Row="1">
+                                <RichTextBox Margin="0 10 0 0" Height="150"></RichTextBox>
+                            </Grid>
+                        </StackPanel>
+                    </Grid>
+                </Grid>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>
