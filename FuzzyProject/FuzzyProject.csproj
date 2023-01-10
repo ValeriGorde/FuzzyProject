@@ -5,6 +5,7 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
+	<UseWindowsForms>true</UseWindowsForms>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,6 +18,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Reference Include="FLS">
+      <HintPath>..\..\..\..\Downloads\Fuzzy-Logic-Sharp-master\FLS\bin\Debug\FLS.dll</HintPath>
+    </Reference>
     <Reference Include="WPF_MVVM_Classes">
       <HintPath>Services\WPF_MVVM_Classes.dll</HintPath>
     </Reference>

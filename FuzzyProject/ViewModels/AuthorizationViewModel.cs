@@ -1,4 +1,5 @@
 ﻿using FuzzyProject.DB_EF;
+using FuzzyProject.Models;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -95,14 +96,14 @@ namespace FuzzyProject.ViewModels
                         if (account.Role == "Оператор")
                         {
                             reseacherPage = new ReseacherPage();
-                            reseacherViewModel = new ReseacherViewModel();
+                            reseacherViewModel = new ReseacherViewModel(reseacherPage, Login);
                             reseacherPage.DataContext = reseacherViewModel;
                             reseacherPage.Show();
                         }
                         else if (account.Role == "Администратор")
                         {
                             adminPage = new AdminPage();
-                            adminViewModel = new AdminViewModel();
+                            adminViewModel = new AdminViewModel(adminPage);
                             adminPage.DataContext = adminViewModel;
                             adminPage.Show();
                         }

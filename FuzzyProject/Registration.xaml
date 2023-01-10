@@ -14,11 +14,9 @@
                 <DropShadowEffect BlurRadius="30" Color="LightGray" ShadowDepth="0"/>
             </Border.Effect>
             <StackPanel>
-                <TextBlock Text="Регистрация" FontSize="30" FontWeight="Bold" Margin="0 0 0 20"/>
+                <TextBlock Text="Регистрация" FontSize="30" FontWeight="Bold"/>
 
-                <Grid Margin="0 0 0 20">
-                    <Button Background="#7373D9" Content="Войти"  Height="32" VerticalAlignment="Center" HorizontalAlignment="Left" Width="72" />
-                </Grid>
+                <Grid Margin="0 0 0 20"/>
 
                 <TextBox Text="{Binding Login}" materialDesign:HintAssist.Hint="Введите логин" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                 <PasswordBox PasswordChanged="PasswordBox_PasswordChanged"  materialDesign:HintAssist.Hint="Введите пароль" Style="{StaticResource MaterialDesignFloatingHintPasswordBox}" />
