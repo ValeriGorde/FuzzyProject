@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Documents;
 using System.Windows.Media.Imaging;
+using Color = System.Drawing.Color;
 
 namespace FuzzyProject.WorkWithColors
 {
@@ -32,6 +33,8 @@ namespace FuzzyProject.WorkWithColors
                 return bitmapimage;
             }
         }
+        
+
         public double[] GetLAB(Bitmap img) 
         {
             var list = FindList(img);
@@ -83,6 +86,30 @@ namespace FuzzyProject.WorkWithColors
                 }
             }
             return newBitmap;
+        }
+
+        public Bitmap GetColor(int red, int green, int blue)
+        {
+            Color newColor = Color.FromArgb(red, green, blue);
+
+            Bitmap newBitmap = new Bitmap(80, 70);
+            for (int i = 0; i < 80; i++)
+            {
+                for (int j = 0; j < 70; j++)
+                {
+                    newBitmap.SetPixel(i, j, newColor);
+                }
+            }
+            return newBitmap;
+        }
+
+        public Bitmap FromBytesToBitmap(byte[] pic) 
+        {
+            ImageConverter ic = new ImageConverter();
+            Image img = (Image)ic.ConvertFrom(pic);
+            Bitmap newPic = new Bitmap(img);
+
+            return newPic;
         }
 
     }

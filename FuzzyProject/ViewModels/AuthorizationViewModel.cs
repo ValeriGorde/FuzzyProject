@@ -10,11 +10,11 @@ namespace FuzzyProject.ViewModels
 {
     internal class AuthorizationViewModel : ViewModelBase
     {
-        private ApplicationContext context;
+        private AppContextDB context;
         private readonly Window authWindow;
         public AuthorizationViewModel(Window _authWindow)
         {
-            context = new ApplicationContext();
+            context = new AppContextDB();
             authWindow = _authWindow;
             BrushesLogin = System.Drawing.Color.Gray.Name.ToString();
             BrushesPassword = System.Drawing.Color.Gray.Name.ToString();
@@ -108,6 +108,11 @@ namespace FuzzyProject.ViewModels
                             adminPage.Show();
                         }
                         authWindow.Close();
+                    }
+                    else 
+                    {
+                        BrushesLogin = System.Drawing.Color.Red.Name.ToString();
+                        BrushesPassword = System.Drawing.Color.Red.Name.ToString();
                     }
                 });
             }

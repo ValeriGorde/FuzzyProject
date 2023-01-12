@@ -16,40 +16,103 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media.Imaging;
+using System.Windows.Media.Media3D;
 using WPF_MVVM_Classes;
 using static System.Windows.Forms.DataFormats;
+using Color = System.Drawing.Color;
+using Material = FuzzyProject.Models.Material;
 
 namespace FuzzyProject.ViewModels
 {
     internal class ReseacherViewModel: ViewModelBase
     {
-        Models.Color color;
         CalculateImg calculate;
         SetVariable setVariable;
         ReccomendsForOperator recommends;
 
         public string login;
         private readonly Window reseacherWindow;
-        private Bitmap img;
+        private Bitmap imgFirst;
+        private Bitmap imgSecond;
         private string selectedFileName;
         private string imgPath = "c:\\";
 
         public ReseacherViewModel(Window _reseacherWindow, string _login) 
         {
             ColorsView = new List<string>();
-            ColorsView.Add("Жёлтый");
-            ColorsView.Add("Синий");
+            ColorsView.Add("оранжевый");
+            ColorsView.Add("голубой");
+            ColorsView.Add("белый");
+            ColorsView.Add("зелёный");
+
+            ColorsViewSpect = new List<string>();
+            ColorsViewSpect.Add("оранжевый");
+            ColorsViewSpect.Add("голубой");
+            ColorsViewSpect.Add("белый");
+            ColorsViewSpect.Add("зелёный");
+
             reseacherWindow = _reseacherWindow;
             login = _login;
         }
 
-        public void UpdateBD()
+        #region References
+
+        private string _referencesCoorL;
+        public string ReferenceCoorL
         {
-            using (ApplicationContext context = new ApplicationContext()) 
+            get { return _referencesCoorL; }
+            set
             {
-                context.Reports.Load();
+                _referencesCoorL = value;
+                OnPropertyChanged();
             }
         }
+
+        private string _referencesCoorA;
+        public string ReferenceCoorA
+        {
+            get { return _referencesCoorA; }
+            set
+            {
+                _referencesCoorA = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _referencesCoorB;
+        public string ReferenceCoorB
+        {
+            get { return _referencesCoorB; }
+            set
+            {
+                _referencesCoorB = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private RelayCommand _getReferences;
+        public RelayCommand GetReferences
+        {
+            get { return _getReferences ??= new RelayCommand(x => 
+            {
+                if (ColorsChoice != null)
+                {
+                    using (AppContextDB context = new AppContextDB())
+                    {
+                        ReferenceParam reference;
+                        reference = context.ReferencesParams.FirstOrDefault(r => r.Color == ColorsChoice);
+                        ReferenceCoorL = reference.CoordinateL.ToString();
+                        ReferenceCoorA = reference.CoordinateA.ToString();
+                        ReferenceCoorB = reference.CoordinateB.ToString();
+                    }
+                }
+            }); 
+            }
+        }
+        #endregion
+
+        #region From Image
+       
 
         private List<string> _colorsView;
         public List<string> ColorsView
@@ -85,10 +148,10 @@ namespace FuzzyProject.ViewModels
         }
 
         private string _coorL;
-        public string CoorL 
+        public string CoorL
         {
             get { return _coorL; }
-            set 
+            set
             {
                 _coorL = value;
                 OnPropertyChanged();
@@ -118,10 +181,10 @@ namespace FuzzyProject.ViewModels
         }
 
         private BitmapSource _startImg;
-        public BitmapSource StartImg 
+        public BitmapSource StartImg
         {
             get { return _startImg; }
-            set 
+            set
             {
                 _startImg = value;
                 OnPropertyChanged();
@@ -146,17 +209,17 @@ namespace FuzzyProject.ViewModels
             {
                 return _getResult ??= new RelayCommand(x =>
                 {
-                   
+
                 });
             }
         }
 
         private RelayCommand _openImg;
-        public RelayCommand OpenImg 
+        public RelayCommand OpenImg
         {
-            get 
+            get
             {
-                return _openImg ??= new RelayCommand(x => 
+                return _openImg ??= new RelayCommand(x =>
                 {
                     calculate = new CalculateImg();
                     OpenFileDialog dlg = new OpenFileDialog();
@@ -166,31 +229,32 @@ namespace FuzzyProject.ViewModels
                     if (dlg.ShowDialog() == true)
                     {
                         selectedFileName = dlg.FileName;
-                        img = new Bitmap(selectedFileName);
-                        StartImg = calculate.BitmapToImageSource(img);
+                        imgFirst = new Bitmap(selectedFileName);
+                        StartImg = calculate.BitmapToImageSource(imgFirst);
                     }
                 });
             }
         }
 
         private RelayCommand _getColor;
-        public RelayCommand GetColor 
+        public RelayCommand GetColor
         {
-            get 
+            get
             {
-                return _getColor ??= new RelayCommand(x => 
+                return _getColor ??= new RelayCommand(x =>
                 {
                     if (StartImg != null)
                     {
-                        var newImg = calculate.Convert(img);
+                        var newImg = calculate.Convert(imgFirst);
                         EndImg = calculate.BitmapToImageSource(newImg);
+                        imgSecond = newImg;
 
-                        var colorsLAB = calculate.GetLAB(img);
+                        var colorsLAB = calculate.GetLAB(imgFirst);
                         CoorL = colorsLAB[0].ToString();
                         CoorA = colorsLAB[1].ToString();
                         CoorB = colorsLAB[2].ToString();
                     }
-                    else 
+                    else
                     {
                         MessageBox.Show("Загрузите исходное изображение!", "Ошибка получения цвета");
                     }
@@ -203,16 +267,29 @@ namespace FuzzyProject.ViewModels
         {
             get
             {
-                return _clearForm ??= new RelayCommand(x => 
+                return _clearForm ??= new RelayCommand(x =>
                 {
                     CoorL = "";
                     CoorA = "";
                     CoorB = "";
+                    ReferenceCoorL = " ";
+                    ReferenceCoorA = " ";
+                    ReferenceCoorB = " ";
+                    ColorsChoice = null;
                     StartImg = null;
                     EndImg = null;
                 });
             }
-        }        
+        }
+
+        private RelayCommand _saveReport;
+        public RelayCommand SaveReport
+        {
+            get
+            {
+                return _saveReport ??= new RelayCommand(x => { });
+            }
+        }
 
         private RelayCommand _analyse;
         public RelayCommand Analyse
@@ -248,31 +325,218 @@ namespace FuzzyProject.ViewModels
                         //перевод изображения в биты для сохранения в БД
                         using (MemoryStream ms = new MemoryStream())
                         {
-                            img.Save(ms, ImageFormat.Bmp);
+                            imgSecond.Save(ms, ImageFormat.Bmp);
+                            imgSecond.Save(ms, ImageFormat.Bmp);
                             imgArr = ms.ToArray();
                         }
 
-                        using (ApplicationContext context = new ApplicationContext())
+                        using (DB_EF.AppContextDB context = new DB_EF.AppContextDB())
                         {
                             var account = context.Accounts.FirstOrDefault(a => a.Login == login);
+                            var material = context.Materials.FirstOrDefault(m => m.Image == imgArr);
 
-                            Material material = new Material { Name = "Экструдат", Color = ColorsChoice, Parameters = parameters, Image = imgArr };
                             Report report = new Report { Date = date, Login = login, Reccomendation = recommendation };
-                            context.Materials.Add(material);
                             context.Reports.Add(report);
-                            //привязка к пользователю
-                            report.Account = account;
-                            report.Material = material;
+
+                            if (material == null)
+                            {
+                                Material newMaterial = new Material { Name = "Экструдат", Color = ColorsChoice, Parameters = parameters, Image = imgArr };
+                                context.Materials.Add(newMaterial);
+                                report.Account = account;
+                                report.Material = newMaterial;
+                            }
+                            else
+                            {
+                                //привязка к пользователю
+                                report.Account = account;
+                                report.Material = material;
+                            }
                             context.SaveChanges();
                         }
                     }
-                    else 
+                    else
                     {
                         MessageBox.Show("Некоторые поля пустые", "Ошибка");
                     }
                 });
             }
         }
+        #endregion
+
+        #region From Spectrophotometer
+        private BitmapSource _spectrImg;
+        public BitmapSource SpectrImg
+        {
+            get { return _spectrImg; }
+            set
+            {
+                _spectrImg = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _spectCoorL;
+        public string SpectCoorL
+        {
+            get { return _spectCoorL; }
+            set
+            {
+                _spectCoorL = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _spectCoorA;
+        public string SpectCoorA 
+        {
+            get { return _spectCoorA; }
+            set 
+            {
+                _spectCoorA = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _spectCoorB;
+        public string SpectCoorB
+        {
+            get { return _spectCoorB; }
+            set
+            {
+                _spectCoorB = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _spectReferenceCoorL;
+        public string SpectReferenceCoorL
+        {
+            get { return _spectReferenceCoorL; }
+            set
+            {
+                _spectReferenceCoorL = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _spectReferenceCoorA;
+        public string SpectReferenceCoorA
+        {
+            get { return _spectReferenceCoorA; }
+            set
+            {
+                _spectReferenceCoorA = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _spectReferenceCoorB;
+        public string SpectReferenceCoorB
+        {
+            get { return _spectReferenceCoorB; }
+            set
+            {
+                _spectReferenceCoorB = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private List<string> _colorsViewSpect;
+        public List<string> ColorsViewSpect
+        {
+            get { return _colorsViewSpect; }
+            set
+            {
+                _colorsViewSpect = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _colorsChoiceSpect;
+        public string ColorsChoiceSpect
+        {
+            get { return _colorsChoiceSpect; }
+            set
+            {
+                _colorsChoiceSpect = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private RelayCommand _getSpectrColor;
+        public RelayCommand GetSpectrColor
+        {
+            get
+            {
+                return _getSpectrColor ??= new RelayCommand(x =>
+                {
+                    SpectrImg = null;
+                    double coorL = Convert.ToDouble(SpectCoorL);
+                    double coorA = Convert.ToDouble(SpectCoorA);
+                    double coorB = Convert.ToDouble(SpectCoorB);
+
+                    //сделать проверку на то, если поля не заполнены
+                    ConvertRGB convert = new ConvertRGB();
+                    int[] rgb = convert.GetLabToRGB(coorL, coorA, coorB);
+
+                    calculate = new CalculateImg();
+                    var newImg = calculate.GetColor(rgb[0], rgb[1], rgb[2]);
+                    //var newImg = calculate.GetColor(226, 191, 161);
+                    SpectrImg = calculate.BitmapToImageSource(newImg);
+                });
+            }
+        }
+
+        private RelayCommand _clearSpectrForm;
+        public RelayCommand ClearSpectrForm
+        {
+            get
+            {
+                return _clearSpectrForm ??= new RelayCommand(x =>
+                {
+                    SpectrImg = null;
+                    SpectCoorL = " ";
+                    SpectCoorA = " ";
+                    SpectCoorB = " ";
+                    SpectReferenceCoorL = " ";
+                    SpectReferenceCoorA = " ";
+                    SpectReferenceCoorB = " ";
+                    ColorsChoiceSpect = null;
+                });
+            }
+        }
+
+        private RelayCommand _getSpectReferences;
+        public RelayCommand GetSpectReferences
+        {
+            get
+            {
+                return _getSpectReferences ??= new RelayCommand(x =>
+                {
+                    if (ColorsChoiceSpect != null)
+                    {
+                        using (AppContextDB context = new AppContextDB())
+                        {
+                            ReferenceParam reference;
+                            reference = context.ReferencesParams.FirstOrDefault(r => r.Color == ColorsChoiceSpect);
+                            SpectReferenceCoorL = reference.CoordinateL.ToString();
+                            SpectReferenceCoorA = reference.CoordinateA.ToString();
+                            SpectReferenceCoorB = reference.CoordinateB.ToString();
+                        }
+                    }
+                    else 
+                    {
+                        MessageBox.Show("Установите необходимый цвет!", "Ошибка при загрузке эталонов");
+                    }
+
+                    ConvertRGB convert = new ConvertRGB();
+                    convert.ConvertLabToRGB(60, 60, -13);
+                });
+            }
+        }
+
+        #endregion
+
 
         private Authorization? authorization = null;
         private AuthorizationViewModel authorizationViewModel;

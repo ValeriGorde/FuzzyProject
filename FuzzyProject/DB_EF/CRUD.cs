@@ -10,7 +10,7 @@ namespace FuzzyProject.DB_EF
 {
     internal class CRUD
     {
-        public void Create(ApplicationContext ac, string login, string password, string role)
+        public void Create(AppContextDB ac, string login, string password, string role)
         {
             var account = new Account { Login = login, Password = password, Role = role };
             ac.Accounts.Add(account);
@@ -18,7 +18,7 @@ namespace FuzzyProject.DB_EF
         }
 
         //удаление объекта из БД (по id)
-        public void Delete(ApplicationContext ac, int id)
+        public void Delete(AppContextDB ac, int id)
         {
             var account = new Account { Id = id };
             ac.Accounts.Remove(account);
@@ -26,7 +26,7 @@ namespace FuzzyProject.DB_EF
         }
 
         //обновление
-        public void Update(ApplicationContext ac, int id, string newLogin)
+        public void Update(AppContextDB ac, int id, string newLogin)
         {
             var account = ac.Accounts.FirstOrDefault(b => b.Id == id);
             account.Login = newLogin;
@@ -35,7 +35,7 @@ namespace FuzzyProject.DB_EF
         }
 
         //выбор всех обектов
-        public void SelectAllBooks(ApplicationContext ac)
+        public void SelectAllBooks(AppContextDB ac)
         {
             var accounts = ac.Accounts.ToList();
 

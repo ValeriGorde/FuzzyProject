@@ -11,12 +11,12 @@ namespace FuzzyProject.ViewModels
 {
     internal class RegistrationViewModel : ViewModelBase
     {
-        ApplicationContext context;
+        AppContextDB context;
         private readonly Window registrWindow;
         public RegistrationViewModel(Window _registrWindow)
         {
             registrWindow = _registrWindow;
-            context = new ApplicationContext();
+            context = new AppContextDB();
         }
 
 
@@ -43,7 +43,7 @@ namespace FuzzyProject.ViewModels
         }
 
         private string _role;
-        public string Role 
+        public string Role
         {
             get { return _role; }
             set
@@ -75,10 +75,10 @@ namespace FuzzyProject.ViewModels
                         MessageBox.Show("Вы не ввели пароль");
                         return;
                     }
-                    
+
                     //добавить проверки на длину логина и пароля
 
-                    Account newAccount = new Account { Login = Login, Password = Password, Role = "Оператор"};
+                    Account newAccount = new Account { Login = Login, Password = Password, Role = "Оператор" };
                     context.Accounts.Add(newAccount);
                     context.SaveChanges();
 

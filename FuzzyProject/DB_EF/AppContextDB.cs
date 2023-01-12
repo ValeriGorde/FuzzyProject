@@ -9,20 +9,18 @@ using System.Threading.Tasks;
 
 namespace FuzzyProject.DB_EF
 {
-    internal class ApplicationContext: DbContext
+    internal class AppContextDB: DbContext
     {
         public DbSet<Account> Accounts { get; set; }
         public DbSet<Report> Reports { get; set; }
         public DbSet<Material> Materials { get; set; }
-        public ApplicationContext()
+        public DbSet<ReferenceParam> ReferencesParams { get; set; }
+        public AppContextDB()
         {
             //Database.EnsureDeleted();
             Database.EnsureCreated();
         }
-        //protected override void OnModelCreating(ModelBuilder modelBuilder)
-        //{
-        //    modelBuilder.Entity<Material>().Property(m => m.Name).HasDefaultValue("Экструдат");
-        //}
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlite("Data Source = FuzzyProjectDB.db");
