@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FuzzyProject.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,29 +10,30 @@ namespace FuzzyProject.FuzzyLogic
 {
     internal class ReccomendsForOperator
     {
+        
         public string GiveRecommend(double result) 
         {
             string reccomendation = "";
 
-            if (result < 35)
+            if (result < 0.1)
             {
-                reccomendation = "Всё отлично!"; 
-                MessageBox.Show(reccomendation, "Рекомендация");
+                reccomendation = "Действуй не требуется. Продукт соответствует установленным требованиям.";
             }
-            else if (result >= 35 && result <= 75)
+            else if (result >= 0.14 && result <= 0.4)
             {
-                reccomendation = "Стоит проверить оборудование";
-                MessageBox.Show(reccomendation, "Рекомендация");
+                reccomendation = "Велика вероятность недоплавов или наличия деструктивных элементов. Стоит проверить дозаторы сырья.";
             }
-            else if (result > 75)
+            else if (result >= 0.4 && result <= 0.6)
             {
-                reccomendation = "Всё плохо!";
-                MessageBox.Show(reccomendation, "Рекомендация");
+                reccomendation = "Качество продукции отличается от эаталонного образца, стоит изменить температуру.";
+            }
+            else if (result > 0.6) 
+            {
+                reccomendation = "Качество продукции значительно отличается от эталлоного образца, необходимо провести осмотр оборудования.";
             }
             else
             {
-                reccomendation = "Недостаточно информации";
-                MessageBox.Show(reccomendation, "Рекомендация");
+                reccomendation = "Недостаточно информации для получения рекомендации, обратитесь к техническому специалисту.";
             }
 
             return reccomendation;

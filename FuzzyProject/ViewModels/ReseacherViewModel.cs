@@ -24,7 +24,7 @@ using Material = FuzzyProject.Models.Material;
 
 namespace FuzzyProject.ViewModels
 {
-    internal class ReseacherViewModel: ViewModelBase
+    internal class ReseacherViewModel : ViewModelBase
     {
         CalculateImg calculate;
         SetVariable setVariable;
@@ -34,10 +34,11 @@ namespace FuzzyProject.ViewModels
         private readonly Window reseacherWindow;
         private Bitmap imgFirst;
         private Bitmap imgSecond;
+        private Bitmap imgSpectr;
         private string selectedFileName;
         private string imgPath = "c:\\";
 
-        public ReseacherViewModel(Window _reseacherWindow, string _login) 
+        public ReseacherViewModel(Window _reseacherWindow, string _login)
         {
             ColorsView = new List<string>();
             ColorsView.Add("оранжевый");
@@ -93,7 +94,9 @@ namespace FuzzyProject.ViewModels
         private RelayCommand _getReferences;
         public RelayCommand GetReferences
         {
-            get { return _getReferences ??= new RelayCommand(x => 
+            get
+            {
+                return _getReferences ??= new RelayCommand(x =>
             {
                 if (ColorsChoice != null)
                 {
@@ -106,13 +109,22 @@ namespace FuzzyProject.ViewModels
                         ReferenceCoorB = reference.CoordinateB.ToString();
                     }
                 }
-            }); 
+            });
             }
         }
         #endregion
 
         #region From Image
-       
+        private string _slValue;
+        public string SlValue
+        {
+            get { return _slValue; }
+            set
+            {
+                _slValue = value;
+                OnPropertyChanged();
+            }
+        }
 
         private List<string> _colorsView;
         public List<string> ColorsView
@@ -202,17 +214,17 @@ namespace FuzzyProject.ViewModels
             }
         }
 
-        private RelayCommand _getResult;
-        public RelayCommand GetResult
+        private double _sliderImg;
+        public double SliderImg
         {
-            get
+            get { return _sliderImg; }
+            set
             {
-                return _getResult ??= new RelayCommand(x =>
-                {
-
-                });
+                _sliderImg = value;
+                OnPropertyChanged();
             }
         }
+
 
         private RelayCommand _openImg;
         public RelayCommand OpenImg
@@ -291,6 +303,10 @@ namespace FuzzyProject.ViewModels
             }
         }
 
+
+        private Recommendations? recommendations = null;
+        private RecommendationsViewModel recommendationsViewModel;
+
         private RelayCommand _analyse;
         public RelayCommand Analyse
         {
@@ -298,25 +314,25 @@ namespace FuzzyProject.ViewModels
             {
                 return _analyse ??= new RelayCommand(x =>
                 {
-                    setVariable = new SetVariable();
-
-                    var coorL = Convert.ToDouble(CoorL);
-                    var coorA = Convert.ToDouble(CoorA);
-                    var coorB = Convert.ToDouble(CoorB);
-                    var result = setVariable.SetCharachteristics(coorL, coorA, coorB);
-                    string recommendation = " ";
 
                     if (ColorsChoice != null)
                     {
-                        if (ColorsChoice == ColorsView[0])
-                        {
-                            recommends = new ReccomendsForOperator();
-                            recommendation = recommends.GiveRecommend(result);
-                        }
-                        else
-                        {
-                            MessageBox.Show("В разработке", "Извините");
-                        }
+                        setVariable = new SetVariable();
+
+                        var coorL = Convert.ToDouble(CoorL);
+                        var coorA = Convert.ToDouble(CoorA);
+                        var coorB = Convert.ToDouble(CoorB);
+                        var eps = Convert.ToDouble(SliderImg);
+
+                        var coors = new double[] { coorL, coorA, coorB };
+
+                        var result = setVariable.SetCharachteristics(coors, ColorsChoice, eps);
+                        string recommendation = " ";
+
+                        //вывод рекомендаций
+                        recommends = new ReccomendsForOperator();
+                        recommendation = recommends.GiveRecommend(result);
+
 
                         string date = DateTime.Now.ToString();
                         string parameters = CoorL + " " + CoorA + " " + CoorB;
@@ -330,7 +346,24 @@ namespace FuzzyProject.ViewModels
                             imgArr = ms.ToArray();
                         }
 
-                        using (DB_EF.AppContextDB context = new DB_EF.AppContextDB())
+                        //перенести потом ниже, когда все рекоммендации добавяться
+                        byte[] img;
+                        using (AppContextDB contextDB = new AppContextDB())
+                        {
+                            var referenceImg = contextDB.ReferencesParams.FirstOrDefault(r => r.Color == ColorsChoice);
+                            img = referenceImg.Image;
+                        }
+
+                        var refImgBitmap = calculate.FromBytesToBitmap(img);
+                        var refImgSource = calculate.BitmapToImageSource(refImgBitmap);
+
+                        recommendations = new Recommendations();
+                        recommendationsViewModel = new RecommendationsViewModel(recommendation, refImgSource, recommendations);
+                        recommendations.DataContext = recommendationsViewModel;
+                        recommendations.Show();
+                        //
+
+                        using (AppContextDB context = new AppContextDB())
                         {
                             var account = context.Accounts.FirstOrDefault(a => a.Login == login);
                             var material = context.Materials.FirstOrDefault(m => m.Image == imgArr);
@@ -387,10 +420,10 @@ namespace FuzzyProject.ViewModels
         }
 
         private string _spectCoorA;
-        public string SpectCoorA 
+        public string SpectCoorA
         {
             get { return _spectCoorA; }
-            set 
+            set
             {
                 _spectCoorA = value;
                 OnPropertyChanged();
@@ -463,6 +496,105 @@ namespace FuzzyProject.ViewModels
             }
         }
 
+        private double _sliderSpectr;
+        public double SliderSpectr
+        {
+            get { return _sliderSpectr; }
+            set
+            {
+                _sliderSpectr = value;
+                OnPropertyChanged();
+            }
+        }
+
+
+        private RelayCommand _analyseSpectr;
+        public RelayCommand AnalyseSpectr
+        {
+            get
+            {
+                return _analyseSpectr ??= new RelayCommand(x =>
+                {
+                   
+                    if (ColorsChoiceSpect != null)
+                    {
+                        setVariable = new SetVariable();
+
+                        var coorL = Convert.ToDouble(SpectCoorL);
+                        var coorA = Convert.ToDouble(SpectCoorA);
+                        var coorB = Convert.ToDouble(SpectCoorB);
+                        var eps = Convert.ToDouble(SliderSpectr);
+
+                        var coors = new double[] { coorL, coorA, coorB };
+
+                        var result = setVariable.SetCharachteristics(coors, ColorsChoiceSpect, eps);
+                        string recommendation = " ";
+
+                        recommends = new ReccomendsForOperator();
+                        recommendation = recommends.GiveRecommend(result);
+
+                        //перенести потом ниже, когда все рекоммендации добавяться
+                        byte[] img;
+                        using (AppContextDB contextDB = new AppContextDB())
+                        {
+                            var referenceImg = contextDB.ReferencesParams.FirstOrDefault(r => r.Color == ColorsChoiceSpect);
+                            img = referenceImg.Image;
+                        }
+
+                        var refImgBitmap = calculate.FromBytesToBitmap(img);
+                        var refImgSource = calculate.BitmapToImageSource(refImgBitmap);
+
+                        recommendations = new Recommendations();
+                        recommendationsViewModel = new RecommendationsViewModel(recommendation, refImgSource, recommendations);
+                        recommendations.DataContext = recommendationsViewModel;
+                        recommendations.Show();
+
+
+                        string date = DateTime.Now.ToString();
+                        string parameters = SpectCoorL + " " + SpectCoorA + " " + SpectCoorB;
+                        byte[] imgArr;
+
+                        //перевод изображения в биты для сохранения в БД
+                        using (MemoryStream ms = new MemoryStream())
+                        {
+                            imgSpectr.Save(ms, ImageFormat.Bmp);
+                            imgArr = ms.ToArray();
+                        }
+
+
+
+                        using (AppContextDB context = new AppContextDB())
+                        {
+                            var account = context.Accounts.FirstOrDefault(a => a.Login == login);
+                            var material = context.Materials.FirstOrDefault(m => m.Image == imgArr);
+
+                            Report report = new Report { Date = date, Login = login, Reccomendation = recommendation };
+                            context.Reports.Add(report);
+
+                            if (material == null)
+                            {
+                                Material newMaterial = new Material { Name = "Экструдат", Color = ColorsChoiceSpect, Parameters = parameters, Image = imgArr };
+                                context.Materials.Add(newMaterial);
+                                report.Account = account;
+                                report.Material = newMaterial;
+                            }
+                            else
+                            {
+                                //привязка к пользователю
+                                report.Account = account;
+                                report.Material = material;
+                            }
+                            context.SaveChanges();
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("Некоторые поля пустые", "Ошибка");
+                    }
+                });
+            }
+        }
+
         private RelayCommand _getSpectrColor;
         public RelayCommand GetSpectrColor
         {
@@ -483,6 +615,7 @@ namespace FuzzyProject.ViewModels
                     var newImg = calculate.GetColor(rgb[0], rgb[1], rgb[2]);
                     //var newImg = calculate.GetColor(226, 191, 161);
                     SpectrImg = calculate.BitmapToImageSource(newImg);
+                    imgSpectr = newImg;
                 });
             }
         }
@@ -524,7 +657,7 @@ namespace FuzzyProject.ViewModels
                             SpectReferenceCoorB = reference.CoordinateB.ToString();
                         }
                     }
-                    else 
+                    else
                     {
                         MessageBox.Show("Установите необходимый цвет!", "Ошибка при загрузке эталонов");
                     }

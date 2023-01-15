@@ -27,7 +27,7 @@
                     </Grid.ColumnDefinitions>
 
                     <TextBlock Grid.Column="0" VerticalAlignment="Top" Style="{DynamicResource MaterialDesignHeadline5TextBlock}" FontWeight="Bold" Text="Кабинет оператора" Grid.ColumnSpan="2" Margin="0,0,140,0"/>
-                    <Button Command="{Binding SaveReport}" Grid.Column="1" Style="{DynamicResource MaterialDesignFlatLightButton}" Content="Сохранение отчёта" HorizontalAlignment="Right"  Width="171" VerticalAlignment="Top" Grid.ColumnSpan="2" Margin="0,0,80,0"/>
+                    <!--<Button Command="{Binding SaveReport}" Grid.Column="1" Style="{DynamicResource MaterialDesignFlatLightButton}" Content="Сохранение отчёта" HorizontalAlignment="Right"  Width="171" VerticalAlignment="Top" Grid.ColumnSpan="2" Margin="0,0,80,0"/>-->
                     <Button Command="{Binding Exit}" Grid.Column="2" Style="{DynamicResource MaterialDesignFlatLightButton}" Content="Выход"  Width="80" HorizontalAlignment="Right" VerticalAlignment="Top"/>
                 </Grid>
 
@@ -66,24 +66,30 @@
                                         </Grid.RowDefinitions>
 
                                         <StackPanel Orientation="Horizontal" Grid.Row="0" VerticalAlignment="Center">
-                                            <TextBlock Text="Цвет: "/>
-                                            <ComboBox SelectedItem="{Binding ColorsChoice}" ItemsSource="{Binding ColorsView}"  Width="140"/>
+                                            <TextBlock Text="Краситель: "/>
+                                            <ComboBox SelectedItem="{Binding ColorsChoice}" ItemsSource="{Binding ColorsView}"  Width="118"/>
                                         </StackPanel>
                                         <StackPanel Orientation="Horizontal" Grid.Row="1" VerticalAlignment="Center">
                                             <Button Command="{Binding GetReferences}" Content="Получить эталоны" HorizontalAlignment="Left" Margin="10 10 0 0" Width="160" Style="{DynamicResource MaterialDesignOutlinedDarkButton}"/>
                                         </StackPanel>
                                         <StackPanel Orientation="Vertical" Grid.Row="2" VerticalAlignment="Center">
-                                            <TextBlock Margin="0 0 0 20" Text="Погрешность: "/>
+
                                             <Grid>
                                                 <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="5.9*"/>
+                                                    <ColumnDefinition />
                                                     <ColumnDefinition/>
                                                 </Grid.ColumnDefinitions>
-                                                
-                                                <Slider Grid.Column="0" Maximum="1" TickPlacement="BottomRight" TickFrequency="0.01" IsSnapToTickEnabled="True" HorizontalAlignment="Center" VerticalAlignment="Top" Width="150" Height="30"/>
-                                                <TextBox Grid.Column="1"  DockPanel.Dock="Right" Width="40"/>
+
+                                                <!--<Slider x:Name="sValue" Grid.Column="0" Maximum="1" TickFrequency="0.01" IsSnapToTickEnabled="True" HorizontalAlignment="Center" VerticalAlignment="Top" Width="150" Height="30"/>
+                                                <TextBox Grid.Column="1" Text="{Binding Value, ElementName=slValue, UpdateSourceTrigger=PropertyChanged}"  Width="40"/>-->
+                                                <StackPanel Grid.Column="0" VerticalAlignment="Center" Margin="0 0 0 20">
+                                                    <TextBlock  Text="Погрешность: " VerticalAlignment="Center"/>
+                                                </StackPanel>
+
+                                                <TextBox Grid.Column="1" Margin="0 0 0 20" Text="{Binding ElementName=SlValue, Path=Value, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" TextAlignment="Left" Width="30" />
+
                                             </Grid>
-                                            
+                                            <Slider Value="{Binding SliderImg}"  Maximum="1" TickFrequency="0.01" IsSnapToTickEnabled="True" Name="SlValue" Width="160"/>
                                         </StackPanel>
                                         <!--<StackPanel Orientation="Horizontal" Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Center">
                                             <Button Command="{Binding ClearForm}" Content="Отчистить форму" HorizontalAlignment="Left" Margin="10 10 0 0" Width="150" Style="{DynamicResource MaterialDesignOutlinedDarkButton}"/>
@@ -94,7 +100,7 @@
                                         <StackPanel Orientation="Horizontal" Grid.Row="4" VerticalAlignment="Center" HorizontalAlignment="Center">
                                             <Button Command="{Binding GetColor}" Content="Получить цвет" HorizontalAlignment="Left" Margin="10 10 0 0" Width="150" Style="{DynamicResource MaterialDesignOutlinedDarkButton}"/>
                                         </StackPanel>
-                                        
+
 
                                     </Grid>
                                 </Grid>
@@ -127,14 +133,14 @@
                                             <Button Command="{Binding ClearForm}" Content="Отчистить форму" HorizontalAlignment="Left" Margin="35 0 0 0" Width="150" Style="{DynamicResource MaterialDesignOutlinedDarkButton}"/>
                                         </StackPanel>
                                     </Grid>
-                                        
+
                                 </Grid>
 
                                 <StackPanel Grid.Row="1" Orientation="Horizontal" VerticalAlignment="Center">
                                     <TextBlock Text="Параметры загруженного изображения: " FontWeight="Bold"/>
                                 </StackPanel>
-                                
-                               
+
+
 
                                 <StackPanel Grid.Row="3" Orientation="Horizontal" VerticalAlignment="Center">
                                     <TextBlock Text="Эталонные параметры: " FontWeight="Bold"/>
@@ -183,11 +189,11 @@
                                         <RowDefinition Height="60"/>
                                         <RowDefinition Height="60"/>
                                         <RowDefinition Height="60"/>
-                                        <RowDefinition/>
-                                        <RowDefinition/>
-                                        <RowDefinition/>
+                                        <RowDefinition Height="61*"/>
+                                        <RowDefinition Height="80"/>
+                                        <RowDefinition Height="54*"/>
                                     </Grid.RowDefinitions>
-                                    <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0 10 0 0">
+                                    <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,10,0,0">
                                         <TextBlock Text="Координаты cо спектрофотометра:" FontWeight="Bold"/>
                                     </StackPanel>
                                     <StackPanel Grid.Row="1" Orientation="Horizontal">
@@ -202,29 +208,36 @@
                                         <TextBlock Text="Координата *b =" VerticalAlignment="Center" Margin="10 0 0 0"/>
                                         <TextBox TextAlignment="Center" Text="{Binding SpectCoorB}"  Width="70" VerticalAlignment="Center"/>
                                     </StackPanel>
-                                    <StackPanel VerticalAlignment="Center" Grid.Row="4" Orientation="Horizontal" Margin="10 0 0 0">
-                                        <TextBlock Text="Цвет: "/>
-                                        <ComboBox SelectedItem="{Binding ColorsChoiceSpect}" ItemsSource="{Binding ColorsViewSpect}"  Width="140"/>
+                                    <StackPanel VerticalAlignment="Center" Grid.Row="4" Orientation="Horizontal" Margin="10,0,0,0" Height="25">
+                                        <TextBlock Text="Краситель: "/>
+                                        <ComboBox SelectedItem="{Binding ColorsChoiceSpect}" ItemsSource="{Binding ColorsViewSpect}"  Width="125"/>
                                     </StackPanel>
-                                    <StackPanel Grid.Row="5" HorizontalAlignment="Left">
-                                        <TextBlock Margin="10 10 0 0" Text="Погрешность:" />
-                                        <Grid>
+                                    <StackPanel Orientation="Vertical" Grid.Row="5" VerticalAlignment="Center" Height="64">
+
+                                        <Grid Height="40">
                                             <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="5.9*"/>
+                                                <ColumnDefinition />
                                                 <ColumnDefinition/>
                                             </Grid.ColumnDefinitions>
 
-                                            <Slider Margin="10 10 0 0" Grid.Column="0" Maximum="1" TickPlacement="BottomRight" TickFrequency="0.01" IsSnapToTickEnabled="True" HorizontalAlignment="Center" VerticalAlignment="Top" Width="150" Height="30"/>
-                                            <TextBox Grid.Column="1"  DockPanel.Dock="Right" Width="40"/>
+                                            <!--<Slider x:Name="sValue" Grid.Column="0" Maximum="1" TickFrequency="0.01" IsSnapToTickEnabled="True" HorizontalAlignment="Center" VerticalAlignment="Top" Width="150" Height="30"/>
+                                                <TextBox Grid.Column="1" Text="{Binding Value, ElementName=slValue, UpdateSourceTrigger=PropertyChanged}"  Width="40"/>-->
+                                            <StackPanel Grid.Column="0" VerticalAlignment="Center" Margin="10 0 0 20">
+                                                <TextBlock  Text="Погрешность: " VerticalAlignment="Center"/>
+                                            </StackPanel>
+                                            <TextBox Grid.Column="1" Margin="0 0 0 15" Text="{Binding ElementName=SlValueSpect, Path=Value, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" TextAlignment="Left" Width="30" />
                                         </Grid>
+                                        <Slider Value="{Binding SliderSpectr}" HorizontalAlignment="Left"  Maximum="1" TickFrequency="0.01" IsSnapToTickEnabled="True" Name="SlValueSpect" Width="170" Margin="20 0 0 0" Height="24"/>
                                     </StackPanel>
 
-                                    <StackPanel VerticalAlignment="Center" Grid.Row="6" Orientation="Horizontal" Margin="10 0 0 0">
+                                    <StackPanel VerticalAlignment="Center" Grid.Row="6" Orientation="Horizontal" Margin="10 10 0 0" Height="32">
                                         <Button Command="{Binding GetSpectrColor}" Content="Получить цвет" Width="160" Style="{DynamicResource MaterialDesignOutlinedDarkButton}"/>
                                     </StackPanel>
                                 </Grid>
                                 <Grid Grid.Column="1">
                                     <Image Source="{Binding SpectrImg}" Width="320" Height="260" Margin="0 0 15 15"/>
+                                    <!--<TextBox Height="25" VerticalAlignment="Bottom" Width="150" HorizontalAlignment="Left"/>
+                                    <Button VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="150" Content="Press"/>-->
                                 </Grid>
                                 <Grid Grid.Column="2">
                                     <Grid.RowDefinitions>
@@ -240,7 +253,7 @@
                                     <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0 10 0 0">
                                         <TextBlock Text="Эталлонные показатели:" FontWeight="Bold"/>
                                     </StackPanel>
-                                    
+
                                     <StackPanel Grid.Row="1" Orientation="Horizontal">
                                         <TextBlock Text="Координата *L =" VerticalAlignment="Center" Margin="10 0 0 0"/>
                                         <TextBox TextAlignment="Center" Text="{Binding SpectReferenceCoorL}"  Width="70" VerticalAlignment="Center"/>
@@ -259,8 +272,8 @@
                                     <StackPanel HorizontalAlignment="Center" Grid.Row="5" Orientation="Horizontal">
                                         <Button Command="{Binding ClearSpectrForm}" Content="Отчистить форму" HorizontalAlignment="Left"  Width="160" Style="{DynamicResource MaterialDesignOutlinedDarkButton}"/>
                                     </StackPanel>
-                                    <StackPanel HorizontalAlignment="Center" Grid.Row="6" Orientation="Horizontal">
-                                        <Button Content="Анализ" HorizontalAlignment="Left"  Width="210" Style="{DynamicResource MaterialDesignFlatDarkBgButton}"/>
+                                    <StackPanel HorizontalAlignment="Center" Grid.Row="6" Orientation="Horizontal" Margin="0 30 0 0">
+                                        <Button Command="{Binding AnalyseSpectr}" Content="Анализ" HorizontalAlignment="Left"  Width="210" Style="{DynamicResource MaterialDesignFlatDarkBgButton}"/>
                                     </StackPanel>
 
                                 </Grid>

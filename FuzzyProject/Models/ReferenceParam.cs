@@ -15,5 +15,6 @@ namespace FuzzyProject.Models
         public double CoordinateA { get; set; }
         public double CoordinateB { get; set; }
         public string Color { get; set; }
+        public byte[] Image { get; set; }
     }
 }

@@ -14,7 +14,6 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
 using WPF_MVVM_Classes;
-using AppContextDB = FuzzyProject.DB_EF.AppContextDB;
 using MessageBox = System.Windows.MessageBox;
 
 namespace FuzzyProject.ViewModels
