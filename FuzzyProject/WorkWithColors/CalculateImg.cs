@@ -18,6 +18,21 @@ namespace FuzzyProject.WorkWithColors
         Models.Color color;
         ConvertRGB convert;
 
+        public byte[] FromImgToBytes(Bitmap image) 
+        {
+            byte[] imgMaterial;
+
+            //перевод изображения в биты для сохранения в БД
+            using (MemoryStream ms = new MemoryStream())
+            {
+                image.Save(ms, ImageFormat.Bmp);
+                image.Save(ms, ImageFormat.Bmp);
+                imgMaterial = ms.ToArray();
+                
+            }
+            return imgMaterial;
+        }
+
         public BitmapImage BitmapToImageSource(Bitmap bitmap)
         {
             using (MemoryStream memory = new MemoryStream())
@@ -111,6 +126,5 @@ namespace FuzzyProject.WorkWithColors
 
             return newPic;
         }
-
     }
 }

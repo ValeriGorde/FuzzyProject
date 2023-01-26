@@ -2,15 +2,9 @@
 using FuzzyProject.Models;
 using FuzzyProject.WorkWithColors;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
 using WPF_MVVM_Classes;
@@ -30,9 +24,13 @@ namespace FuzzyProject.ViewModels
 
         public AdminViewModel(Window _adminWindow)
         {
+            Account = null;
+            Material = null;
+            
             SetList();
             SetReportsList(); //изменить на датагрид
             SetMaterailList();
+
 
             Roles = new List<string>();
             Roles.Add("Администратор");
@@ -50,7 +48,8 @@ namespace FuzzyProject.ViewModels
         public void SetReportsList()
         {
             context = new AppContextDB();
-            Reports = new List<Report>();
+            context.Reports.Load();
+            Reports = context.Reports.ToList();
             ReportsList = new List<string>();
             var reports = context.Reports.OrderBy(x => x.Date).ToList();
 
@@ -143,10 +142,20 @@ namespace FuzzyProject.ViewModels
                     if (SelectedMaterial != null)
                     {
                         var material = context.Materials.Single(a => a.Id == SelectedMaterial.Id);
-                        context.Materials.Remove(material);
-                        context.SaveChanges();
 
-                        SetMaterailList();
+                        var report = context.Reports.Where(r => r.MaterialId == SelectedMaterial.Id).ToList();
+                        if (report.Count == 0)
+                        {
+                            context.Materials.Remove(material);
+                            context.SaveChanges();
+
+                            SetMaterailList();
+                        }
+                        else
+                        {
+                            MessageBox.Show("Вы не можете удалить материал, так как он имеет ссылку в отчете. Для начала удалите отчёт!");
+                        }
+                        
                     }
                 });
             }
@@ -211,6 +220,60 @@ namespace FuzzyProject.ViewModels
             return material;
         }
 
+        private RelayCommand _openMaterialImg;
+        public RelayCommand OpenMaterialImg
+        {
+            get
+            {
+                return _openMaterialImg ??= new RelayCommand(x =>
+                {
+                    if (SelectedMaterial != null)
+                    {
+                        var material = context.Materials.FirstOrDefault(m => m.Id == SelectedMaterial.Id);
+                        var pic = material.Image;
+
+                        calculate = new CalculateImg();
+                        var newPic = calculate.FromBytesToBitmap(pic);
+
+                        imageShow = new ImageShow();
+                        imagePageViewModel = new ImagePageViewModel(imageShow, newPic);
+                        imageShow.DataContext = imagePageViewModel;
+                        imageShow.Show();
+                    }
+                });
+            }
+        }
+
+        private RelayCommand _loadMaterialImg;
+        public RelayCommand LoadMaterialImg
+        {
+            get
+            {
+                return _loadMaterialImg ??= new RelayCommand(x =>
+                {
+                    if (SelectedMaterial != null)
+                    {
+                        calculate = new CalculateImg();
+                        OpenFileDialog dlg = new OpenFileDialog();
+                        dlg.InitialDirectory = imgPath;
+                        dlg.Filter = "Image files (*.jpg)|*.jpg|All Files (*.*)|*.*";
+                        dlg.RestoreDirectory = true;
+                        if (dlg.ShowDialog() == DialogResult.OK)
+                        {
+                            selectedFileName = dlg.FileName;
+                            img = new Bitmap(selectedFileName);
+
+                            imgMaterial = calculate.FromImgToBytes(img);
+                            MessageBox.Show("Изображение успешно загружено!");
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("Вы не выбрали материал!", "Ошибка");
+                    }
+                });
+            }
+        }
         #endregion
 
         #region Account
@@ -375,10 +438,6 @@ namespace FuzzyProject.ViewModels
             return report;
         }
 
-
-
-
-
         private string _loginReport;
         public string LoginReport
         {
@@ -504,20 +563,18 @@ namespace FuzzyProject.ViewModels
                     {
                         var nowReport = Reports.FirstOrDefault(r => r.Date == _selectedReport);
                         var report = FromDBReport(nowReport.Date);
+
                         context.Reports.Remove(report);
                         context.SaveChanges();
 
-                        Reports.Remove(Reports.Single(r => r.Date == nowReport.Date));
+                        Reports.Remove(Reports.First(r => r.Date == nowReport.Date));
                         ReportsList.Remove(nowReport.Date);
+
                         SetReportsList();
                     }
                 });
             }
         }
-        #endregion
-
-
-
 
         private ImageShow? imageShow = null;
         private ImagePageViewModel imagePageViewModel;
@@ -546,68 +603,7 @@ namespace FuzzyProject.ViewModels
                 });
             }
         }
-
-        private RelayCommand _openMaterialImg;
-        public RelayCommand OpenMaterialImg
-        {
-            get
-            {
-                return _openMaterialImg ??= new RelayCommand(x =>
-                {
-                    if (SelectedMaterial != null)
-                    {
-                        var material = context.Materials.FirstOrDefault(m => m.Id == SelectedMaterial.Id);
-                        var pic = material.Image;
-
-                        calculate = new CalculateImg();
-                        var newPic = calculate.FromBytesToBitmap(pic);
-
-                        imageShow = new ImageShow();
-                        imagePageViewModel = new ImagePageViewModel(imageShow, newPic);
-                        imageShow.DataContext = imagePageViewModel;
-                        imageShow.Show();
-                    }
-                });
-            }
-        }
-
-        private RelayCommand _loadMaterialImg;
-        public RelayCommand LoadMaterialImg
-        {
-            get
-            {
-                return _loadMaterialImg ??= new RelayCommand(x =>
-                {
-                    if (SelectedMaterial != null)
-                    {
-                        calculate = new CalculateImg();
-                        OpenFileDialog dlg = new OpenFileDialog();
-                        dlg.InitialDirectory = imgPath;
-                        dlg.Filter = "Image files (*.jpg)|*.jpg|All Files (*.*)|*.*";
-                        dlg.RestoreDirectory = true;
-                        if (dlg.ShowDialog() == DialogResult.OK)
-                        {
-                            selectedFileName = dlg.FileName;
-                            img = new Bitmap(selectedFileName);
-
-                            //перевод изображения в биты для сохранения в БД
-                            using (MemoryStream ms = new MemoryStream())
-                            {
-                                img.Save(ms, ImageFormat.Bmp);
-                                img.Save(ms, ImageFormat.Bmp);
-                                imgMaterial = ms.ToArray();
-                                MessageBox.Show("Изображение загружено!", "Успех");
-                            }
-                        }
-                    }
-                    else
-                    {
-                        MessageBox.Show("Вы не выбрали материал!", "Ошибка");
-                    }
-                });
-            }
-        }
-
+        #endregion
 
 
         private Authorization? authorization = null;

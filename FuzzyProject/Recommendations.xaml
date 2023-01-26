@@ -42,7 +42,7 @@
                                 <RowDefinition/>
                             </Grid.RowDefinitions>
                             <Grid Grid.Row="0">
-                                <TextBlock Grid.Column="0" Text="Эталлонный образец"/>
+                                <TextBlock Grid.Column="0" Text="Эталонный образец"/>
                             </Grid>
                             <Grid Grid.Row="1">
                                 <Image Source="{Binding RecommendImg}"  Grid.Column="0" Margin="0 0 10 0" />

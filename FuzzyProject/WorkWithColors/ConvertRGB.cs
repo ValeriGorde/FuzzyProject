@@ -129,36 +129,53 @@ namespace FuzzyProject.WorkWithColors
 
             int[] colorsRGB = new int[] { (int)red, (int)green, (int)blue };
 
-                return colorsRGB;
+            return colorsRGB;
 
         }
 
+        //используется этот метод
         public int[] GetLabToRGB(double l, double a, double b)
         {
 
-            double _y = l / 116 + 0.1379310344827586;
+            double _y = (l + 16) / 116;
             double _x = a / 500 + _y;
-            double _z = _y - (b / 200);
+            double _z = _y - b / 200;
 
-            _x = _x > 0.2068965517241379 ? Math.Pow(_x, 3) : _x / 7.787 - 0.0177129876053369;
-            _y = _y > 0.2068965517241379 ? Math.Pow(_y, 3) : _y / 7.787 - 0.0177129876053369;
-            _z = _z > 0.2068965517241379 ? Math.Pow(_z, 3) : _z / 7.787 - 0.0177129876053369;
+            if (Math.Pow(_y, 3) > 0.008856) _y = Math.Pow(_y, 3);
+            else _y = (_y - 16 / 116) / 7.787;
 
-            // Observer = 2°, Illuminant = D65
-            double R = 3.080093082 * _x - 1.5372 * _y - 0.542890638 * _z;
-            double G = -0.920910383 * _x + 1.8758 * _y + 0.045186445 * _z;
-            double B = 0.052941179 * _x - 0.2040 * _y + 1.150893310 * _z;
+            if (Math.Pow(_x, 3) > 0.008856) _x = Math.Pow(_x, 3);
+            else _x = (_x - 16 / 116) / 7.787;
 
-            R = R > 0.0031308 ? Math.Pow(R, 0.4166666666666667) * 269.025 - 14.025 : R * 3294.6;
-            G = G > 0.0031308 ? Math.Pow(G, 0.4166666666666667) * 269.025 - 14.025 : G * 3294.6;
-            B = B > 0.0031308 ? Math.Pow(B, 0.4166666666666667) * 269.025 - 14.025 : B * 3294.6;
+            if (Math.Pow(_z, 3) > 0.008856) _z = Math.Pow(_z, 3);
+            else _z = (_z - 16 / 116) / 7.787;
 
-            var red = Math.Round(R);
-            var green = Math.Round(G);
-            var blue = Math.Round(B);
+            _x *= 95.047;
+            _y *= 100;
+            _z *= 108.883;
 
-            int[] colorsRGB = new int[] { (int)red, (int)green, (int)blue };
+            _x /= 100;
+            _y /= 100;
+            _z /= 100;
 
+            double _r = _x * 2.04137 + _y * -0.56495 + _z * -0.34469;
+            double _g = _x * -0.96927 + _y * 1.87601 + _z * 0.04156;
+            double _b = _x * 0.01345 + _y * -0.11839 + _z * 1.01541;
+
+            _r = Math.Pow(_r, (1 / 2.19921875));
+            _g = Math.Pow(_g, (1 / 2.19921875));
+            _b = Math.Pow(_b, (1 / 2.19921875));
+
+            _r *= 255;
+            _g *= 255;
+            _b *= 255;
+
+            if (_r > 255) _r = 255;
+            else if (_g > 255) _g = 255;
+            else if (_b > 255) _b = 255;
+
+            int[] colorsRGB = new int[] { (int)_r, (int)_g, (int)_b };
+                        
             return colorsRGB;
         }
     }

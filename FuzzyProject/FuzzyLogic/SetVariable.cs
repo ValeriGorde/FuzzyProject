@@ -9,8 +9,9 @@ namespace FuzzyProject.FuzzyLogic
 {
     internal class SetVariable
     {
-        public double SetCharachteristics(double[] coors, string color, double eps)
+        public double SetCharachteristics(double[] coors, string color)
         {
+            #region Other Rules
             //LinguisticVariable coorl = new LinguisticVariable("Coorl");
             //var black = coorl.MembershipFunctions.AddTrapezoid("Чёрный", 0, 0, 10, 40);
             //var gray = coorl.MembershipFunctions.AddTrapezoid("Серый", 10, 40, 60, 90);
@@ -25,7 +26,7 @@ namespace FuzzyProject.FuzzyLogic
             //var blue = coorb.MembershipFunctions.AddTrapezoid("Синий", -127, -127, -80, -25);
             //var grayB = coorb.MembershipFunctions.AddTrapezoid("Серый", -80, -25, 25, 80);
             //var yellow = coorb.MembershipFunctions.AddTrapezoid("Жёлтый", 25, 80, 128, 128);
-
+            #endregion
 
             #region Deltas
 
@@ -93,10 +94,6 @@ namespace FuzzyProject.FuzzyLogic
                 else deltas[2] = (coors[2] / 1) - 1;
             }
 
-            for (int i = 0; i < deltas.Length; i++) 
-            {
-                deltas[i] += eps;
-            }
             //else if (color == "зелёный")
             //{
             //    if (coors[1] < 80)
@@ -120,7 +117,7 @@ namespace FuzzyProject.FuzzyLogic
             //}
             #endregion
 
-
+            #region Linguistic
             LinguisticVariable coorl = new LinguisticVariable("Coorl");
             var veryBadL = coorl.MembershipFunctions.AddTriangle("Плохо", -0.3, 0, 0.3);
             var badL = coorl.MembershipFunctions.AddTriangle("Серый", 0.05, 0.3, 0.6);
@@ -168,8 +165,15 @@ namespace FuzzyProject.FuzzyLogic
             fuzzyEngine.Rules.If(coorb.Is(normalL)).Then(conclusion.Is(good));
 
             double result = fuzzyEngine.Defuzzify(new { coorl = deltas[0], coora = deltas[1], coorb = deltas[2] });
+            #endregion
 
-            return result;
+
+            double[] refCoors = new double[] { 86, 0, 0 };
+
+            double deltaE;
+            deltaE = Math.Sqrt(Math.Pow(coors[0] - refCoors[0], 2) + Math.Pow(coors[1] - refCoors[1], 2) + Math.Pow(coors[2] - refCoors[2], 2))/100;
+
+            return deltaE;
         }
     }
 }

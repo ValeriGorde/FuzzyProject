@@ -1,9 +1,7 @@
-﻿using FLS;
-using FuzzyProject.DB_EF;
+﻿using FuzzyProject.DB_EF;
 using FuzzyProject.FuzzyLogic;
 using FuzzyProject.Models;
 using FuzzyProject.WorkWithColors;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
@@ -11,15 +9,9 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media.Imaging;
-using System.Windows.Media.Media3D;
 using WPF_MVVM_Classes;
-using static System.Windows.Forms.DataFormats;
-using Color = System.Drawing.Color;
 using Material = FuzzyProject.Models.Material;
 
 namespace FuzzyProject.ViewModels
@@ -40,16 +32,21 @@ namespace FuzzyProject.ViewModels
 
         public ReseacherViewModel(Window _reseacherWindow, string _login)
         {
+            BrushesL = BrushesA = BrushesB = System.Drawing.Color.Gray.Name.ToString();
+
+            ColorsChoice = "белый";
+            ColorsChoiceSpect = "белый";
+
             ColorsView = new List<string>();
+            ColorsView.Add("белый");
             ColorsView.Add("оранжевый");
             ColorsView.Add("голубой");
-            ColorsView.Add("белый");
             ColorsView.Add("зелёный");
 
             ColorsViewSpect = new List<string>();
+            ColorsViewSpect.Add("белый");
             ColorsViewSpect.Add("оранжевый");
             ColorsViewSpect.Add("голубой");
-            ColorsViewSpect.Add("белый");
             ColorsViewSpect.Add("зелёный");
 
             reseacherWindow = _reseacherWindow;
@@ -322,11 +319,10 @@ namespace FuzzyProject.ViewModels
                         var coorL = Convert.ToDouble(CoorL);
                         var coorA = Convert.ToDouble(CoorA);
                         var coorB = Convert.ToDouble(CoorB);
-                        var eps = Convert.ToDouble(SliderImg);
 
                         var coors = new double[] { coorL, coorA, coorB };
 
-                        var result = setVariable.SetCharachteristics(coors, ColorsChoice, eps);
+                        var result = setVariable.SetCharachteristics(coors, ColorsChoice);
                         string recommendation = " ";
 
                         //вывод рекомендаций
@@ -507,6 +503,38 @@ namespace FuzzyProject.ViewModels
             }
         }
 
+        private string _brushesL;
+        public string BrushesL
+        {
+            get { return _brushesL; }
+            set
+            {
+                _brushesL = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _brushesA;
+        public string BrushesA
+        {
+            get { return _brushesA; }
+            set
+            {
+                _brushesA = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _brushesB;
+        public string BrushesB
+        {
+            get { return _brushesB; }
+            set
+            {
+                _brushesB = value;
+                OnPropertyChanged();
+            }
+        }
 
         private RelayCommand _analyseSpectr;
         public RelayCommand AnalyseSpectr
@@ -523,11 +551,10 @@ namespace FuzzyProject.ViewModels
                         var coorL = Convert.ToDouble(SpectCoorL);
                         var coorA = Convert.ToDouble(SpectCoorA);
                         var coorB = Convert.ToDouble(SpectCoorB);
-                        var eps = Convert.ToDouble(SliderSpectr);
 
                         var coors = new double[] { coorL, coorA, coorB };
 
-                        var result = setVariable.SetCharachteristics(coors, ColorsChoiceSpect, eps);
+                        var result = setVariable.SetCharachteristics(coors, ColorsChoiceSpect);
                         string recommendation = " ";
 
                         recommends = new ReccomendsForOperator();
@@ -549,7 +576,6 @@ namespace FuzzyProject.ViewModels
                         recommendations.DataContext = recommendationsViewModel;
                         recommendations.Show();
 
-
                         string date = DateTime.Now.ToString();
                         string parameters = SpectCoorL + " " + SpectCoorA + " " + SpectCoorB;
                         byte[] imgArr;
@@ -560,8 +586,6 @@ namespace FuzzyProject.ViewModels
                             imgSpectr.Save(ms, ImageFormat.Bmp);
                             imgArr = ms.ToArray();
                         }
-
-
 
                         using (AppContextDB context = new AppContextDB())
                         {
@@ -602,20 +626,43 @@ namespace FuzzyProject.ViewModels
             {
                 return _getSpectrColor ??= new RelayCommand(x =>
                 {
-                    SpectrImg = null;
-                    double coorL = Convert.ToDouble(SpectCoorL);
-                    double coorA = Convert.ToDouble(SpectCoorA);
-                    double coorB = Convert.ToDouble(SpectCoorB);
+                    if (SpectCoorL != "" && SpectCoorA != "" && SpectCoorB != "")
+                    {
+                        BrushesL = BrushesA = BrushesB = System.Drawing.Color.Gray.Name.ToString();
 
-                    //сделать проверку на то, если поля не заполнены
-                    ConvertRGB convert = new ConvertRGB();
-                    int[] rgb = convert.GetLabToRGB(coorL, coorA, coorB);
+                        SpectrImg = null;
+                        double coorL = Convert.ToDouble(SpectCoorL);
+                        double coorA = Convert.ToDouble(SpectCoorA);
+                        double coorB = Convert.ToDouble(SpectCoorB);
 
-                    calculate = new CalculateImg();
-                    var newImg = calculate.GetColor(rgb[0], rgb[1], rgb[2]);
-                    //var newImg = calculate.GetColor(226, 191, 161);
-                    SpectrImg = calculate.BitmapToImageSource(newImg);
-                    imgSpectr = newImg;
+                        if (coorL < 0 || coorL > 100)
+                        {
+                            BrushesL = System.Drawing.Color.Red.Name.ToString();
+                        }
+                        else if (coorA < -127 || coorA > 128)
+                        {
+                            BrushesA = System.Drawing.Color.Red.Name.ToString(); 
+                        }
+                        else if (coorB < -127 || coorB > 128)
+                        {
+                            BrushesB = System.Drawing.Color.Red.Name.ToString();
+                        }
+                        else 
+                        {
+                            ConvertRGB convert = new ConvertRGB();
+                            int[] rgb = convert.GetLabToRGB(coorL, coorA, coorB);
+
+                            calculate = new CalculateImg();
+                            var newImg = calculate.GetColor(rgb[0], rgb[1], rgb[2]);
+                            SpectrImg = calculate.BitmapToImageSource(newImg);
+                            imgSpectr = newImg;
+                        }
+                    }
+                    else 
+                    {
+                        MessageBox.Show("Заполните все поля!", "Ошибка");
+                    }
+                    
                 });
             }
         }
