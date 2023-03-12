@@ -6,62 +6,146 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FuzzyProject"
         mc:Ignorable="d"
-        Title="Кабинет оператора" Height="620" Width="900"
-        WindowStartupLocation="CenterScreen">
-    <Grid Background="#ffdadada">
-        <Border MinWidth="850" MinHeight="550" Margin="15" Background="White" VerticalAlignment="Center" Padding="30" MaxWidth="550" CornerRadius="20">
-            <Border.Effect>
-                <DropShadowEffect BlurRadius="30" Color="LightGray" ShadowDepth="0"/>
-            </Border.Effect>
+        Title="Кабинет оператора" Height="770" Width="1000"
+        WindowStartupLocation="CenterScreen" Loaded="Window_Loaded">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0.1*"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
 
-            <Grid HorizontalAlignment="Center" Width="790">
-                <Grid.RowDefinitions>
-                    <RowDefinition MaxHeight="35"/>
-                    <RowDefinition/>
-                </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <ToolBarTray>
+                <ToolBar >
+                    <Button Command="{Binding Info}" Content="{materialDesign:PackIcon Kind=InformationOutline}"/>
+                    <Separator/>
+                    <Button Content="Информация для оператора" Command="{Binding InfoForOperator}"/>
+                    <Separator/>
+                    <Button Content="Выход" Command="{Binding Exit}"/>
+                </ToolBar>
+            </ToolBarTray>
+        </Grid>
 
-                <Grid Row="0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                    </Grid.ColumnDefinitions>
-
-                    <TextBlock Grid.Column="0" VerticalAlignment="Top" Style="{DynamicResource MaterialDesignHeadline5TextBlock}" FontWeight="Bold" Text="Кабинет оператора" Grid.ColumnSpan="2" Margin="0,0,140,0"/>
-                    <!--<Button Command="{Binding SaveReport}" Grid.Column="1" Style="{DynamicResource MaterialDesignFlatLightButton}" Content="Сохранение отчёта" HorizontalAlignment="Right"  Width="171" VerticalAlignment="Top" Grid.ColumnSpan="2" Margin="0,0,80,0"/>-->
-                    <Button Command="{Binding Exit}" Grid.Column="2" Style="{DynamicResource MaterialDesignFlatLightButton}" Content="Выход"  Width="80" HorizontalAlignment="Right" VerticalAlignment="Top"/>
-                </Grid>
-
-                <Grid Row="1">
-                    <TabControl >
-                        <TabItem Header="Исследование изображения">
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition  Height="270"/>
-                                    <RowDefinition Height="35"/>
-                                    <RowDefinition Height="40"/>
-                                    <RowDefinition Height="25"/>
-                                    <RowDefinition Height="40"/>
-                                </Grid.RowDefinitions>
+        <Grid Row="1">
+            <TabControl >
+                <TabItem Header="Исследование изображения">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="1.9*"/>
+                            <RowDefinition Height="0.9*"/>
+                        </Grid.RowDefinitions>
 
 
-                                <Grid  Row="0">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="305"/>
-                                        <ColumnDefinition Width="305"/>
-                                        <ColumnDefinition Width="59*"/>
-                                    </Grid.ColumnDefinitions>
-                                    <StackPanel Grid.Column="0">
-                                        <Image Source="{Binding StartImg}" Height="240" Margin="5 0"/>
-                                    </StackPanel>
-                                    <StackPanel Grid.Column="1">
-                                        <Image Source="{Binding EndImg}" Height="240" Margin="5 0"/>
-                                    </StackPanel>
-                                    <Grid Grid.Column="2">
+                        <Grid  Row="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="0.7*"/>
+                                <ColumnDefinition Width="0.7*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel Grid.Column="0">
+                                <Image x:Name="image" Source="{Binding StartImg}" Height="380" Margin="20" MouseDown="Image_MouseDown">
+
+                                </Image>
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="1">
+                                <Image Source="{Binding EndImg}" Height="380" Margin="20"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <Grid Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+
+                            <Grid Grid.Column="0" Margin="2">
+                                <GroupBox  Header="Параметры загруженного изображения" materialDesign:ElevationAssist.Elevation="Dp6" BorderThickness="1">
+                                    <Grid>
                                         <Grid.RowDefinitions>
                                             <RowDefinition/>
                                             <RowDefinition/>
-                                            <RowDefinition Height="90"/>
+                                            <RowDefinition/>
+                                        </Grid.RowDefinitions>
+
+                                        <StackPanel Grid.Row="0" Orientation="Horizontal">
+                                            <TextBlock Text="Координата *L =" VerticalAlignment="Center" Margin="10 0 0 0"/>
+                                            <TextBox TextAlignment="Center" Text="{Binding CoorL}" Width="70" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                        <StackPanel Grid.Row="1" Orientation="Horizontal">
+                                            <TextBlock Text="Координата *a =" VerticalAlignment="Center" Margin="10 0 0 0"/>
+                                            <TextBox TextAlignment="Center" Text="{Binding CoorA}"  Width="70" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                        <StackPanel Grid.Row="2" Orientation="Horizontal">
+                                            <TextBlock Text="Координата *b =" VerticalAlignment="Center" Margin="10 0 0 0"/>
+                                            <TextBox TextAlignment="Center" Text="{Binding CoorB}" Width="70" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </GroupBox>
+                            </Grid>
+
+                            <Grid Grid.Column="1" Margin="2">
+                                <GroupBox Header="Параметры эталона" materialDesign:ElevationAssist.Elevation="Dp6" BorderThickness="1">
+                                    <Grid>
+
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                        </Grid.RowDefinitions>
+
+                                        <StackPanel Grid.Row="0" Orientation="Horizontal">
+                                            <TextBlock Text="Координата *L =" VerticalAlignment="Center" Margin="10 0 0 0"/>
+                                            <TextBox TextAlignment="Center" Text="{Binding ReferenceCoorL}" Width="70" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                        <StackPanel Grid.Row="1" Orientation="Horizontal">
+                                            <TextBlock Text="Координата *a =" VerticalAlignment="Center" Margin="10 0 0 0"/>
+                                            <TextBox TextAlignment="Center" Text="{Binding ReferenceCoorA}"  Width="70" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                        <StackPanel Grid.Row="2" Orientation="Horizontal">
+                                            <TextBlock Text="Координата *b =" VerticalAlignment="Center" Margin="10 0 0 0"/>
+                                            <TextBox TextAlignment="Center" Text="{Binding ReferenceCoorB}" Width="70" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                        <!--<StackPanel Grid.Column="3" Orientation="Horizontal">
+                                            <Button Command="{Binding Analyse}" Content="Анализ" Margin="35 0 0 0"  Width="150" HorizontalAlignment="Right" Style="{DynamicResource MaterialDesignFlatDarkBgButton}"/>
+                                        </StackPanel>-->
+                                    </Grid>
+                                </GroupBox>
+                            </Grid>
+
+                            <Grid Grid.Column="2" Margin="2">
+                                <GroupBox Header="Информация о материале" materialDesign:ElevationAssist.Elevation="Dp6" BorderThickness="1">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                        </Grid.RowDefinitions>
+
+                                        <StackPanel Grid.Row="0" Orientation="Horizontal">
+                                            <TextBlock Text="Материал: " VerticalAlignment="Center" Margin="10 0 0 0"/>
+                                            <TextBox TextAlignment="Center" Text="{Binding InfoMaterialName}" Width="120" VerticalAlignment="Center"/>
+                                        </StackPanel>
+
+                                        <StackPanel Grid.Row="1" Orientation="Horizontal">
+                                            <TextBlock Text="Краситель: " VerticalAlignment="Center" Margin="10 0 0 0"/>
+                                            <TextBox TextAlignment="Center" Text="{Binding InfoMaterialColor}" Width="120" VerticalAlignment="Center"/>
+                                        </StackPanel>
+
+                                        <!--<StackPanel Grid.Row="1" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                            <Border x:Name="border" Height="80" Width="100"/>
+                                        </StackPanel>-->
+                                    </Grid>
+                                </GroupBox>
+                            </Grid>
+
+                            <!--<Grid Grid.Column="2">
+                                <GroupBox  Header="" materialDesign:ColorZoneAssist.Mode="SecondaryMid" BorderThickness="0">
+                                    <Grid>
+
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition/>
                                             <RowDefinition/>
                                             <RowDefinition/>
                                         </Grid.RowDefinitions>
@@ -71,218 +155,173 @@
                                             <ComboBox SelectedItem="{Binding ColorsChoice}" ItemsSource="{Binding ColorsView}"  Width="118"/>
                                         </StackPanel>
                                         <StackPanel Orientation="Horizontal" Grid.Row="1" VerticalAlignment="Center">
-                                            <Button Command="{Binding GetReferences}" Content="Получить эталоны" HorizontalAlignment="Left" Margin="10 10 0 0" Width="160" Style="{DynamicResource MaterialDesignOutlinedDarkButton}"/>
+                                            <Button Command="{Binding GetReferences}" Content="Получить эталоны" Width="160" Style="{DynamicResource MaterialDesignOutlinedDarkButton}"/>
                                         </StackPanel>
-                                        <!--<StackPanel Orientation="Vertical" Grid.Row="2" VerticalAlignment="Center">
+                                        -->
+                            <!--<StackPanel Grid.Row="2" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                            <Border x:Name="border" Height="80" Width="100">
 
-                                            <Grid>
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition />
-                                                    <ColumnDefinition/>
-                                                </Grid.ColumnDefinitions>
-
-                                                --><!--<Slider x:Name="sValue" Grid.Column="0" Maximum="1" TickFrequency="0.01" IsSnapToTickEnabled="True" HorizontalAlignment="Center" VerticalAlignment="Top" Width="150" Height="30"/>
-                                                <TextBox Grid.Column="1" Text="{Binding Value, ElementName=slValue, UpdateSourceTrigger=PropertyChanged}"  Width="40"/>--><!--
-                                                <StackPanel Grid.Column="0" VerticalAlignment="Center" Margin="0 0 0 20">
-                                                    <TextBlock  Text="Погрешность: " VerticalAlignment="Center"/>
-                                                </StackPanel>
-
-                                                <TextBox Grid.Column="1" Margin="0 0 0 20" Text="{Binding ElementName=SlValue, Path=Value, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" TextAlignment="Left" Width="30" />
-
-                                            </Grid>
-                                            <Slider Value="{Binding SliderImg}"  Maximum="1" TickFrequency="0.01" IsSnapToTickEnabled="True" Name="SlValue" Width="160"/>
+                                            </Border>
                                         </StackPanel>-->
-                                        <!--<StackPanel Orientation="Horizontal" Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Center">
-                                            <Button Command="{Binding ClearForm}" Content="Отчистить форму" HorizontalAlignment="Left" Margin="10 10 0 0" Width="150" Style="{DynamicResource MaterialDesignOutlinedDarkButton}"/>
-                                        </StackPanel>-->
-                                        <StackPanel Orientation="Horizontal" Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Center">
-                                            <Button Command="{Binding OpenImg}" Content="Открыть" HorizontalAlignment="Left" Margin="10 10 0 0" Width="150" Style="{DynamicResource MaterialDesignOutlinedDarkButton}"/>
-                                        </StackPanel>
-                                        <StackPanel Orientation="Horizontal" Grid.Row="4" VerticalAlignment="Center" HorizontalAlignment="Center">
-                                            <Button Command="{Binding GetColor}" Content="Получить цвет" HorizontalAlignment="Left" Margin="10 10 0 0" Width="150" Style="{DynamicResource MaterialDesignOutlinedDarkButton}"/>
-                                        </StackPanel>
-
-
-                                    </Grid>
-                                </Grid>
-
-
-
-                                <Grid Row="2">
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition/>
-                                            <ColumnDefinition/>
-                                            <ColumnDefinition/>
-                                            <ColumnDefinition/>
-                                        </Grid.ColumnDefinitions>
-
-                                        <StackPanel Grid.Row="0" Orientation="Horizontal">
-                                            <TextBlock Text="Координата *L =" VerticalAlignment="Center" Margin="10 0 0 0"/>
-                                            <TextBox TextAlignment="Center" Text="{Binding CoorL}" Width="70" VerticalAlignment="Center"/>
-                                        </StackPanel>
-                                        <StackPanel Grid.Column="1" Orientation="Horizontal">
-                                            <TextBlock Text="Координата *a =" VerticalAlignment="Center" Margin="10 0 0 0"/>
-                                            <TextBox TextAlignment="Center" Text="{Binding CoorA}"  Width="70" VerticalAlignment="Center"/>
-
-                                        </StackPanel>
-                                        <StackPanel Grid.Column="2" Orientation="Horizontal">
-                                            <TextBlock Text="Координата *b =" VerticalAlignment="Center" Margin="10 0 0 0"/>
-                                            <TextBox TextAlignment="Center" Text="{Binding CoorB}" Width="70" VerticalAlignment="Center"/>
-                                        </StackPanel>
-                                        <StackPanel Grid.Column="3" Orientation="Horizontal">
-                                            <Button Command="{Binding ClearForm}" Content="Очистить форму" HorizontalAlignment="Left" Margin="35 0 0 0" Width="150" Style="{DynamicResource MaterialDesignOutlinedDarkButton}"/>
-                                        </StackPanel>
-                                    </Grid>
-
-                                </Grid>
-
-                                <StackPanel Grid.Row="1" Orientation="Horizontal" VerticalAlignment="Center">
-                                    <TextBlock Text="Параметры загруженного изображения: " FontWeight="Bold"/>
-                                </StackPanel>
-
-
-
-                                <StackPanel Grid.Row="3" Orientation="Horizontal" VerticalAlignment="Center">
-                                    <TextBlock Text="Эталонные параметры: " FontWeight="Bold"/>
-                                </StackPanel>
-
-                                <Grid Row="4" >
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition/>
-                                            <ColumnDefinition/>
-                                            <ColumnDefinition/>
-                                            <ColumnDefinition/>
-                                        </Grid.ColumnDefinitions>
-
-                                        <StackPanel Grid.Row="0" Orientation="Horizontal">
-                                            <TextBlock Text="Координата *L =" VerticalAlignment="Center" Margin="10 0 0 0"/>
-                                            <TextBox TextAlignment="Center" Text="{Binding ReferenceCoorL}" Width="70" VerticalAlignment="Center"/>
-                                        </StackPanel>
-                                        <StackPanel Grid.Column="1" Orientation="Horizontal">
-                                            <TextBlock Text="Координата *a =" VerticalAlignment="Center" Margin="10 0 0 0"/>
-                                            <TextBox TextAlignment="Center" Text="{Binding ReferenceCoorA}"  Width="70" VerticalAlignment="Center"/>
-
-                                        </StackPanel>
-                                        <StackPanel Grid.Column="2" Orientation="Horizontal">
-                                            <TextBlock Text="Координата *b =" VerticalAlignment="Center" Margin="10 0 0 0"/>
-                                            <TextBox TextAlignment="Center" Text="{Binding ReferenceCoorB}" Width="70" VerticalAlignment="Center"/>
-                                        </StackPanel>
-                                        <StackPanel Grid.Column="3" Orientation="Horizontal">
+                            <!--<StackPanel Grid.Column="3" Orientation="Horizontal">
                                             <Button Command="{Binding Analyse}" Content="Анализ" Margin="35 0 0 0"  Width="150" HorizontalAlignment="Right" Style="{DynamicResource MaterialDesignFlatDarkBgButton}"/>
+                                        </StackPanel>-->
+                            <!--
+                                    </Grid>
+                                </GroupBox>
+                            </Grid>-->
+
+                            <Grid Grid.Column="3" Margin="2">
+                                <GroupBox  Header="Работа с избражением" materialDesign:ColorZoneAssist.Mode="PrimaryLight" materialDesign:ElevationAssist.Elevation="Dp6" BorderThickness="1">
+                                    <Grid>
+
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                        </Grid.RowDefinitions>
+
+                                        <StackPanel Orientation="Horizontal" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                            <Button Command="{Binding OpenImg}" Content="Открыть" Width="150" Style="{DynamicResource MaterialDesignOutlinedDarkButton}"/>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                            <Button Command="{Binding GetColor}" Content="Получить цвет" Width="150" Style="{DynamicResource MaterialDesignOutlinedDarkButton}"/>
+                                        </StackPanel>
+                                        <StackPanel Grid.Row =" 3" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                            <Button Command="{Binding Analyse}" Content="Анализ" Width="150"  Style="{DynamicResource MaterialDesignFlatDarkBgButton}"/>
                                         </StackPanel>
                                     </Grid>
+                                </GroupBox>
+                            </Grid>
+                        </Grid>
+
+                    </Grid>
+                </TabItem>
+                <TabItem Header="Данные со спектрофотометра">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="1.5*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Grid Grid.Column="0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+
+                            <Grid Grid.Row="0">
+                                <GroupBox Header="Координаты со спектрофотометра" materialDesign:ElevationAssist.Elevation="Dp6" BorderThickness="1">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                        </Grid.RowDefinitions>
+
+                                        <StackPanel Grid.Row="0" Orientation="Horizontal">
+                                            <TextBlock Text="Координата *L =" VerticalAlignment="Center" Margin="10 0 0 0"/>
+                                            <TextBox TextAlignment="Center" Text="{Binding SpectCoorL}"  Width="70" VerticalAlignment="Center"  materialDesign:HintAssist.Hint="  0...100" BorderBrush="{Binding BrushesL}"/>
+                                        </StackPanel>
+                                        <StackPanel Grid.Row="1" Orientation="Horizontal">
+                                            <TextBlock Text="Координата *a =" VerticalAlignment="Center" Margin="10 0 0 0"/>
+                                            <TextBox TextAlignment="Center" Text="{Binding SpectCoorA}"  Width="70" VerticalAlignment="Center"  materialDesign:HintAssist.Hint="  -127...128" BorderBrush="{Binding BrushesA}"/>
+                                        </StackPanel>
+                                        <StackPanel Grid.Row="2" Orientation="Horizontal">
+                                            <TextBlock Text="Координата *b =" VerticalAlignment="Center" Margin="10 0 0 0"/>
+                                            <TextBox TextAlignment="Center" Text="{Binding SpectCoorB}"  Width="70" VerticalAlignment="Center"  materialDesign:HintAssist.Hint="  -127...128" BorderBrush="{Binding BrushesB}"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </GroupBox>
+                            </Grid>
+
+                            <Grid Grid.Row="1">
+                                <GroupBox Header="Эталонные показатели" materialDesign:ElevationAssist.Elevation="Dp6" BorderThickness="1">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+
+                                        </Grid.RowDefinitions>
+
+                                        <StackPanel Grid.Row="0" Orientation="Horizontal">
+                                            <TextBlock Text="Координата *L =" VerticalAlignment="Center" Margin="10 0 0 0"/>
+                                            <TextBox TextAlignment="Center" Text="{Binding SpectReferenceCoorL}"  Width="70" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                        <StackPanel Grid.Row="1" Orientation="Horizontal">
+                                            <TextBlock Text="Координата *a =" VerticalAlignment="Center" Margin="10 0 0 0"/>
+                                            <TextBox TextAlignment="Center" Text="{Binding SpectReferenceCoorA}"  Width="70" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                        <StackPanel Grid.Row="2" Orientation="Horizontal">
+                                            <TextBlock Text="Координата *b =" VerticalAlignment="Center" Margin="10 0 0 0"/>
+                                            <TextBox TextAlignment="Center" Text="{Binding SpectReferenceCoorB}"  Width="70" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </GroupBox>
+                            </Grid>
+
+                            <Grid Grid.Row="3">
+                                <GroupBox Header="Действия" materialDesign:ElevationAssist.Elevation="Dp6" BorderThickness="1">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                        </Grid.RowDefinitions>
+
+                                        <StackPanel Grid.Row="0" Orientation="Horizontal">
+                                            <TextBlock Text="Материал: " VerticalAlignment="Center" Margin="10 0 0 0"/>
+                                            <TextBox TextAlignment="Center" Text="{Binding InfoMaterialName}" Width="120" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                        <StackPanel Grid.Row="1" Orientation="Horizontal">
+                                            <TextBlock Text="Краситель: " VerticalAlignment="Center" Margin="10 0 0 0"/>
+                                            <TextBox TextAlignment="Center" Text="{Binding InfoMaterialColor}" Width="120" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </GroupBox>
+                            </Grid>
+
+
+
+                        </Grid>
+
+
+                        <Grid Grid.Column="1">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="0.2*"/>
+                                <RowDefinition/>
+                                <RowDefinition Height="0.2*"/>
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Grid.Row="0" Style="{DynamicResource MaterialDesignBody1TextBlock}" FontWeight="DemiBold"  HorizontalAlignment="Center" VerticalAlignment="Bottom" Text="Изображение исследуемого экструдата" />
+                            <Image Grid.Row="1" Source="{Binding SpectrImg}" Width="400" Height="300" Margin="15" VerticalAlignment="Top"/>
+                            <Grid Grid.Row="2">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <StackPanel HorizontalAlignment="Center" Grid.Column="0" Orientation="Horizontal">
+                                        <Button Command="{Binding GetSpectrColor}" Content="Получить цвет" Width="180" Style="{DynamicResource MaterialDesignOutlinedDarkButton}"/>
+                                    </StackPanel>
+                                    <StackPanel HorizontalAlignment="Center" Grid.Column="1" Orientation="Horizontal">
+                                        <Button Command="{Binding ClearSpectrForm}" Content="Очистить форму" Width="180" Style="{DynamicResource MaterialDesignOutlinedDarkButton}"/>
+                                    </StackPanel>
+                                    <StackPanel HorizontalAlignment="Center" Grid.Column="2" Orientation="Horizontal">
+                                        <Button Command="{Binding AnalyseSpectr}" Content="Анализ" Width="180" Style="{DynamicResource MaterialDesignFlatDarkBgButton}"/>
+                                    </StackPanel>
                                 </Grid>
                             </Grid>
-                        </TabItem>
-                        <TabItem Header="Данные со спектрофотометра">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition/>
-                                    <ColumnDefinition Width="340"/>
-                                    <ColumnDefinition/>
-                                </Grid.ColumnDefinitions>
-
-                                <Grid Grid.Column="0">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="40"/>
-                                        <RowDefinition Height="60"/>
-                                        <RowDefinition Height="60"/>
-                                        <RowDefinition Height="60"/>
-                                        <RowDefinition Height="61*"/>
-                                        <RowDefinition Height="80"/>
-                                        <RowDefinition Height="54*"/>
-                                    </Grid.RowDefinitions>
-                                    <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,10,0,0">
-                                        <TextBlock Text="Координаты cо спектрофотометра:" FontWeight="Bold"/>
-                                    </StackPanel>
-                                    <StackPanel Grid.Row="1" Orientation="Horizontal">
-                                        <TextBlock Text="Координата *L =" VerticalAlignment="Center" Margin="10 0 0 0"/>
-                                        <TextBox TextAlignment="Center" Text="{Binding SpectCoorL}"  Width="70" VerticalAlignment="Center"  materialDesign:HintAssist.Hint="  0...100" BorderBrush="{Binding BrushesL}"/>
-                                    </StackPanel>
-                                    <StackPanel Grid.Row="2" Orientation="Horizontal">
-                                        <TextBlock Text="Координата *a =" VerticalAlignment="Center" Margin="10 0 0 0"/>
-                                        <TextBox TextAlignment="Center" Text="{Binding SpectCoorA}"  Width="70" VerticalAlignment="Center"  materialDesign:HintAssist.Hint="  -127...128" BorderBrush="{Binding BrushesA}"/>
-                                    </StackPanel>
-                                    <StackPanel Grid.Row="3" Orientation="Horizontal">
-                                        <TextBlock Text="Координата *b =" VerticalAlignment="Center" Margin="10 0 0 0"/>
-                                        <TextBox TextAlignment="Center" Text="{Binding SpectCoorB}"  Width="70" VerticalAlignment="Center"  materialDesign:HintAssist.Hint="  -127...128" BorderBrush="{Binding BrushesB}"/>
-                                    </StackPanel>
-                                    <StackPanel VerticalAlignment="Center" Grid.Row="4" Orientation="Horizontal" Margin="10,0,0,0" Height="25">
-                                        <TextBlock Text="Краситель: "/>
-                                        <ComboBox SelectedItem="{Binding ColorsChoiceSpect}" ItemsSource="{Binding ColorsViewSpect}"  Width="125"/>
-                                    </StackPanel>
-                                    <!--<StackPanel Orientation="Vertical" Grid.Row="5" VerticalAlignment="Center" Height="64">
-
-                                        <Grid Height="40">
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition />
-                                                <ColumnDefinition/>
-                                            </Grid.ColumnDefinitions>
-
-                                            --><!--<Slider x:Name="sValue" Grid.Column="0" Maximum="1" TickFrequency="0.01" IsSnapToTickEnabled="True" HorizontalAlignment="Center" VerticalAlignment="Top" Width="150" Height="30"/>
-                                                <TextBox Grid.Column="1" Text="{Binding Value, ElementName=slValue, UpdateSourceTrigger=PropertyChanged}"  Width="40"/>--><!--
-                                            <StackPanel Grid.Column="0" VerticalAlignment="Center" Margin="10 0 0 20">
-                                                <TextBlock  Text="Погрешность: " VerticalAlignment="Center"/>
-                                            </StackPanel>
-                                            <TextBox Grid.Column="1" Margin="0 0 0 15" Text="{Binding ElementName=SlValueSpect, Path=Value, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" TextAlignment="Left" Width="30" />
-                                        </Grid>
-                                        <Slider Value="{Binding SliderSpectr}" HorizontalAlignment="Left"  Maximum="1" TickFrequency="0.01" IsSnapToTickEnabled="True" Name="SlValueSpect" Width="170" Margin="20 0 0 0" Height="24"/>
-                                    </StackPanel>-->
-
-                                    <StackPanel VerticalAlignment="Center" Grid.Row="6" Orientation="Horizontal" Margin="10 10 0 0" Height="32">
-                                        <Button Command="{Binding GetSpectrColor}" Content="Получить цвет" Width="160" Style="{DynamicResource MaterialDesignOutlinedDarkButton}"/>
-                                    </StackPanel>
-                                </Grid>
-                                <Grid Grid.Column="1">
-                                    <Image Source="{Binding SpectrImg}" Width="320" Height="260" Margin="0 0 15 15"/>
-                                    <!--<TextBox Height="25" VerticalAlignment="Bottom" Width="150" HorizontalAlignment="Left"/>
+                            <!--<TextBox Height="25" VerticalAlignment="Bottom" Width="150" HorizontalAlignment="Left"/>
                                     <Button VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="150" Content="Press"/>-->
-                                </Grid>
-                                <Grid Grid.Column="2">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="40"/>
-                                        <RowDefinition Height="50"/>
-                                        <RowDefinition Height="60"/>
-                                        <RowDefinition Height="60"/>
-                                        <RowDefinition Height="60"/>
-                                        <RowDefinition/>
-                                        <RowDefinition/>
-                                    </Grid.RowDefinitions>
+                        </Grid>
 
-                                    <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0 10 0 0">
-                                        <TextBlock Text="Эталонные показатели:" FontWeight="Bold"/>
-                                    </StackPanel>
-
-                                    <StackPanel Grid.Row="1" Orientation="Horizontal">
-                                        <TextBlock Text="Координата *L =" VerticalAlignment="Center" Margin="10 0 0 0"/>
-                                        <TextBox TextAlignment="Center" Text="{Binding SpectReferenceCoorL}"  Width="70" VerticalAlignment="Center"/>
-                                    </StackPanel>
-                                    <StackPanel Grid.Row="2" Orientation="Horizontal">
-                                        <TextBlock Text="Координата *a =" VerticalAlignment="Center" Margin="10 0 0 0"/>
-                                        <TextBox TextAlignment="Center" Text="{Binding SpectReferenceCoorA}"  Width="70" VerticalAlignment="Center"/>
-                                    </StackPanel>
-                                    <StackPanel Grid.Row="3" Orientation="Horizontal">
-                                        <TextBlock Text="Координата *b =" VerticalAlignment="Center" Margin="10 0 0 0"/>
-                                        <TextBox TextAlignment="Center" Text="{Binding SpectReferenceCoorB}"  Width="70" VerticalAlignment="Center"/>
-                                    </StackPanel>
-                                    <StackPanel HorizontalAlignment="Center" Grid.Row="4" Orientation="Horizontal">
-                                        <Button Command="{Binding GetSpectReferences}" Content="Получить эталоны" HorizontalAlignment="Left"  Width="160" Style="{DynamicResource MaterialDesignOutlinedDarkButton}"/>
-                                    </StackPanel>
-                                    <StackPanel HorizontalAlignment="Center" Grid.Row="5" Orientation="Horizontal">
-                                        <Button Command="{Binding ClearSpectrForm}" Content="Очистить форму" HorizontalAlignment="Left"  Width="160" Style="{DynamicResource MaterialDesignOutlinedDarkButton}"/>
-                                    </StackPanel>
-                                    <StackPanel HorizontalAlignment="Center" Grid.Row="6" Orientation="Horizontal" Margin="0 30 0 0">
-                                        <Button Command="{Binding AnalyseSpectr}" Content="Анализ" HorizontalAlignment="Left"  Width="210" Style="{DynamicResource MaterialDesignFlatDarkBgButton}"/>
-                                    </StackPanel>
-
-                                </Grid>
-                            </Grid>
-                        </TabItem>
-                    </TabControl>
-                </Grid>
-            </Grid>
-        </Border>
+                    </Grid>
+                </TabItem>
+            </TabControl>
+        </Grid>
     </Grid>
 </Window>

@@ -19,119 +19,119 @@ namespace FuzzyProject.ViewModels
             BrushesLogin = System.Drawing.Color.Gray.Name.ToString();
             BrushesPassword = System.Drawing.Color.Gray.Name.ToString();
         }
-        private string _Login;
-        public string Login
-        {
-            get { return _Login; }
-            set
+            private string _Login;
+            public string Login
             {
-                _Login = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private string _Password;
-        public string Password
-        {
-            get { return _Password; }
-            set
-            {
-                _Password = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private string _BrushesLogin;
-        public string BrushesLogin
-        {
-            get { return _BrushesLogin; }
-            set
-            {
-                _BrushesLogin = value;
-                OnPropertyChanged();
-            }
-        }
-        private string _BrushesPassword;
-        public string BrushesPassword
-        {
-            get { return _BrushesPassword; }
-            set
-            {
-                _BrushesPassword = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private AdminPage? adminPage = null;
-        private AdminViewModel adminViewModel;
-
-        private ReseacherPage? reseacherPage = null;
-        private ReseacherViewModel reseacherViewModel;
-
-        private Registration? registration = null;
-        private RegistrationViewModel registrationViewModel;
-
-        private RelayCommand _OpenWindow;
-        public RelayCommand OpenWindow
-        {
-            get
-            {
-                return _OpenWindow ??= new RelayCommand(x =>
+                get { return _Login; }
+                set
                 {
-                    if (string.IsNullOrWhiteSpace(Login))
-                    {
-                        MessageBox.Show("Вы не ввели логин");
-                        return;
-                    }
+                    _Login = value;
+                    OnPropertyChanged();
+                }
+            }
 
-                    if (string.IsNullOrWhiteSpace(Password))
-                    {
-                        MessageBox.Show("Вы не ввели пароль");
-                        return;
-                    }
+            private string _Password;
+            public string Password
+            {
+                get { return _Password; }
+                set
+                {
+                    _Password = value;
+                    OnPropertyChanged();
+                }
+            }
 
-                    var account = context.Accounts.ToList().FirstOrDefault(x => x.Login == Login && x.Password == Password);
-                    if (account != null)
+            private string _BrushesLogin;
+            public string BrushesLogin
+            {
+                get { return _BrushesLogin; }
+                set
+                {
+                    _BrushesLogin = value;
+                    OnPropertyChanged();
+                }
+            }
+            private string _BrushesPassword;
+            public string BrushesPassword
+            {
+                get { return _BrushesPassword; }
+                set
+                {
+                    _BrushesPassword = value;
+                    OnPropertyChanged();
+                }
+            }
+
+            private AdminPage? adminPage = null;
+            private AdminViewModel adminViewModel;
+
+            private ReseacherPage? reseacherPage = null;
+            private ReseacherViewModel reseacherViewModel;
+
+            private Registration? registration = null;
+            private RegistrationViewModel registrationViewModel;
+
+            private RelayCommand _OpenWindow;
+            public RelayCommand OpenWindow
+            {
+                get
+                {
+                    return _OpenWindow ??= new RelayCommand(x =>
                     {
-                        if (account.Role == "Оператор")
+                        if (string.IsNullOrWhiteSpace(Login))
                         {
-                            reseacherPage = new ReseacherPage();
-                            reseacherViewModel = new ReseacherViewModel(reseacherPage, Login);
-                            reseacherPage.DataContext = reseacherViewModel;
-                            reseacherPage.Show();
+                            MessageBox.Show("Вы не ввели логин");
+                            return;
                         }
-                        else if (account.Role == "Администратор")
+
+                        if (string.IsNullOrWhiteSpace(Password))
                         {
-                            adminPage = new AdminPage();
-                            adminViewModel = new AdminViewModel(adminPage);
-                            adminPage.DataContext = adminViewModel;
-                            adminPage.Show();
+                            MessageBox.Show("Вы не ввели пароль");
+                            return;
                         }
+
+                        var account = context.Accounts.ToList().FirstOrDefault(x => x.Login == Login && x.Password == Password);
+                        if (account != null)
+                        {
+                            if (account.Role == "Оператор")
+                            {
+                                reseacherPage = new ReseacherPage();
+                                reseacherViewModel = new ReseacherViewModel(reseacherPage, Login);
+                                reseacherPage.DataContext = reseacherViewModel;
+                                reseacherPage.Show();
+                            }
+                            else if (account.Role == "Администратор")
+                            {
+                                adminPage = new AdminPage();
+                                adminViewModel = new AdminViewModel(adminPage);
+                                adminPage.DataContext = adminViewModel;
+                                adminPage.Show();
+                            }
+                            authWindow.Close();
+                        }
+                        else 
+                        {
+                            BrushesLogin = System.Drawing.Color.Red.Name.ToString();
+                            BrushesPassword = System.Drawing.Color.Red.Name.ToString();
+                        }
+                    });
+                }
+            }
+
+            private RelayCommand _OpenRegistration;
+            public RelayCommand OpenRegistration
+            {
+                get
+                {
+                    return _OpenRegistration ??= new RelayCommand(x =>
+                    {
+                        registration = new Registration();
+                        registrationViewModel = new RegistrationViewModel(registration);
+                        registration.DataContext = registrationViewModel;
+                        registration.Show();
                         authWindow.Close();
-                    }
-                    else 
-                    {
-                        BrushesLogin = System.Drawing.Color.Red.Name.ToString();
-                        BrushesPassword = System.Drawing.Color.Red.Name.ToString();
-                    }
-                });
+                    });
+                }
             }
-        }
-
-        private RelayCommand _OpenRegistration;
-        public RelayCommand OpenRegistration
-        {
-            get
-            {
-                return _OpenRegistration ??= new RelayCommand(x =>
-                {
-                    registration = new Registration();
-                    registrationViewModel = new RegistrationViewModel(registration);
-                    registration.DataContext = registrationViewModel;
-                    registration.Show();
-                    authWindow.Close();
-                });
-            }
-        }
     }
 }

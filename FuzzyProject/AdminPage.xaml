@@ -7,213 +7,200 @@
         mc:Ignorable="d"
         Title="Кабинет администратора" Height="600" Width="800"
         WindowStartupLocation="CenterScreen">
-    <Grid Background="#ffdadada">
+    <Grid>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition MaxHeight="60"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
 
-        <Border MinWidth="650" MinHeight="500" Margin="15" Background="White" VerticalAlignment="Center" Padding="30" MaxWidth="550" CornerRadius="20">
-            <Border.Effect>
-                <DropShadowEffect BlurRadius="30" Color="LightGray" ShadowDepth="0"/>
-            </Border.Effect>
+            <Grid Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
 
+                <Button Command="{Binding Exit}" Grid.Column="1" Style="{DynamicResource MaterialDesignFlatLightButton}" Content="Выход"  Width="120" Height="60" HorizontalAlignment="Right" VerticalAlignment="Top"/>
+            </Grid>
 
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition MaxHeight="60"/>
-                    <RowDefinition/>
-                </Grid.RowDefinitions>
+            <Grid Row="1">
+                <TabControl >
+                    <TabItem Header="Пользователи">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1.8*"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
 
-                <Grid Row="0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                    </Grid.ColumnDefinitions>
+                            <DataGrid AutoGenerateColumns="False" IsReadOnly="True" SelectedItem="{Binding SelectedAccount}" ItemsSource= "{Binding Account}" Grid.Column="0" GridLinesVisibility="Vertical" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Visible">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Binding="{Binding Id}" Header="ID" Width="SizeToHeader" />
+                                    <DataGridTextColumn Binding="{Binding Login}" Header="Логин" Width="*"/>
+                                    <DataGridTextColumn Binding="{Binding Password}" Header="Пароль" Width="*"/>
+                                    <DataGridTextColumn Binding="{Binding Role}" Header="Роль" Width="*"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
 
-                    <TextBlock Grid.Column="0" VerticalAlignment="Top" Style="{DynamicResource MaterialDesignHeadline5TextBlock}" FontWeight="Bold" Text="Кабинет администратора"/>
-                    <Button Command="{Binding Exit}" Grid.Column="1" Style="{DynamicResource MaterialDesignFlatLightButton}" Content="Выход"  Width="80" HorizontalAlignment="Right" VerticalAlignment="Top"/>
-                </Grid>
+                            <Grid Grid.Column="1">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
 
-                <Grid Row="1">
-                    <TabControl >
-                        <TabItem Header="Пользователи">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="1.8*"/>
-                                    <ColumnDefinition/>
-                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Row="0" Orientation="Horizontal">
+                                    <TextBlock Margin="10 0 0 0" VerticalAlignment="Center" FontSize="14" Text="Логин:" />
+                                    <TextBox Text="{Binding NewLogin}" Margin="10 10 10 0" Width="140" VerticalAlignment="Center"/>
+                                </StackPanel>
+                                <StackPanel Grid.Row="1" Orientation="Horizontal">
+                                    <TextBlock Margin="10 0 0 0" VerticalAlignment="Center" FontSize="14" Text="Пароль:" />
+                                    <TextBox Text="{Binding NewPassword}" Margin="10 10 10 0" Width="130" VerticalAlignment="Center"/>
+                                </StackPanel>
+                                <StackPanel Grid.Row="2" Orientation="Horizontal">
+                                    <TextBlock Margin="10 0 0 0" VerticalAlignment="Center" FontSize="14" Text="Роль:" />
+                                    <ComboBox SelectedItem="{Binding NewRole}" ItemsSource="{Binding Roles}" Margin="10 10 10 0" Width="150" VerticalAlignment="Center"/>
+                                </StackPanel>
+                                <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <Button Command="{Binding AddAccount}" Style="{DynamicResource MaterialDesignOutlinedDarkButton}" Content="Добавить"  Height="32" Width="150" Cursor="Hand"/>
+                                </StackPanel>
+                                <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <Button Command="{Binding UpdateAccount}" Style="{DynamicResource MaterialDesignOutlinedDarkButton}" Content="Изменить" Height="32" Width="150" Cursor="Hand"/>
+                                </StackPanel>
+                                <StackPanel Grid.Row="5" Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <Button Command="{Binding RemoveAccount}" Style="{DynamicResource MaterialDesignOutlinedDarkButton}" Content="Удалить" Height="32" Width="150" Cursor="Hand"/>
+                                </StackPanel>
+                            </Grid>
+                        </Grid>
+                    </TabItem>
 
-                                <DataGrid AutoGenerateColumns="False" IsReadOnly="True" SelectedItem="{Binding SelectedAccount}" ItemsSource= "{Binding Account}" Grid.Column="0" GridLinesVisibility="Vertical" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Visible">
+                    <TabItem Header="Материалы">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1.7*"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+
+                            <Grid Grid.Column="0">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="5*"/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+
+                                <DataGrid AutoGenerateColumns="False" IsReadOnly="True" SelectedItem="{Binding SelectedMaterial}" ItemsSource= "{Binding Material}" Grid.Column="0" GridLinesVisibility="Vertical" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Visible">
                                     <DataGrid.Columns>
-                                        <DataGridTextColumn Binding="{Binding Id}" Header="ID" Width="SizeToHeader" />
-                                        <DataGridTextColumn Binding="{Binding Login}" Header="Логин" Width="110"/>
-                                        <DataGridTextColumn Binding="{Binding Password}" Header="Пароль" Width="110"/>
-                                        <DataGridTextColumn Binding="{Binding Role}" Header="Роль" Width="110"/>
+                                        <!--<DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="50"/>-->
+                                        <DataGridTextColumn Header="Название" Binding="{Binding Name}" Width="*"/>
+                                        <DataGridTextColumn Header="Краситель" Binding="{Binding Color}" Width="*"/>
+                                        <DataGridTextColumn Header="Параметры" Binding="{Binding Parameters}" Width="*"/>
                                     </DataGrid.Columns>
                                 </DataGrid>
 
-                                <Grid Grid.Column="1">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition/>
-                                        <RowDefinition/>
-                                        <RowDefinition/>
-                                        <RowDefinition/>
-                                        <RowDefinition/>
-                                        <RowDefinition/>
-                                    </Grid.RowDefinitions>
+                                <Button Grid.Row="1" Command="{Binding RemoveMaterial}" Width="100" HorizontalAlignment="Left" Content="Удалить" Style="{DynamicResource MaterialDesignOutlinedDarkButton}" Margin="15 0 0 0"/>
+                                <Button Grid.Row="1" Command="{Binding UpdateMaterial}" Width="100" HorizontalAlignment="Center" Content="Изменить" Style="{DynamicResource MaterialDesignOutlinedDarkButton}"/>
+                                <Button Grid.Row="1" Command="{Binding AddMaterial}" Width="100" HorizontalAlignment="Right" Content="Добавить" Style="{DynamicResource MaterialDesignOutlinedDarkButton}" Margin="0 0 15 0"/>
 
-                                    <StackPanel Grid.Row="0" Orientation="Horizontal">
-                                        <TextBlock Margin="10 0 0 0" VerticalAlignment="Center" FontSize="14" Text="Логин:" />
-                                        <TextBox Text="{Binding NewLogin}" Margin="10 10 10 0" Width="140" VerticalAlignment="Center"/>
-                                    </StackPanel>
-                                    <StackPanel Grid.Row="1" Orientation="Horizontal">
-                                        <TextBlock Margin="10 0 0 0" VerticalAlignment="Center" FontSize="14" Text="Пароль:" />
-                                        <TextBox Text="{Binding NewPassword}" Margin="10 10 10 0" Width="130" VerticalAlignment="Center"/>
-                                    </StackPanel>
-                                    <StackPanel Grid.Row="2" Orientation="Horizontal">
-                                        <TextBlock Margin="10 0 0 0" VerticalAlignment="Center" FontSize="14" Text="Роль:" />
-                                        <ComboBox SelectedItem="{Binding NewRole}" ItemsSource="{Binding Roles}" Margin="10 10 10 0" Width="150" VerticalAlignment="Center"/>
-                                    </StackPanel>
-                                    <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center">
-                                        <Button Command="{Binding AddAccount}" Style="{DynamicResource MaterialDesignOutlinedDarkButton}" Content="Добавить"  Height="32" Width="150" Cursor="Hand"/>
-                                    </StackPanel>
-                                    <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Center">
-                                        <Button Command="{Binding UpdateAccount}" Style="{DynamicResource MaterialDesignOutlinedDarkButton}" Content="Изменить" Height="32" Width="150" Cursor="Hand"/>
-                                    </StackPanel>
-                                    <StackPanel Grid.Row="5" Orientation="Horizontal" HorizontalAlignment="Center">
-                                        <Button Command="{Binding RemoveAccount}" Style="{DynamicResource MaterialDesignOutlinedDarkButton}" Content="Удалить" Height="32" Width="150" Cursor="Hand"/>
-                                    </StackPanel>
-                                </Grid>
                             </Grid>
-                        </TabItem>
 
-                        <TabItem Header="Материалы">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="1.7*"/>
-                                    <ColumnDefinition/>
-                                </Grid.ColumnDefinitions>
+                            <Grid Grid.Column="1">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
 
-                                <Grid Grid.Column="0">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="5*"/>
-                                        <RowDefinition/>
-                                    </Grid.RowDefinitions>
-
-                                    <DataGrid AutoGenerateColumns="False" IsReadOnly="True" SelectedItem="{Binding SelectedMaterial}" ItemsSource= "{Binding Material}" Grid.Column="0" GridLinesVisibility="Vertical" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Visible">
-                                        <DataGrid.Columns>
-                                            <!--<DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="50"/>-->
-                                            <DataGridTextColumn Header="Название" Binding="{Binding Name}" Width="110"/>
-                                            <DataGridTextColumn Header="Краситель" Binding="{Binding Color}" Width="SizeToHeader"/>
-                                            <DataGridTextColumn Header="Параметры" Binding="{Binding Parameters}" Width="150"/>
-                                        </DataGrid.Columns>
-                                    </DataGrid>
-
-                                    <Button Grid.Row="1" Command="{Binding RemoveMaterial}" Width="100" HorizontalAlignment="Left" Content="Удалить" Style="{DynamicResource MaterialDesignOutlinedDarkButton}"/>
-                                    <Button Grid.Row="1" Command="{Binding UpdateMaterial}" Width="100" HorizontalAlignment="Center" Content="Изменить" Style="{DynamicResource MaterialDesignOutlinedDarkButton}"/>
-                                    <Button Grid.Row="1" Command="{Binding AddMaterial}" Width="100" HorizontalAlignment="Right" Content="Добавить" Style="{DynamicResource MaterialDesignOutlinedDarkButton}"/>
-
-                                </Grid>
-
-                                <Grid Grid.Column="1">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition/>
-                                        <RowDefinition/>
-                                        <RowDefinition/>
-                                        <RowDefinition/>
-                                        <RowDefinition/>
-                                        <RowDefinition/>
-                                    </Grid.RowDefinitions>
-
-                                    <StackPanel Grid.Row="0" Orientation="Horizontal">
-                                        <TextBlock Margin="10 0 0 0" VerticalAlignment="Center" FontSize="14" Text="Название:" />
-                                        <TextBox Text="{Binding NewNameMaterial}" Margin="10 10 10 0" Width="130" VerticalAlignment="Center"/>
-                                    </StackPanel>
-                                    <StackPanel Grid.Row="1" Orientation="Horizontal">
-                                        <TextBlock Margin="10 0 0 0" VerticalAlignment="Center" FontSize="14" Text="Краситель:" />
-                                        <TextBox Text="{Binding NewColorMaterial}" Margin="10 10 10 0" Width="130" VerticalAlignment="Center"/>
-                                    </StackPanel>
-                                    <StackPanel Grid.Row="2" Orientation="Horizontal">
-                                        <TextBlock Margin="10 0 0 0" VerticalAlignment="Center" FontSize="14" Text="Параметры:" />
-                                        <TextBox Text="{Binding NewParamsMaterial}" Margin="10 10 10 0" Width="130" VerticalAlignment="Center"/>
-                                    </StackPanel>
-                                    <!--<StackPanel Grid.Row="3" Orientation="Horizontal">
+                                <StackPanel Grid.Row="0" Orientation="Horizontal">
+                                    <TextBlock Margin="10 0 0 0" VerticalAlignment="Center" FontSize="14" Text="Название:" />
+                                    <TextBox Text="{Binding NewNameMaterial}" Margin="10 10 10 0" Width="130" VerticalAlignment="Center"/>
+                                </StackPanel>
+                                <StackPanel Grid.Row="1" Orientation="Horizontal">
+                                    <TextBlock Margin="10 0 0 0" VerticalAlignment="Center" FontSize="14" Text="Краситель:" />
+                                    <TextBox Text="{Binding NewColorMaterial}" Margin="10 10 10 0" Width="130" VerticalAlignment="Center"/>
+                                </StackPanel>
+                                <StackPanel Grid.Row="2" Orientation="Horizontal">
+                                    <TextBlock Margin="10 0 0 0" VerticalAlignment="Center" FontSize="14" Text="Параметры:" />
+                                    <TextBox Text="{Binding NewParamsMaterial}" Margin="10 10 10 0" Width="130" VerticalAlignment="Center"/>
+                                </StackPanel>
+                                <!--<StackPanel Grid.Row="3" Orientation="Horizontal">
                                         <TextBlock Margin="10 0 0 0" VerticalAlignment="Center" FontSize="14" Text="Параметры:" />
                                         <TextBox Margin="10 10 10 0" Width="140" VerticalAlignment="Center"/>
                                     </StackPanel>-->
-                                    <StackPanel Grid.Row="4" VerticalAlignment="Center">
-                                        <Button Command="{Binding LoadMaterialImg}" Width="190" Content="Загрузить изображение" Style="{DynamicResource MaterialDesignOutlinedDarkButton}"/>
-                                    </StackPanel>
-                                    <StackPanel Grid.Row="5" VerticalAlignment="Center">
-                                        <Button Command="{Binding OpenMaterialImg}" Width="190" Content="Открыть изображение" Style="{DynamicResource MaterialDesignOutlinedDarkButton}"/>
-                                    </StackPanel>                                    
-                                </Grid>
+                                <StackPanel Grid.Row="4" VerticalAlignment="Center">
+                                    <Button Command="{Binding LoadMaterialImg}" Width="190" Content="Загрузить изображение" Style="{DynamicResource MaterialDesignOutlinedDarkButton}"/>
+                                </StackPanel>
+                                <StackPanel Grid.Row="5" VerticalAlignment="Center">
+                                    <Button Command="{Binding OpenMaterialImg}" Width="190" Content="Открыть изображение" Style="{DynamicResource MaterialDesignOutlinedDarkButton}"/>
+                                </StackPanel>
                             </Grid>
-                        </TabItem>
+                        </Grid>
+                    </TabItem>
 
-                        <TabItem Header="Отчёты">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="1.4*"/>
-                                    <ColumnDefinition/>
-                                </Grid.ColumnDefinitions>
+                    <TabItem Header="Отчёты">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1.4*"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
 
-                                <Grid Grid.Column="0">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="5*"/>
-                                        <RowDefinition/>
-                                    </Grid.RowDefinitions>
+                            <Grid Grid.Column="0">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="5*"/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
 
-                                    <ListBox SelectedItem="{Binding SelectedReport}" ItemsSource="{Binding ReportsList}" Grid.Row="0" Margin="0,0,0,1">
-                                        <ListBox.Items >
-                                            
-                                        </ListBox.Items>
-                                    </ListBox>
+                                <ListBox SelectedItem="{Binding SelectedReport}" ItemsSource="{Binding ReportsList}" Grid.Row="0" Margin="0,0,0,1">
+                                    <ListBox.Items >
 
-                                    <Button Command="{Binding RemoveReport}" Grid.Row="1" Width="150" HorizontalAlignment="Left" Content="Удалить запись" Style="{DynamicResource MaterialDesignOutlinedDarkButton}"/>
+                                    </ListBox.Items>
+                                </ListBox>
 
-                                </Grid>
+                                <Button Command="{Binding RemoveReport}" Grid.Row="1" Width="250" HorizontalAlignment="Center" Content="Удалить запись" Style="{DynamicResource MaterialDesignOutlinedDarkButton}"/>
 
-                                <Grid Grid.Column="1">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition/>
-                                        <RowDefinition/>
-                                        <RowDefinition/>
-                                        <RowDefinition/>
-                                        <RowDefinition/>
-                                        <RowDefinition/>
-                                    </Grid.RowDefinitions>
-
-                                    <StackPanel Grid.Row="0" Orientation="Horizontal">
-                                        <TextBlock Margin="10 0 0 0" VerticalAlignment="Center" FontSize="14" Text="Дата:" />
-                                        <TextBox  Text="{Binding NewDateReport}" Margin="10 10 10 0" Width="170" VerticalAlignment="Center"/>
-                                    </StackPanel>
-                                    <StackPanel Grid.Row="1" Orientation="Horizontal">
-                                        <TextBlock Margin="10 0 0 0" VerticalAlignment="Center" FontSize="14" Text="Логин:" />
-                                        <TextBox Text="{Binding NewLoginReport}" Margin="10 10 10 0" Width="170" VerticalAlignment="Center"/>
-                                    </StackPanel>
-                                    <StackPanel Grid.Row="2" Orientation="Horizontal">
-                                        <TextBlock Margin="10 0 0 0" VerticalAlignment="Center" FontSize="14" Text="Материал:" />
-                                        <TextBox Text="{Binding NewMaterialReport}" Margin="10 10 10 0" Width="170" VerticalAlignment="Center"/>
-                                    </StackPanel>
-                                    <StackPanel Grid.Row="3" Orientation="Horizontal">
-                                        <TextBlock Margin="10 0 0 0" VerticalAlignment="Center" FontSize="14" Text="Параметры:" />
-                                        <TextBox Text="{Binding NewParamsReport}" Margin="10 10 10 0" Width="140" VerticalAlignment="Center"/>
-                                    </StackPanel>
-                                    <StackPanel Grid.Row="4" Orientation="Horizontal">
-                                        <TextBlock Margin="10 0 0 0" VerticalAlignment="Center" FontSize="14" Text="Рекомендация:" />
-                                        <TextBox Text="{Binding NewRecomReport}" Margin="10 10 10 0" Width="120" VerticalAlignment="Center"/>
-                                    </StackPanel>
-                                    <StackPanel Grid.Row="5" VerticalAlignment="Center">
-                                        <Button Command="{Binding OpenImg}" Width="190" Content="Открыть изображение" Style="{DynamicResource MaterialDesignOutlinedDarkButton}"/>
-                                    </StackPanel>
-                                </Grid>
                             </Grid>
-                        </TabItem>                        
-                    </TabControl>
-                </Grid>
 
+                            <Grid Grid.Column="1">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+
+                                <StackPanel Grid.Row="0" Orientation="Horizontal">
+                                    <TextBlock Margin="10 0 0 0" VerticalAlignment="Center" FontSize="14" Text="Дата:" />
+                                    <TextBox  Text="{Binding NewDateReport}" Margin="10 10 10 0" Width="170" VerticalAlignment="Center"/>
+                                </StackPanel>
+                                <StackPanel Grid.Row="1" Orientation="Horizontal">
+                                    <TextBlock Margin="10 0 0 0" VerticalAlignment="Center" FontSize="14" Text="Логин:" />
+                                    <TextBox Text="{Binding NewLoginReport}" Margin="10 10 10 0" Width="170" VerticalAlignment="Center"/>
+                                </StackPanel>
+                                <StackPanel Grid.Row="2" Orientation="Horizontal">
+                                    <TextBlock Margin="10 0 0 0" VerticalAlignment="Center" FontSize="14" Text="Материал:" />
+                                    <TextBox Text="{Binding NewMaterialReport}" Margin="10 10 10 0" Width="170" VerticalAlignment="Center"/>
+                                </StackPanel>
+                                <StackPanel Grid.Row="3" Orientation="Horizontal">
+                                    <TextBlock Margin="10 0 0 0" VerticalAlignment="Center" FontSize="14" Text="Параметры:" />
+                                    <TextBox Text="{Binding NewParamsReport}" Margin="10 10 10 0" Width="140" VerticalAlignment="Center"/>
+                                </StackPanel>
+                                <StackPanel Grid.Row="4" Orientation="Horizontal">
+                                    <TextBlock Margin="10 0 0 0" VerticalAlignment="Center" FontSize="14" Text="Рекомендация:" />
+                                    <TextBox Text="{Binding NewRecomReport}" Margin="10 10 10 0" Width="120" VerticalAlignment="Center"/>
+                                </StackPanel>
+                                <StackPanel Grid.Row="5" VerticalAlignment="Center">
+                                    <Button Command="{Binding OpenImg}" Width="190" Content="Открыть изображение" Style="{DynamicResource MaterialDesignOutlinedDarkButton}"/>
+                                </StackPanel>
+                            </Grid>
+                        </Grid>
+                    </TabItem>
+                </TabControl>
             </Grid>
-
-
-
-        </Border>
+        </Grid>
     </Grid>
 </Window>

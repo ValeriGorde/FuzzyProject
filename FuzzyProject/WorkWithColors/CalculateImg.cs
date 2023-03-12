@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Runtime.ConstrainedExecution;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Documents;
@@ -64,6 +65,36 @@ namespace FuzzyProject.WorkWithColors
             return colorsLAB;
         }
 
+        public System.Drawing.Color FindAveragePixcel(Bitmap img)
+        {
+            color = new Models.Color();
+
+            int r = 0;
+            int g = 0;
+            int b = 0;
+
+            int sum = 0;
+
+            for (int i = 0; i < img.Width; i++)
+            {
+                for (int j = 0; j < img.Height; j++)
+                {
+                    System.Drawing.Color pixel = img.GetPixel(i, j);
+                    r += pixel.R;
+                    g += pixel.G;
+                    b += pixel.B;
+
+                    sum++;
+                }
+            }
+
+            r /= sum;
+            g /= sum;
+            b /= sum;
+
+            return Color.FromArgb(r, g, b);
+        }
+
         public Dictionary<System.Drawing.Color, int> FindList(Bitmap img) 
         {
             color = new Models.Color();
@@ -89,15 +120,18 @@ namespace FuzzyProject.WorkWithColors
 
         public Bitmap Convert(Bitmap img) 
         {
-            var list = FindList(img);
-            var maxKey = list.Aggregate((x, y) => x.Value > y.Value ? x : y).Key;
+            //var list = FindList(img);
+            //var maxKey = list.Aggregate((x, y) => x.Value > y.Value ? x : y).Key;
+
+            var avrPix = FindAveragePixcel(img);
+
             Bitmap newBitmap = new Bitmap(img.Width, img.Height);
             for (int i = 0; i < img.Width; i++)
             {
                 for (int j = 0; j < img.Height; j++)
                 {
                     System.Drawing.Color pixel = img.GetPixel(i, j);
-                    newBitmap.SetPixel(i, j, maxKey);
+                    newBitmap.SetPixel(i, j, avrPix);
                 }
             }
             return newBitmap;

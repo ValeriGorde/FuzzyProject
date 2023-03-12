@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:FuzzyProject"
         mc:Ignorable="d"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-        Title="Авторизация" Height="400" Width="600"
+        Title="Авторизация" Height="400" Width="500"
         WindowStartupLocation="CenterScreen">
     
     <Grid Background="#ffdadada">
@@ -18,13 +18,13 @@
                 <TextBlock Text="Вход" FontSize="30" FontWeight="Bold" Margin="0 0 0 20"/>
 
                 <Grid Margin="0 0 0 20">
-                    <Button Command="{Binding OpenRegistration}" Background="#7373D9" HorizontalAlignment="Left" Content="Регистрация" Cursor="Hand"/>
+                    <Button Command="{Binding OpenRegistration}" HorizontalAlignment="Left" Content="Регистрация" Cursor="Hand"/>
                 </Grid>
 
                 <TextBox  Text="{Binding Login}" BorderBrush="{Binding BrushesLogin}"  materialDesign:HintAssist.Hint="Введите логин" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
                 <PasswordBox PasswordChanged="passwordBox_PasswordChanged"  BorderBrush="{Binding BrushesPassword}" materialDesign:HintAssist.Hint="Введите пароль" Style="{StaticResource MaterialDesignFloatingHintPasswordBox}" />
 
-                <Button Background="#7373D9" Content="Войти" Command="{Binding OpenWindow}" Margin="0 20" Cursor="Hand"/>
+                <Button Content="Войти" Command="{Binding OpenWindow}" Margin="0 20" Cursor="Hand"/>
 
             </StackPanel>
         </Border>
