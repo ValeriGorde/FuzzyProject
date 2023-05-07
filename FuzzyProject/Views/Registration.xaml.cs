@@ -12,16 +12,22 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace FuzzyProject
+namespace FuzzyProject.Views
 {
     /// <summary>
-    /// Логика взаимодействия для ImageShow.xaml
+    /// Логика взаимодействия для Registration.xaml
     /// </summary>
-    public partial class ImageShow : Window
+    public partial class Registration : Window
     {
-        public ImageShow()
+        public Registration()
         {
             InitializeComponent();
+        }
+
+        private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
+        {
+            //это позволяет передать пароль во viewModel
+            ((dynamic)this.DataContext).Password = ((PasswordBox)sender).Password;
         }
     }
 }

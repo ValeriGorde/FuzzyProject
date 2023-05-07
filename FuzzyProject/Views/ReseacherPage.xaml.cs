@@ -6,7 +6,7 @@ using System.Windows.Media;
 using Color = System.Windows.Media.Color;
 using Point = System.Windows.Point;
 
-namespace FuzzyProject
+namespace FuzzyProject.Views
 {
     /// <summary>
     /// Логика взаимодействия для ReseacherPage.xaml

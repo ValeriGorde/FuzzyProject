@@ -1,4 +1,4 @@
-﻿<Window x:Class="FuzzyProject.ReseacherPage"
+﻿<Window x:Class="FuzzyProject.Views.ReseacherPage"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -10,12 +10,12 @@
         WindowStartupLocation="CenterScreen" Loaded="Window_Loaded">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="0.1*"/>
+            <RowDefinition Height="0.08*"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0">
-            <ToolBarTray>
+            <StackPanel>
                 <ToolBar >
                     <Button Command="{Binding Info}" Content="{materialDesign:PackIcon Kind=InformationOutline}"/>
                     <Separator/>
@@ -23,7 +23,7 @@
                     <Separator/>
                     <Button Content="Выход" Command="{Binding Exit}"/>
                 </ToolBar>
-            </ToolBarTray>
+            </StackPanel>
         </Grid>
 
         <Grid Row="1">
@@ -43,12 +43,12 @@
                             </Grid.ColumnDefinitions>
 
                             <StackPanel Grid.Column="0">
-                                <Image x:Name="image" Source="{Binding StartImg}" Height="380" Margin="20" MouseDown="Image_MouseDown">
-
-                                </Image>
+                                <TextBlock Text="Исходное изображение:" HorizontalAlignment="Center" FontWeight="Bold"/>
+                                <Image x:Name="image" Source="{Binding StartImg}" Height="380" Margin="20" MouseDown="Image_MouseDown"/>
                             </StackPanel>
 
                             <StackPanel Grid.Column="1">
+                                <TextBlock Text="Полученный цвет:" HorizontalAlignment="Center" FontWeight="Bold"/>
                                 <Image Source="{Binding EndImg}" Height="380" Margin="20"/>
                             </StackPanel>
                         </Grid>
@@ -98,19 +98,16 @@
 
                                         <StackPanel Grid.Row="0" Orientation="Horizontal">
                                             <TextBlock Text="Координата *L =" VerticalAlignment="Center" Margin="10 0 0 0"/>
-                                            <TextBox TextAlignment="Center" Text="{Binding ReferenceCoorL}" Width="70" VerticalAlignment="Center"/>
+                                            <TextBox TextAlignment="Center" Text="{Binding ImgReferenceCoorL}" Width="70" VerticalAlignment="Center"/>
                                         </StackPanel>
                                         <StackPanel Grid.Row="1" Orientation="Horizontal">
                                             <TextBlock Text="Координата *a =" VerticalAlignment="Center" Margin="10 0 0 0"/>
-                                            <TextBox TextAlignment="Center" Text="{Binding ReferenceCoorA}"  Width="70" VerticalAlignment="Center"/>
+                                            <TextBox TextAlignment="Center" Text="{Binding ImgReferenceCoorA}"  Width="70" VerticalAlignment="Center"/>
                                         </StackPanel>
                                         <StackPanel Grid.Row="2" Orientation="Horizontal">
                                             <TextBlock Text="Координата *b =" VerticalAlignment="Center" Margin="10 0 0 0"/>
-                                            <TextBox TextAlignment="Center" Text="{Binding ReferenceCoorB}" Width="70" VerticalAlignment="Center"/>
+                                            <TextBox TextAlignment="Center" Text="{Binding ImgReferenceCoorB}" Width="70" VerticalAlignment="Center"/>
                                         </StackPanel>
-                                        <!--<StackPanel Grid.Column="3" Orientation="Horizontal">
-                                            <Button Command="{Binding Analyse}" Content="Анализ" Margin="35 0 0 0"  Width="150" HorizontalAlignment="Right" Style="{DynamicResource MaterialDesignFlatDarkBgButton}"/>
-                                        </StackPanel>-->
                                     </Grid>
                                 </GroupBox>
                             </Grid>
@@ -125,12 +122,12 @@
 
                                         <StackPanel Grid.Row="0" Orientation="Horizontal">
                                             <TextBlock Text="Материал: " VerticalAlignment="Center" Margin="10 0 0 0"/>
-                                            <TextBox TextAlignment="Center" Text="{Binding InfoMaterialName}" Width="120" VerticalAlignment="Center"/>
+                                            <ComboBox SelectedItem="{Binding ChosenMaterialFromImg._L}" ItemsSource="{Binding Material}" Width="120" VerticalAlignment="Center"/>
                                         </StackPanel>
 
                                         <StackPanel Grid.Row="1" Orientation="Horizontal">
                                             <TextBlock Text="Краситель: " VerticalAlignment="Center" Margin="10 0 0 0"/>
-                                            <TextBox TextAlignment="Center" Text="{Binding InfoMaterialColor}" Width="120" VerticalAlignment="Center"/>
+                                            <ComboBox SelectedItem="{Binding ChosenColorantFromImg._L}" ItemsSource="{Binding Colorant}" Width="120" VerticalAlignment="Center"/>
                                         </StackPanel>
 
                                         <!--<StackPanel Grid.Row="1" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">

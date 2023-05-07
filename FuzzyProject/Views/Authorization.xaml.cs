@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 
-namespace FuzzyProject
+namespace FuzzyProject.Views
 {
     /// <summary>
     /// Логика взаимодействия для Authorization.xaml

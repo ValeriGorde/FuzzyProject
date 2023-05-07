@@ -9,22 +9,27 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace FuzzyProject.Models
 {
-    internal class Report
+    public class Report
     {
         [Key]
         public int Id { get; set; }
-        public string Date { get; set; }
-        public string Login { get; set; }
-        public string Reccomendation { get; set; }
+        public DateTime Date { get; set; }
+        public string Message { get; set; }
 
         // Внешний ключ
-        public int AccountId { get; set; }
+        public int ColorantId { get; set; }
         // Навигационное свойство
-        public Account Account { get; set; }
+        public Colorant Colorants { get; set; }
 
         // Внешний ключ
         public int MaterialId { get; set; }
         // Навигационное свойство
         public Material Material { get; set; }
+
+        //Навигационное свойство для параметра
+        public int ParametersId { get; set; }
+        //Внешний ключ параметра
+        public Parameter Parameters { get; set; }
+
     }
 }

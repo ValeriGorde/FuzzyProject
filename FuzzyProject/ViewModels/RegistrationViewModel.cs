@@ -1,5 +1,6 @@
 ﻿using FuzzyProject.DB_EF;
 using FuzzyProject.Models;
+using FuzzyProject.Views;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;

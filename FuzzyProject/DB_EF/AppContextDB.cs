@@ -14,10 +14,11 @@ namespace FuzzyProject.DB_EF
         public DbSet<Report> Reports { get; set; }
         public DbSet<Material> Materials { get; set; }
         public DbSet<ReferenceParam> ReferencesParams { get; set; }
+        public DbSet<Colorant> Colorants { get; set; }
+        public DbSet<Parameter> Parameters { get; set; }
         public AppContextDB()
         {
-            //Database.EnsureDeleted();
-            Database.EnsureCreated();
+            Database.Migrate();
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
