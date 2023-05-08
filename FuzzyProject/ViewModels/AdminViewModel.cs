@@ -182,21 +182,18 @@ namespace FuzzyProject.ViewModels
             {
                 return _addMaterial ??= new RelayCommand(x =>
                 {
-                    if (SelectedMaterial != null)
+                    if (NewNameMaterial != string.Empty && NewNameMaterial != "" && NewNameMaterial != null && ChosenColorantMaterial != null &&
+                    ChosenParamMaterial != null)
                     {
-                        if (NewNameMaterial != string.Empty && NewNameMaterial != "" && NewNameMaterial != null && ChosenColorantMaterial != null &&
-                        ChosenParamMaterial != null)
-                        {
-                            var newMaterial = new Material { Name = NewNameMaterial, ColorantId = ChosenColorantMaterial.Id, ParametersId = ChosenParamMaterial.Id };
-                            context.Materials.Add(newMaterial);
-                            context.SaveChanges();
+                        var newMaterial = new Material { Name = NewNameMaterial, ColorantId = ChosenColorantMaterial.Id, ParametersId = ChosenParamMaterial.Id, Image = imgMaterial };
+                        context.Materials.Add(newMaterial);
+                        context.SaveChanges();
 
-                            SetMaterailList();
-                        }
-                        else
-                        {
-                            MessageBox.Show("Заполните все поля, чтобы добавить новый материал", "Ошибка при добавлении материала");
-                        }
+                        SetMaterailList();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Заполните все поля, чтобы добавить новый материал", "Ошибка при добавлении материала");
                     }
                 });
             }
@@ -259,25 +256,18 @@ namespace FuzzyProject.ViewModels
             {
                 return _loadMaterialImg ??= new RelayCommand(x =>
                 {
-                    if (SelectedMaterial != null)
+                    calculate = new CalculateImg();
+                    OpenFileDialog dlg = new OpenFileDialog();
+                    dlg.InitialDirectory = imgPath;
+                    dlg.Filter = "Image files (*.jpg)|*.jpg|All Files (*.*)|*.*";
+                    dlg.RestoreDirectory = true;
+                    if (dlg.ShowDialog() == DialogResult.OK)
                     {
-                        calculate = new CalculateImg();
-                        OpenFileDialog dlg = new OpenFileDialog();
-                        dlg.InitialDirectory = imgPath;
-                        dlg.Filter = "Image files (*.jpg)|*.jpg|All Files (*.*)|*.*";
-                        dlg.RestoreDirectory = true;
-                        if (dlg.ShowDialog() == DialogResult.OK)
-                        {
-                            selectedFileName = dlg.FileName;
-                            img = new Bitmap(selectedFileName);
+                        selectedFileName = dlg.FileName;
+                        img = new Bitmap(selectedFileName);
 
-                            imgMaterial = calculate.FromImgToBytes(img);
-                            MessageBox.Show("Изображение успешно загружено!");
-                        }
-                    }
-                    else
-                    {
-                        MessageBox.Show("Вы не выбрали материал!", "Ошибка");
+                        imgMaterial = calculate.FromImgToBytes(img);
+                        MessageBox.Show("Изображение успешно загружено!");
                     }
                 });
             }
@@ -440,7 +430,7 @@ namespace FuzzyProject.ViewModels
         #endregion
 
         #region Reports
-        private DateTime _newDateReport;
+        private DateTime _newDateReport = DateTime.Now.Date;
         public DateTime NewDateReport
         {
             get { return _newDateReport; }
@@ -600,22 +590,17 @@ namespace FuzzyProject.ViewModels
             }
         }
 
-        private Account _selectedColorant;
-        public Account SelectedColorant
+        private Colorant _selectedColorant;
+        public Colorant SelectedColorant
         {
             get { return _selectedColorant; }
             set
             {
                 _selectedColorant = value;
                 OnPropertyChanged();
-                if (_selectedAccount != null)
+                if (_selectedColorant != null)
                 {
-                    NewLogin = _selectedAccount.Login;
-                    NewPassword = _selectedAccount.Password;
-                    if (_selectedAccount.Role == "Администратор")
-                        NewRole = Roles[0];
-                    else
-                        NewRole = Roles[1];
+                    NewColorantName = _selectedColorant.Name;
                 }
             }
         }
@@ -625,7 +610,7 @@ namespace FuzzyProject.ViewModels
         {
             get
             {
-                return _addAccount ??= new RelayCommand(x =>
+                return _addColorant ??= new RelayCommand(x =>
                 {
                     if (NewColorantName != string.Empty && NewColorantName != "" && NewColorantName != null)
                     {

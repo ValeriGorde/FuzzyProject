@@ -290,7 +290,7 @@ namespace FuzzyProject.ViewModels
                     recommendation = recommends.GiveRecommend(result);
 
 
-                    var date = DateTime.Now;
+                    var date = DateTime.Now.Date;
                     string parameters = CoorL + " " + CoorA + " " + CoorB;
                     byte[] imgArr;
 
@@ -554,7 +554,7 @@ namespace FuzzyProject.ViewModels
                     recommendations.DataContext = recommendationsViewModel;
                     recommendations.Show();
 
-                    var date = DateTime.Now;
+                    var date = DateTime.Now.Date;
                     string parameters = SpectCoorL + " " + SpectCoorA + " " + SpectCoorB;
                     byte[] imgArr;
 
