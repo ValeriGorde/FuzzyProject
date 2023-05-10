@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FuzzyProject.Migrations
 {
     [DbContext(typeof(AppContextDB))]
-    [Migration("20230507225920_Initial")]
+    [Migration("20230510175608_Initial")]
     partial class Initial
     {
         /// <inheritdoc />

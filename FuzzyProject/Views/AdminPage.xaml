@@ -129,7 +129,7 @@
                                 <DataGrid AutoGenerateColumns="False" IsReadOnly="True" SelectedItem="{Binding SelectedMaterial}" ItemsSource= "{Binding Material}" Grid.Column="0" GridLinesVisibility="Vertical" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Visible">
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Header="Название" Binding="{Binding Name}" Width="*"/>
-                                        <DataGridTextColumn Header="Краситель" Binding="{Binding Colorant.Name}" Width="*"/>
+                                        <DataGridTextColumn Header="Краситель" Binding="{Binding Colorants.Name}" Width="*"/>
                                         <DataGridTextColumn Header="L" Binding="{Binding Parameters._L}" Width="70"/>
                                         <DataGridTextColumn Header="a" Binding="{Binding Parameters._A}" Width="70"/>
                                         <DataGridTextColumn Header="b" Binding="{Binding Parameters._B}" Width="70"/>
@@ -349,10 +349,10 @@
                                 <DataGrid Grid.Row="0" AutoGenerateColumns="False" IsReadOnly="True" SelectedItem="{Binding SelectedReference}" ItemsSource= "{Binding Reference}" GridLinesVisibility="Vertical" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Visible">
 
                                     <DataGrid.Columns>
-                                        <DataGridTextColumn Binding="{Binding ParametersId._L}" Header="Параметр L" Width="*"/>
-                                        <DataGridTextColumn Binding="{Binding ParametersId._A}" Header="Параметр a" Width="*"/>
-                                        <DataGridTextColumn Binding="{Binding ParametersId._B}" Header="Параметр b" Width="*"/>
-                                        <DataGridTextColumn Binding="{Binding ColorantId.Name}" Header="Краситель" Width="*"/>
+                                        <DataGridTextColumn Binding="{Binding Parameters._L}" Header="Параметр L" Width="*" />
+                                        <DataGridTextColumn Binding="{Binding Parameters._A}" Header="Параметр a" Width="*"/>
+                                        <DataGridTextColumn Binding="{Binding Parameters._B}" Header="Параметр b" Width="*"/>
+                                        <DataGridTextColumn Binding="{Binding Colorant.Name}" Header="Краситель" Width="*"/>
                                     </DataGrid.Columns>
                                 </DataGrid>
 
@@ -409,13 +409,13 @@
                                         <ComboBox Grid.Row="0" SelectedItem="{Binding ChosenColorant}" ItemsSource="{Binding Colorant}" 
                                                   Width="150" VerticalAlignment="Center" HorizontalAlignment="Left" 
                                                   SelectedValuePath="Name" DisplayMemberPath="Name"/>
-                                        <ComboBox Grid.Row="1" SelectedItem="{Binding ChosenParam._L}" ItemsSource="{Binding Parameter}" 
+                                        <ComboBox Grid.Row="1" SelectedItem="{Binding ChosenParam}" ItemsSource="{Binding Parameter}" 
                                                   Width="150" VerticalAlignment="Center" HorizontalAlignment="Left"
                                                   SelectedValuePath="_L" DisplayMemberPath="_L"/>
-                                        <ComboBox Grid.Row="2" SelectedItem="{Binding ChosenParam._A}" ItemsSource="{Binding Parameter}" 
+                                        <ComboBox Grid.Row="2" SelectedItem="{Binding ChosenParam}" ItemsSource="{Binding Parameter}" 
                                                   Width="150" VerticalAlignment="Center" HorizontalAlignment="Left"
                                                    SelectedValuePath="_A" DisplayMemberPath="_A"/>
-                                        <ComboBox Grid.Row="3" SelectedItem="{Binding ChosenParam._B}" ItemsSource="{Binding Parameter}" 
+                                        <ComboBox Grid.Row="3" SelectedItem="{Binding ChosenParam}" ItemsSource="{Binding Parameter}" 
                                                   Width="150" VerticalAlignment="Center" HorizontalAlignment="Left"
                                                    SelectedValuePath="_B" DisplayMemberPath="_B"/>
                                     </Grid>

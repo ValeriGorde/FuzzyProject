@@ -18,7 +18,7 @@ namespace FuzzyProject.DB_EF
         public DbSet<Parameter> Parameters { get; set; }
         public AppContextDB()
         {
-            Database.Migrate();
+            //Database.Migrate();
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

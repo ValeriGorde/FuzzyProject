@@ -3,6 +3,7 @@ using FuzzyProject.FuzzyLogic;
 using FuzzyProject.Models;
 using FuzzyProject.Views;
 using FuzzyProject.WorkWithColors;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Win32;
 using System;
@@ -42,6 +43,10 @@ namespace FuzzyProject.ViewModels
             reseacherWindow = _reseacherWindow;
             login = _login;
             context = new AppContextDB();
+
+            //загрузка красителей из бд
+            context.Colorants.Load();
+            Colorant = context.Colorants.ToList();
         }
 
         #region From Image
@@ -53,6 +58,17 @@ namespace FuzzyProject.ViewModels
             set
             {
                 _referencesFromImg = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private List<Colorant> _colorant;
+        public List<Colorant> Colorant
+        {
+            get { return _colorant; }
+            set
+            {
+                _colorant = value;
                 OnPropertyChanged();
             }
         }
@@ -69,9 +85,10 @@ namespace FuzzyProject.ViewModels
                 if (_chosenColorantFromImg != null)
                 {
                     var reference = context.ReferencesParams.FirstOrDefault(r => r.Colorant.Name == _chosenColorantFromImg.Name);
-                    ImgReferenceCoorL = reference.Parameters._L;
-                    ImgReferenceCoorA = reference.Parameters._A;
-                    ImgReferenceCoorB = reference.Parameters._B;
+                    var parameter = context.Parameters.FirstOrDefault(p => p.Id == reference.ParametersId);
+                    ImgReferenceCoorL = parameter._L;
+                    ImgReferenceCoorA = parameter._A;
+                    ImgReferenceCoorB = parameter._B;
 
                 }
             }
@@ -247,7 +264,7 @@ namespace FuzzyProject.ViewModels
                     CoorB = 0;
                     ImgReferenceCoorL = 0;
                     ImgReferenceCoorA = 0;
-                    ImgReferenceCoorB = 0; 
+                    ImgReferenceCoorB = 0;
                     StartImg = null;
                     EndImg = null;
                 });
@@ -327,39 +344,40 @@ namespace FuzzyProject.ViewModels
                         Report report = new Report { Date = date, Message = recommendation };
                         context.Reports.Add(report);
 
-                        if(param == null) 
+                        var newParam = new Parameter
                         {
-                            Parameter paramets = new Parameter
-                            {
-                                _L = CoorL,
-                                _A = CoorA,
-                                _B = CoorB
-                            };
-                            context.Parameters.Add(param);
-                            report.Parameters = paramets;
+                            _L = CoorL,
+                            _A = CoorA,
+                            _B = CoorB
+                        };
+                        var newMaterial = new Material
+                        {
+                            Name = ChosenMaterialFromImg.Name,
+                            Image = imgArr,
+                            ColorantId = ChosenColorantFromImg.Id,
+                            ParametersId = param.Id
+                        };
+                        var newColor = new Colorant
+                        {
+                            Name = ChosenColorantFromImg.Name
+                        };
+
+                        if (param == null)
+                        {
+                            context.Parameters.Add(newParam);
                             context.SaveChanges();
+                            report.Parameters = newParam;
                         }
-                        else if (color == null) 
+                        else if (color == null)
                         {
-                            Colorant newColorant = new Colorant
-                            {
-                                Name = ChosenColorantFromImg.Name
-                            };
-                            context.Colorants.Add(newColorant);
-                            report.Colorants = newColorant;
+                            context.Colorants.Add(newColor);
                             context.SaveChanges();
+                            report.Colorants = newColor;
                         }
                         else if (material == null)
                         {
-                            Material newMaterial = new Material
-                            {
-                                Name = ChosenMaterialFromImg.Name,
-                                Image = imgArr,
-                                ColorantId = ChosenColorantFromImg.Id,
-                                ParametersId = param.Id
-                            };
-
                             context.Materials.Add(newMaterial);
+                            context.SaveChanges();
                             report.Material = newMaterial;
                         }
                         else

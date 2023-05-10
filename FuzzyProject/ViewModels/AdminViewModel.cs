@@ -26,12 +26,7 @@ namespace FuzzyProject.ViewModels
 
         public AdminViewModel(Window _adminWindow)
         {
-            SetList();
-            SetReportsList(); //изменить на датагрид
-            SetMaterailList();
-            SetColorantList();
-            SetReferenceList();
-            SetParameterList();
+            SetData();
 
             //добавить отдельную модель для роли
             Roles = new List<string>();
@@ -40,45 +35,20 @@ namespace FuzzyProject.ViewModels
             adminWindow = _adminWindow;
         }
 
-        public void SetList()
+        public void SetData()
         {
             context = new AppContextDB();
             context.Accounts.Load();
-            Account = context.Accounts.ToList();
-        }
-
-        public void SetReportsList()
-        {
-            context = new AppContextDB();
-            context.Reports.Load();
-            Report = context.Reports.ToList();
-        }
-
-        public void SetMaterailList()
-        {
-            context = new AppContextDB();
             context.Materials.Load();
-            Material = context.Materials.ToList();
-        }
-
-        public void SetColorantList()
-        {
-            context = new AppContextDB();
+            context.Reports.Load();
             context.Colorants.Load();
-            Colorant = context.Colorants.ToList();
-        }
-
-        public void SetParameterList()
-        {
-            context = new AppContextDB();
             context.Parameters.Load();
-            Parameter = context.Parameters.ToList();
-        }
-
-        public void SetReferenceList()
-        {
-            context = new AppContextDB();
             context.ReferencesParams.Load();
+            Account = context.Accounts.ToList();
+            Report = context.Reports.ToList();
+            Material = context.Materials.ToList();
+            Colorant = context.Colorants.ToList();
+            Parameter = context.Parameters.ToList();
             Reference = context.ReferencesParams.ToList();
         }
 
@@ -163,7 +133,7 @@ namespace FuzzyProject.ViewModels
                             context.Materials.Remove(material);
                             context.SaveChanges();
 
-                            SetMaterailList();
+                            SetData();
                         }
                         else
                         {
@@ -189,7 +159,7 @@ namespace FuzzyProject.ViewModels
                         context.Materials.Add(newMaterial);
                         context.SaveChanges();
 
-                        SetMaterailList();
+                        SetData();
                     }
                     else
                     {
@@ -215,7 +185,7 @@ namespace FuzzyProject.ViewModels
                         newMaterial.Image = imgMaterial;
                         context.SaveChanges();
 
-                        SetMaterailList();
+                        SetData();
                     }
                     else
                     {
@@ -363,7 +333,7 @@ namespace FuzzyProject.ViewModels
                         context.Accounts.Add(newAccount);
                         context.SaveChanges();
 
-                        SetList();
+                        SetData();
                     }
                     else
                     {
@@ -388,7 +358,7 @@ namespace FuzzyProject.ViewModels
                         newAccount.Role = NewRole;
                         context.SaveChanges();
 
-                        SetList();
+                        SetData();
                     }
                     else
                     {
@@ -418,7 +388,7 @@ namespace FuzzyProject.ViewModels
                         context.Accounts.Remove(account);
                         context.SaveChanges();
 
-                        SetList();
+                        SetData();
                     }
                     else
                     {
@@ -528,7 +498,7 @@ namespace FuzzyProject.ViewModels
                         context.Reports.Remove(report);
                         context.SaveChanges();
 
-                        SetReportsList();
+                        SetData();
                     }
                     else
                     {
@@ -618,7 +588,7 @@ namespace FuzzyProject.ViewModels
                         context.Colorants.Add(newColorant);
                         context.SaveChanges();
 
-                        SetColorantList();
+                        SetData();
                     }
                     else
                     {
@@ -641,7 +611,7 @@ namespace FuzzyProject.ViewModels
                         newColorant.Name = NewColorantName;
                         context.SaveChanges();
 
-                        SetColorantList();
+                        SetData();
                     }
                     else
                     {
@@ -664,7 +634,7 @@ namespace FuzzyProject.ViewModels
                         context.Colorants.Remove(colorant);
                         context.SaveChanges();
 
-                        SetColorantList();
+                        SetData();
                     }
                     else
                     {
@@ -750,7 +720,7 @@ namespace FuzzyProject.ViewModels
                     context.Parameters.Add(newParameter);
                     context.SaveChanges();
 
-                    SetParameterList();
+                    SetData();
                 });
             }
         }
@@ -770,7 +740,7 @@ namespace FuzzyProject.ViewModels
                         newParameter._B = NewParamB;
                         context.SaveChanges();
 
-                        SetParameterList();
+                        SetData();
                     }
                     else
                     {
@@ -793,7 +763,7 @@ namespace FuzzyProject.ViewModels
                         context.Parameters.Remove(param);
                         context.SaveChanges();
 
-                        SetParameterList();
+                        SetData();
                     }
                     else
                     {
@@ -865,13 +835,14 @@ namespace FuzzyProject.ViewModels
                     ReferenceParam reference = new ReferenceParam
                     {
                         ColorantId = ChosenColorant.Id,
-                        ParametersId = ChosenParam.Id
-                    }; //как сделать чтобы каждым параметр по отдельности сохранялся и показывался
+                        ParametersId = ChosenParam.Id,
+                        Image = imgMaterial
+                    };
 
                     context.ReferencesParams.Add(reference);
                     context.SaveChanges();
 
-                    SetReferenceList();
+                    SetData();
                 });
             }
         }
@@ -887,13 +858,12 @@ namespace FuzzyProject.ViewModels
                     {
                         var reference = context.ReferencesParams.Find(SelectedReference.Id);
                         reference.Colorant = ChosenColorant;
-                        reference.Parameters._L = ChosenParam._L;
-                        reference.Parameters._A = ChosenParam._A;
-                        reference.Parameters._B = ChosenParam._B;
+                        reference.Parameters = ChosenParam;
+                        reference.Image = imgMaterial;
 
                         context.SaveChanges();
 
-                        SetReferenceList();
+                        SetData();
                     }
                     else
                     {
@@ -916,7 +886,7 @@ namespace FuzzyProject.ViewModels
                         context.ReferencesParams.Remove(reference);
                         context.SaveChanges();
 
-                        SetReferenceList();
+                        SetData();
                     }
                     else
                     {
@@ -946,6 +916,10 @@ namespace FuzzyProject.ViewModels
                         imageShow.DataContext = imagePageViewModel;
                         imageShow.Show();
                     }
+                    else
+                    {
+                        MessageBox.Show("Вы не выбрали эталон!", "Ошибка");
+                    }
                 });
             }
         }
@@ -957,27 +931,20 @@ namespace FuzzyProject.ViewModels
             {
                 return _uploadReferenceImg ??= new RelayCommand(x =>
                 {
-                    if (SelectedReference != null)
+                    calculate = new CalculateImg();
+                    OpenFileDialog dlg = new OpenFileDialog();
+
+                    dlg.InitialDirectory = imgPath;
+                    dlg.Filter = "Image files (*.jpg)|*.jpg|All Files (*.*)|*.*";
+                    dlg.RestoreDirectory = true;
+
+                    if (dlg.ShowDialog() == DialogResult.OK)
                     {
-                        calculate = new CalculateImg();
-                        OpenFileDialog dlg = new OpenFileDialog();
+                        selectedFileName = dlg.FileName;
+                        img = new Bitmap(selectedFileName);
 
-                        dlg.InitialDirectory = imgPath;
-                        dlg.Filter = "Image files (*.jpg)|*.jpg|All Files (*.*)|*.*";
-                        dlg.RestoreDirectory = true;
-
-                        if (dlg.ShowDialog() == DialogResult.OK)
-                        {
-                            selectedFileName = dlg.FileName;
-                            img = new Bitmap(selectedFileName);
-
-                            imgMaterial = calculate.FromImgToBytes(img);
-                            MessageBox.Show("Изображение успешно загружено!");
-                        }
-                    }
-                    else
-                    {
-                        MessageBox.Show("Вы не выбрали эталон!", "Ошибка");
+                        imgMaterial = calculate.FromImgToBytes(img);
+                        MessageBox.Show("Изображение успешно загружено!");
                     }
                 });
             }

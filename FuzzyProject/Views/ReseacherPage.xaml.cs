@@ -38,7 +38,7 @@ namespace FuzzyProject.Views
         RenderTargetBitmap getPixels(FrameworkElement elem)
         {
             PresentationSource source = PresentationSource.FromVisual(this);
-              double dpiX = 96.0 * source.CompositionTarget.TransformToDevice.M11;
+            double dpiX = 96.0 * source.CompositionTarget.TransformToDevice.M11;
             double dpiY = 96.0 * source.CompositionTarget.TransformToDevice.M22;
 
             RenderTargetBitmap bitmap = new RenderTargetBitmap((int)elem.ActualWidth, (int)elem.ActualHeight, dpiX, dpiY, PixelFormats.Pbgra32);
@@ -49,7 +49,7 @@ namespace FuzzyProject.Views
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            
+
         }
     }
 }

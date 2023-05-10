@@ -125,14 +125,16 @@
 
                                         <StackPanel Grid.Row="0" Orientation="Horizontal">
                                             <TextBlock Text="Материал: " VerticalAlignment="Center" Margin="10 0 0 0"/>
-                                            <ComboBox SelectedItem="{Binding ChosenMaterialFromImg._L}" ItemsSource="{Binding Material}"
-                                                      Width="120" VerticalAlignment="Center"/>
+                                            <ComboBox SelectedItem="{Binding ChosenMaterialFromImg}" ItemsSource="{Binding Material}"
+                                                      Width="120" VerticalAlignment="Center"
+                                                      SelectedValuePath="Name" DisplayMemberPath="Name"/>
                                         </StackPanel>
 
                                         <StackPanel Grid.Row="1" Orientation="Horizontal">
                                             <TextBlock Text="Краситель: " VerticalAlignment="Center" Margin="10 0 0 0"/>
-                                            <ComboBox SelectedItem="{Binding ChosenColorantFromImg._L}" ItemsSource="{Binding Colorant}"
-                                                      Width="120" VerticalAlignment="Center"/>
+                                            <ComboBox SelectedItem="{Binding ChosenColorantFromImg}" ItemsSource="{Binding Colorant}"
+                                                      Width="120" VerticalAlignment="Center"
+                                                      SelectedValuePath="Name" DisplayMemberPath="Name"/>
                                         </StackPanel>
                                     </Grid>
                                 </GroupBox>
