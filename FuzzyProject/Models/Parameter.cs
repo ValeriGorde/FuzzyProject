@@ -14,8 +14,8 @@ namespace FuzzyProject.Models
         public double _L { get; set; }
         public double _A { get; set; }  
         public double _B { get; set; }
-        public List<Material>? Materials { get; set; } = new List<Material>();
-        public List<ReferenceParam>? ReferenceParams { get; set; } = new List<ReferenceParam>();
-        public List<Report>? Reports { get; set; } = new List<Report>();
+        //public List<Material> Materials { get; set; } = new List<Material>();
+        //public List<ReferenceParam> ReferenceParams { get; set; } = new List<ReferenceParam>();
+        //public List<Report> Reports { get; set; } = new List<Report>();
     }
 }

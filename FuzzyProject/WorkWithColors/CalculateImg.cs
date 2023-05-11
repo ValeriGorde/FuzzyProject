@@ -1,14 +1,8 @@
-﻿using FuzzyProject.Models;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
-using System.Runtime.ConstrainedExecution;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Documents;
 using System.Windows.Media.Imaging;
 using Color = System.Drawing.Color;
 
@@ -49,7 +43,6 @@ namespace FuzzyProject.WorkWithColors
                 return bitmapimage;
             }
         }
-        
 
         public double[] GetLAB(Bitmap img) 
         {

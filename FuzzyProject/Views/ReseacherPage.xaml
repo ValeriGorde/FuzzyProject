@@ -74,15 +74,15 @@
                                         </Grid.RowDefinitions>
 
                                         <StackPanel Grid.Row="0" Orientation="Horizontal">
-                                            <TextBlock Text="Координата *L =" VerticalAlignment="Center" Margin="10 0 0 0"/>
+                                            <TextBlock Text="Координата L =" VerticalAlignment="Center" Margin="10 0 0 0"/>
                                             <TextBox TextAlignment="Center" Text="{Binding CoorL}" Width="70" VerticalAlignment="Center"/>
                                         </StackPanel>
                                         <StackPanel Grid.Row="1" Orientation="Horizontal">
-                                            <TextBlock Text="Координата *a =" VerticalAlignment="Center" Margin="10 0 0 0"/>
+                                            <TextBlock Text="Координата a =" VerticalAlignment="Center" Margin="10 0 0 0"/>
                                             <TextBox TextAlignment="Center" Text="{Binding CoorA}"  Width="70" VerticalAlignment="Center"/>
                                         </StackPanel>
                                         <StackPanel Grid.Row="2" Orientation="Horizontal">
-                                            <TextBlock Text="Координата *b =" VerticalAlignment="Center" Margin="10 0 0 0"/>
+                                            <TextBlock Text="Координата b =" VerticalAlignment="Center" Margin="10 0 0 0"/>
                                             <TextBox TextAlignment="Center" Text="{Binding CoorB}" Width="70" VerticalAlignment="Center"/>
                                         </StackPanel>
                                     </Grid>
@@ -125,7 +125,7 @@
 
                                         <StackPanel Grid.Row="0" Orientation="Horizontal">
                                             <TextBlock Text="Материал: " VerticalAlignment="Center" Margin="10 0 0 0"/>
-                                            <ComboBox SelectedItem="{Binding ChosenMaterialFromImg}" ItemsSource="{Binding Material}"
+                                            <ComboBox SelectedItem="{Binding ChosenMaterialFromImg.Name}" ItemsSource="{Binding Material}"
                                                       Width="120" VerticalAlignment="Center"
                                                       SelectedValuePath="Name" DisplayMemberPath="Name"/>
                                         </StackPanel>
@@ -186,7 +186,7 @@
                                           materialDesign:ElevationAssist.Elevation="Dp6" BorderThickness="1">
                                     <Grid>
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition/>
+                                            <ColumnDefinition Width="0.5*"/>
                                             <ColumnDefinition/>
                                         </Grid.ColumnDefinitions>
 
@@ -197,9 +197,9 @@
                                                 <RowDefinition/>
                                             </Grid.RowDefinitions>
 
-                                            <TextBlock Grid.Row="0" Text="Координата *L =" VerticalAlignment="Center" Margin="10 0 0 0"/>
-                                            <TextBlock Grid.Row="1" Text="Координата *a =" VerticalAlignment="Center" Margin="10 0 0 0"/>
-                                            <TextBlock Grid.Row="2" Text="Координата *b =" VerticalAlignment="Center" Margin="10 0 0 0"/>
+                                            <TextBlock Grid.Row="0" Text="Координата L =" VerticalAlignment="Center" Margin="10 0 0 0"/>
+                                            <TextBlock Grid.Row="1" Text="Координата a =" VerticalAlignment="Center" Margin="10 0 0 0"/>
+                                            <TextBlock Grid.Row="2" Text="Координата b =" VerticalAlignment="Center" Margin="10 0 0 0"/>
                                         </Grid>
 
                                         <Grid Grid.Column="1">
@@ -287,10 +287,12 @@
                                                 <RowDefinition/>
                                             </Grid.RowDefinitions>
 
-                                            <ComboBox Grid.Row="0" SelectedItem="{Binding ChosenMaterialFromImg._L}" ItemsSource="{Binding Material}"
-                                                      HorizontalAlignment="Left" Width="160" VerticalAlignment="Center"/>
-                                            <ComboBox Grid.Row="1" SelectedItem="{Binding ChosenMaterialFromImg._L}" ItemsSource="{Binding Material}"
-                                                      HorizontalAlignment="Left" Width="160" VerticalAlignment="Center"/>
+                                            <ComboBox Grid.Row="0" SelectedItem="{Binding ChosenMaterialFromImg.Name}" ItemsSource="{Binding Material}"
+                                                      HorizontalAlignment="Left" Width="160" VerticalAlignment="Center"
+                                                      SelectedValuePath="Name" DisplayMemberPath="Name"/>
+                                            <ComboBox Grid.Row="1" SelectedItem="{Binding ChosenColorantFromSpect}" ItemsSource="{Binding Colorant}"
+                                                      HorizontalAlignment="Left" Width="160" VerticalAlignment="Center"
+                                                      SelectedValuePath="Name" DisplayMemberPath="Name"/>
                                         </Grid>
                                     </Grid>
                                 </GroupBox>

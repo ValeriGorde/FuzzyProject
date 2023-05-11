@@ -44,9 +44,11 @@ namespace FuzzyProject.ViewModels
             login = _login;
             context = new AppContextDB();
 
-            //загрузка красителей из бд
+            //загрузка красителей и материалов из бд
             context.Colorants.Load();
+            context.Materials.Load();
             Colorant = context.Colorants.ToList();
+            Material = context.Materials.ToList();
         }
 
         #region From Image
@@ -94,6 +96,7 @@ namespace FuzzyProject.ViewModels
             }
         }
 
+
         private Material _chosenMaterialFromImg;
         public Material ChosenMaterialFromImg
         {
@@ -101,6 +104,17 @@ namespace FuzzyProject.ViewModels
             set
             {
                 _chosenMaterialFromImg = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private List<Material> _material;
+        public List<Material> Material
+        {
+            get { return _material; }
+            set
+            {
+                _material = value;
                 OnPropertyChanged();
             }
         }
@@ -335,59 +349,67 @@ namespace FuzzyProject.ViewModels
                     recommendations.DataContext = recommendationsViewModel;
                     recommendations.Show();
 
-                    using (AppContextDB context = new AppContextDB())
-                    {
-                        var material = context.Materials.FirstOrDefault(m => m.Image == imgArr);
-                        var param = context.Parameters.FirstOrDefault(p => p._L == CoorL && p._A == CoorA && p._B == CoorB);
-                        var color = context.Colorants.FirstOrDefault(c => c.Name == ChosenColorantFromImg.Name);
+                    //using (AppContextDB context = new AppContextDB())
+                    //{
+                    //    var material = context.Materials.FirstOrDefault(m => m.Image == imgArr);
+                    //    var param = context.Parameters.FirstOrDefault(p => p._L == CoorL && p._A == CoorA && p._B == CoorB);
+                    //    var color = context.Colorants.FirstOrDefault(c => c.Name == ChosenColorantFromImg.Name);
 
-                        Report report = new Report { Date = date, Message = recommendation };
-                        context.Reports.Add(report);
+                    //    Report report = new Report { Date = date, Message = recommendation };
+                    //    context.Reports.Add(report);                      
+                        
+                    //    if (param == null)
+                    //    {
+                    //        var newParam = new Parameter
+                    //        {
+                    //            _L = CoorL,
+                    //            _A = CoorA,
+                    //            _B = CoorB
+                    //        };
+                    //        context.Parameters.Add(newParam);
+                    //        context.SaveChanges();
+                    //        report.Parameters = newParam;
+                    //    }
+                    //    else if (color == null)
+                    //    {
+                    //        var newColor = new Colorant
+                    //        {
+                    //            Name = ChosenColorantFromImg.Name
+                    //        };
+                    //        context.Colorants.Add(newColor);
+                    //        context.SaveChanges();
+                    //        report.Colorants = newColor;
+                    //    }
+                    //    else if (material == null)
+                    //    {
+                    //        var newMaterial = new Material
+                    //        {
+                    //            Name = ChosenMaterialFromImg.Name,
+                    //            Image = imgArr,
+                    //            ColorantId = ChosenColorantFromImg.Id,
+                    //        };
+                    //        if (param != null) 
+                    //        {
+                    //            newMaterial.ParametersId = param.Id;
+                    //        }
+                    //        else 
+                    //        {
+                    //            param = context.Parameters.FirstOrDefault(p => p._L == CoorL && p._A == CoorA && p._B == CoorB);
+                    //            newMaterial.ParametersId = param.Id;
+                    //        }                          
 
-                        var newParam = new Parameter
-                        {
-                            _L = CoorL,
-                            _A = CoorA,
-                            _B = CoorB
-                        };
-                        var newMaterial = new Material
-                        {
-                            Name = ChosenMaterialFromImg.Name,
-                            Image = imgArr,
-                            ColorantId = ChosenColorantFromImg.Id,
-                            ParametersId = param.Id
-                        };
-                        var newColor = new Colorant
-                        {
-                            Name = ChosenColorantFromImg.Name
-                        };
-
-                        if (param == null)
-                        {
-                            context.Parameters.Add(newParam);
-                            context.SaveChanges();
-                            report.Parameters = newParam;
-                        }
-                        else if (color == null)
-                        {
-                            context.Colorants.Add(newColor);
-                            context.SaveChanges();
-                            report.Colorants = newColor;
-                        }
-                        else if (material == null)
-                        {
-                            context.Materials.Add(newMaterial);
-                            context.SaveChanges();
-                            report.Material = newMaterial;
-                        }
-                        else
-                        {
-                            report.Material = material;
-                            report.Parameters = param;
-                            report.Colorants = color;
-                        }
-                        context.SaveChanges();
-                    }
+                    //        context.Materials.Add(newMaterial);
+                    //        context.SaveChanges();
+                    //        report.Material = newMaterial;
+                    //    }
+                    //    else
+                    //    {
+                    //        report.Material = material;
+                    //        report.Parameters = param;
+                    //        report.Colorants = color;
+                    //    }
+                    //    context.SaveChanges();
+                    //}
                 });
             }
         }
@@ -405,10 +427,11 @@ namespace FuzzyProject.ViewModels
 
                 if (_chosenColorantFromSpect != null)
                 {
-                    var reference = context.ReferencesParams.FirstOrDefault(r => r.Colorant.Name == _chosenMaterialFromSpect.Name);
-                    SpectReferenceCoorL = reference.Parameters._L;
-                    SpectReferenceCoorA = reference.Parameters._A;
-                    SpectReferenceCoorB = reference.Parameters._B;
+                    var reference = context.ReferencesParams.FirstOrDefault(r => r.Colorant.Name == _chosenColorantFromSpect.Name);
+                    var parameter = context.Parameters.FirstOrDefault(p => p.Id == reference.ParametersId);
+                    SpectReferenceCoorL = parameter._L;
+                    SpectReferenceCoorA = parameter._A;
+                    SpectReferenceCoorB = parameter._B;
 
                 }
             }
@@ -583,59 +606,59 @@ namespace FuzzyProject.ViewModels
                         imgArr = ms.ToArray();
                     }
 
-                    using (AppContextDB context = new AppContextDB())
-                    {
-                        var material = context.Materials.FirstOrDefault(m => m.Image == imgArr);
-                        var param = context.Parameters.FirstOrDefault(p => p._L == SpectCoorL && p._A == SpectCoorA && p._B == SpectCoorB);
-                        var color = context.Colorants.FirstOrDefault(c => c.Name == ChosenColorantFromSpect.Name);
+                    //using (AppContextDB context = new AppContextDB())
+                    //{
+                    //    var material = context.Materials.FirstOrDefault(m => m.Image == imgArr);
+                    //    var param = context.Parameters.FirstOrDefault(p => p._L == SpectCoorL && p._A == SpectCoorA && p._B == SpectCoorB);
+                    //    var color = context.Colorants.FirstOrDefault(c => c.Name == ChosenColorantFromSpect.Name);
 
 
-                        Report report = new Report { Date = date, Message = recommendation };
-                        context.Reports.Add(report);
+                    //    Report report = new Report { Date = date, Message = recommendation };
+                    //    context.Reports.Add(report);
 
-                        if (param == null)
-                        {
-                            Parameter paramets = new Parameter
-                            {
-                                _L = SpectCoorL,
-                                _A = SpectCoorA,
-                                _B = SpectCoorB
-                            };
-                            context.Parameters.Add(param);
-                            report.Parameters = paramets;
-                            context.SaveChanges();
-                        }
-                        else if (color == null)
-                        {
-                            Colorant newColorant = new Colorant
-                            {
-                                Name = ChosenColorantFromSpect.Name
-                            };
-                            context.Colorants.Add(newColorant);
-                            report.Colorants = newColorant;
-                            context.SaveChanges();
-                        }
-                        else if (material == null)
-                        {
-                            Material newMaterial = new Material
-                            {
-                                Name = ChosenMaterialFromSpect.Name,
-                                Image = imgArr,
-                                ColorantId = ChosenColorantFromSpect.Id,
-                                ParametersId = param.Id
-                            };
+                    //    if (param == null)
+                    //    {
+                    //        Parameter paramets = new Parameter
+                    //        {
+                    //            _L = SpectCoorL,
+                    //            _A = SpectCoorA,
+                    //            _B = SpectCoorB
+                    //        };
+                    //        context.Parameters.Add(param);
+                    //        report.Parameters = paramets;
+                    //        context.SaveChanges();
+                    //    }
+                    //    else if (color == null)
+                    //    {
+                    //        Colorant newColorant = new Colorant
+                    //        {
+                    //            Name = ChosenColorantFromSpect.Name
+                    //        };
+                    //        context.Colorants.Add(newColorant);
+                    //        report.Colorants = newColorant;
+                    //        context.SaveChanges();
+                    //    }
+                    //    else if (material == null)
+                    //    {
+                    //        Material newMaterial = new Material
+                    //        {
+                    //            Name = ChosenMaterialFromSpect.Name,
+                    //            Image = imgArr,
+                    //            ColorantId = ChosenColorantFromSpect.Id,
+                    //            ParametersId = param.Id
+                    //        };
 
-                            context.Materials.Add(newMaterial);
-                            report.Material = newMaterial;
-                        }
-                        else
-                        {
-                            report.Material = material;
-                            report.Parameters = param;
-                            report.Colorants = color;
-                        }
-                        context.SaveChanges();
-                    }
+                    //        context.Materials.Add(newMaterial);
+                    //        report.Material = newMaterial;
+                    //    }
+                    //    else
+                    //    {
+                    //        report.Material = material;
+                    //        report.Parameters = param;
+                    //        report.Colorants = color;
+                    //    }
+                    //    context.SaveChanges();
+                    //}
                 });
             }
         }
