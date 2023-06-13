@@ -1,24 +1,28 @@
-﻿using FuzzyProject.DB_EF;
+﻿using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Wordprocessing;
+using DocumentFormat.OpenXml;
+using FuzzyProject.DB_EF;
 using FuzzyProject.FuzzyLogic;
 using FuzzyProject.Models;
 using FuzzyProject.Views;
 using FuzzyProject.WorkWithColors;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
-using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
-using System.Reflection.Metadata;
 using System.Windows;
+using System.Windows.Forms;
 using System.Windows.Media.Imaging;
 using WPF_MVVM_Classes;
 using Material = FuzzyProject.Models.Material;
+using MessageBox = System.Windows.MessageBox;
 using Parameter = FuzzyProject.Models.Parameter;
+using System.Reflection.Metadata;
+using System.Text;
+using Microsoft.Win32;
 
 namespace FuzzyProject.ViewModels
 {
@@ -30,14 +34,14 @@ namespace FuzzyProject.ViewModels
         AppContextDB context;
 
         public string login;
-        private readonly Window reseacherWindow;
+        private readonly System.Windows.Window reseacherWindow;
         private Bitmap imgFirst;
         private Bitmap imgSecond;
         private Bitmap imgSpectr;
         private string selectedFileName;
         private string imgPath = "c:\\";
 
-        public ReseacherViewModel(Window _reseacherWindow, string _login)
+        public ReseacherViewModel(System.Windows.Window _reseacherWindow, string _login)
         {
             BrushesL = BrushesA = BrushesB = System.Drawing.Color.Gray.Name.ToString();
             reseacherWindow = _reseacherWindow;
@@ -226,7 +230,7 @@ namespace FuzzyProject.ViewModels
                 return _openImg ??= new RelayCommand(x =>
                 {
                     calculate = new CalculateImg();
-                    OpenFileDialog dlg = new OpenFileDialog();
+                    var dlg = new Microsoft.Win32.OpenFileDialog();
                     dlg.InitialDirectory = imgPath;
                     dlg.Filter = "Image files (*.jpg)|*.jpg|All Files (*.*)|*.*";
                     dlg.RestoreDirectory = true;
@@ -357,7 +361,7 @@ namespace FuzzyProject.ViewModels
 
                     //    Report report = new Report { Date = date, Message = recommendation };
                     //    context.Reports.Add(report);                      
-                        
+
                     //    if (param == null)
                     //    {
                     //        var newParam = new Parameter
@@ -789,7 +793,16 @@ namespace FuzzyProject.ViewModels
             {
                 return _info ??= new RelayCommand(x =>
                 {
-                    MessageBox.Show("Данный программный комплекс .....", "Описание");
+                    MessageBox.Show("Данный программный комплекс был выполнен в соответствии\n" +
+                        "с заданием выпускной квалификационной работы.\n" +
+                        "Тема ВКР: Программный комплекс для анализа цветовых характеристик экструдата на базе нечётких моделей.\n" +
+                        "Цель работы: Разработка программного комплекса,\n" +
+                        "позволяющего провести анализ измеренных цветовых координат экструдата\n" +
+                        "в пространстве CIELab и оценить степень термической деструкции\n" +
+                        "экструдата в производстве неокрашенной полимерной пленки по величине отклонения\n" +
+                        "цвета экструдата от эталона для различных типов полимеров.\n" +
+                        "Работу выполнила студентка 494 группы Гордеева Валерия Александровна\n" +
+                        "Год: 2023\n", "Описание");
                 });
             }
         }
@@ -801,12 +814,177 @@ namespace FuzzyProject.ViewModels
             {
                 return _infoForOperator ??= new RelayCommand(x =>
                 {
-                    MessageBox.Show("ДЛя анализа экструдата полимерн", "Информация для оператора экструдера");
+                    MessageBox.Show("Данный программный комплекс позволяет провести анализ\n" +
+                        "измеренных цветовых координат экструдата\n" +
+                        "в пространстве CIELab и оценить степень термической деструкции\n" +
+                        "экструдата в производтсве неокрашенной полимерной плёнки по величине отклонения\n" +
+                        "цвета экструдата от эталона для различных типов полимеров.\n" +
+                        "Необходимые действия для анализа экструдата:\n" +
+                        "1) Выбор исходных данных (фотоизображение, либо цветовые координаты экструдата)\n" +
+                        "2) Загрузка исходного изоображения/ввод цветовых координат\n" +
+                        "3) Выбор типа полимерной плёнки\n" +
+                        "4) Нажатие на кнопку 'Анализ'", "Информация для оператора экструдера");
                 });
             }
         }
         #endregion
 
+        #region Создание отчёта
+        private RelayCommand _report;
+        public RelayCommand Report
+        {
+            get
+            {
+                return _report ??= new RelayCommand(x =>
+                {
+                    var dialog = new Microsoft.Win32.SaveFileDialog();
+                    dialog.Filter = "Документ Word|*.docx";
+                    dialog.FileName = $"Отчет №1. {DateTime.Today.ToShortDateString()}.docx";
+
+                    if (dialog.ShowDialog() == true)
+                    {
+                        string folderPath = Path.GetDirectoryName(dialog.FileName);
+
+                        string pathFile = Path.Combine(folderPath, $"Отчет №1. {DateTime.Today.ToShortDateString()}.docx");
+                        var file = new FileInfo(Path.Combine(folderPath, pathFile));
+
+                        int num = 1;
+                        while (file.Exists)
+                        {
+                            pathFile = Path.Combine(pathFile, $"Отчет №{num}. {DateTime.Today.ToShortDateString()}.docx");
+                            pathFile.Replace(',', ' ');
+                            file = new FileInfo(Path.Combine(pathFile));
+                            num++;
+                        };
+
+                        using (WordprocessingDocument wordDocument = WordprocessingDocument.Create(dialog.FileName, WordprocessingDocumentType.Document))
+                        {
+                            
+                            string dateTime = $"Отчёт за {DateTime.Now}";
+
+                            MainDocumentPart mainPart = wordDocument.AddMainDocumentPart();
+                            mainPart.Document = new DocumentFormat.OpenXml.Wordprocessing.Document();
+
+                            Body body = new Body();
+
+                            //создание параграфа для заголовка
+                            Paragraph titleParagraph = new Paragraph();
+                            Run run = new Run();
+
+                            Text text = new Text(dateTime);
+
+                            //стили для заголовка
+                            RunProperties titleProperties = new RunProperties();
+                            RunFonts runFonts = new RunFonts() { Ascii = "Times New Roman", HighAnsi = "Times New Roman" };
+                            FontSize fontSize = new FontSize() { Val = "30" };
+                            Bold bold = new Bold();
+                            Justification justificationTitle = new Justification() { Val = JustificationValues.Center };
+                            titleProperties.Append(runFonts);
+                            titleProperties.Append(bold);
+                            titleProperties.Append(justificationTitle);
+                            titleProperties.Append(fontSize);
+
+                            run.Append(titleProperties);
+                            run.Append(text);
+                            titleParagraph.Append(run);
+
+                            body.AppendChild(titleParagraph);
+
+                            //основной текст:
+                            StringBuilder mainText = new StringBuilder();
+
+                            mainText.Append($"Пользователь: .");
+                            mainText.Append($"Тип материала: . ");
+                            mainText.Append($"Цветовые координаты: {CoorL}, {CoorA}, {CoorB}.");
+                            mainText.Append($"Краситель: {ChosenColorantFromImg.Name}.");
+                            mainText.Append($"Изображение: .");
+                            mainText.Append($"Результаты анализа: .");
+
+                            string[] sentences = mainText.ToString().Split(new[] { '.', '?', '!' }, StringSplitOptions.RemoveEmptyEntries);
+
+                            // Создаем параграф для каждого предложения
+                            foreach (string sentence in sentences)
+                            {
+                                Paragraph paragraph = new Paragraph();
+                                Run runMainText = new Run(new Text(sentence.Trim() + "."));
+
+                                // Задаем шрифт и размер текста
+                                RunProperties runProperties = new RunProperties();
+                                RunFonts runMainFonts = new RunFonts() { Ascii = "Times New Roman", HighAnsi = "Times New Roman" };
+                                FontSize fontSizeMain = new FontSize() { Val = "28" };
+                                runProperties.Append(runMainFonts);
+                                runProperties.Append(fontSizeMain);
+                                runMainText.PrependChild(runProperties);
+
+                                paragraph.Append(runMainText);
+                                body.Append(paragraph);
+                            }
+
+                            //добавление созданного раздела в документ
+                            mainPart.Document.AppendChild(body);
+
+                            //сохранение отчёта
+                            wordDocument.Save();
+                            wordDocument.Dispose();
+
+                            // Уведомляем пользователя о сохранении файла
+                            MessageBox.Show("Файл успешно сохранен");
+                        }
+
+                    }
+
+
+
+                    //// Создаем файл
+                    //string fileName = "Отчет за " + DateTime.Now.ToString("dd.MM.yyyy");
+                    //var dialog = new Microsoft.Win32.SaveFileDialog();
+                    //dialog.Filter = "Word Documents (*.docx)|*.docx";
+                    //dialog.FileName = fileName;
+
+                    //if (dialog.ShowDialog() == true)
+                    //{
+                    //    using (WordprocessingDocument wordDoc = WordprocessingDocument.Create(dialog.FileName, WordprocessingDocumentType.Document))
+                    //    {
+                    //        // Добавляем основную часть документа (MainDocumentPart)
+                    //        MainDocumentPart mainPart = wordDoc.AddMainDocumentPart();
+
+                    //        // Создаем новый документ
+                    //        DocumentFormat.OpenXml.Wordprocessing.Document documentElement = new DocumentFormat.OpenXml.Wordprocessing.Document();
+                    //        mainPart.Document = documentElement;
+
+                    //        // Добавляем элемент Body
+                    //        Body body = new Body();
+                    //        documentElement.Append(body);
+
+                    //        // Создаем новый параграф
+                    //        Paragraph paragraph = new Paragraph();
+
+                    //        // Создаем новый run с текстом
+                    //        Run run = new Run(new Text("Hello, world!"));
+
+                    //        // Создаем новый элемент RunProperties (RPr) с необходимыми свойствами
+                    //        RunProperties runProperties = new RunProperties();
+                    //        runProperties.RunFonts = new RunFonts() { Ascii = "Times New Roman", HighAnsi = "Times New Roman" }; // Задаем шрифт
+                    //        runProperties.FontSize = new FontSize() { Val = "30" }; // Задаем размер текста
+
+                    //        // Добавляем элемент RPr в элемент Run
+                    //        run.PrependChild<RunProperties>(runProperties);
+
+                    //        // Добавляем элемент Run в элемент Paragraph
+                    //        paragraph.Append(run);
+
+                    //        // Добавляем параграф в элемент Body
+                    //        body.Append(paragraph);
+
+                    //        // Сохраняем документ
+                    //        mainPart.Document.Save();
+                    //    }
+                    //}
+
+                });
+            }
+        }
+        #endregion
 
 
     }

@@ -61,7 +61,7 @@
                                 <ColumnDefinition/>
                                 <ColumnDefinition/>
                                 <ColumnDefinition/>
-                                <ColumnDefinition/>
+                                <ColumnDefinition Width="1.4*"/>
                             </Grid.ColumnDefinitions>
 
                             <Grid Grid.Column="0" Margin="2">
@@ -148,16 +148,20 @@
                                             <RowDefinition/>
                                             <RowDefinition/>
                                             <RowDefinition/>
+                                            <RowDefinition/>
                                         </Grid.RowDefinitions>
 
                                         <StackPanel Orientation="Horizontal" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center">
-                                            <Button Command="{Binding OpenImg}" Content="Открыть" Width="150" Style="{DynamicResource MaterialDesignOutlinedDarkButton}"/>
+                                            <Button Command="{Binding OpenImg}" Content="Открыть" Width="200" Style="{DynamicResource MaterialDesignOutlinedDarkButton}"/>
                                         </StackPanel>
                                         <StackPanel Orientation="Horizontal" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center">
-                                            <Button Command="{Binding GetColor}" Content="Получить цвет" Width="150" Style="{DynamicResource MaterialDesignOutlinedDarkButton}"/>
+                                            <Button Command="{Binding GetColor}" Content="Получить цвет" Width="200" Style="{DynamicResource MaterialDesignOutlinedDarkButton}"/>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal" Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                            <Button Command="{Binding Report}" Content="Создать отчёт" Width="200" Style="{DynamicResource MaterialDesignOutlinedDarkButton}"/>
                                         </StackPanel>
                                         <StackPanel Grid.Row =" 3" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
-                                            <Button Command="{Binding Analyse}" Content="Анализ" Width="150"  Style="{DynamicResource MaterialDesignFlatDarkBgButton}"/>
+                                            <Button Command="{Binding Analyse}" Content="Анализ" Width="200"  Style="{DynamicResource MaterialDesignFlatDarkBgButton}"/>
                                         </StackPanel>
                                     </Grid>
                                 </GroupBox>
@@ -170,7 +174,7 @@
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition/>
-                            <ColumnDefinition Width="1.5*"/>
+                            <ColumnDefinition Width="1.9*"/>
                         </Grid.ColumnDefinitions>
 
                         <Grid Grid.Column="0">
@@ -308,6 +312,7 @@
                                 <RowDefinition Height="0.2*"/>
                                 <RowDefinition/>
                                 <RowDefinition Height="0.2*"/>
+                                <RowDefinition Height="0.2*"/>
                             </Grid.RowDefinitions>
 
                             <TextBlock Grid.Row="0" Style="{DynamicResource MaterialDesignBody1TextBlock}" FontWeight="DemiBold"  HorizontalAlignment="Center" VerticalAlignment="Bottom" Text="Изображение исследуемого экструдата" />
@@ -323,16 +328,20 @@
                                     <StackPanel HorizontalAlignment="Center" Grid.Column="0" Orientation="Horizontal">
                                         <Button Command="{Binding GetSpectrColor}" Content="Получить цвет" Width="180" Style="{DynamicResource MaterialDesignOutlinedDarkButton}"/>
                                     </StackPanel>
+                                    <StackPanel HorizontalAlignment="Center" Grid.Column="2" Orientation="Horizontal">
+                                        <Button Command="{Binding ClearSpectrForm}" Content="Создать отчёт" Width="180" Style="{DynamicResource MaterialDesignOutlinedDarkButton}"/>
+                                    </StackPanel>
                                     <StackPanel HorizontalAlignment="Center" Grid.Column="1" Orientation="Horizontal">
                                         <Button Command="{Binding ClearSpectrForm}" Content="Очистить форму" Width="180" Style="{DynamicResource MaterialDesignOutlinedDarkButton}"/>
                                     </StackPanel>
-                                    <StackPanel HorizontalAlignment="Center" Grid.Column="2" Orientation="Horizontal">
-                                        <Button Command="{Binding AnalyseSpectr}" Content="Анализ" Width="180" Style="{DynamicResource MaterialDesignFlatDarkBgButton}"/>
-                                    </StackPanel>
                                 </Grid>
                             </Grid>
-                            <!--<TextBox Height="25" VerticalAlignment="Bottom" Width="150" HorizontalAlignment="Left"/>
-                                    <Button VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="150" Content="Press"/>-->
+
+                            <Grid Grid.Row="3">
+                                <StackPanel HorizontalAlignment="Center" Grid.Column="1" Orientation="Horizontal">
+                                    <Button Command="{Binding AnalyseSpectr}" Content="Анализ" Width="300" Style="{DynamicResource MaterialDesignFlatDarkBgButton}"/>
+                                </StackPanel>
+                            </Grid>
                         </Grid>
 
                     </Grid>
