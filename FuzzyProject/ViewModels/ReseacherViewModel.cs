@@ -820,11 +820,11 @@ namespace FuzzyProject.ViewModels
                     MessageBox.Show("Данный программный комплекс позволяет провести анализ\n" +
                         "измеренных цветовых координат экструдата\n" +
                         "в пространстве CIELab и оценить степень термической деструкции\n" +
-                        "экструдата в производтсве неокрашенной полимерной плёнки по величине отклонения\n" +
+                        "экструдата в производстве неокрашенной полимерной плёнки по величине отклонения\n" +
                         "цвета экструдата от эталона для различных типов полимеров.\n" +
                         "Необходимые действия для анализа экструдата:\n" +
                         "1) Выбор исходных данных (фотоизображение, либо цветовые координаты экструдата)\n" +
-                        "2) Загрузка исходного изоображения/ввод цветовых координат\n" +
+                        "2) Загрузка исходного изображения/ввод цветовых координат\n" +
                         "3) Выбор типа полимерной плёнки\n" +
                         "4) Нажатие на кнопку 'Анализ'", "Информация для оператора экструдера");
                 });
@@ -840,88 +840,30 @@ namespace FuzzyProject.ViewModels
             {
                 return _report ??= new RelayCommand(x =>
                 {
-                    //var dialog = new Microsoft.Win32.SaveFileDialog();
-                    //dialog.Filter = "Документ Word|*.docx";
-                    //dialog.FileName = $"Отчет №1. {DateTime.Today.ToShortDateString()}.docx";
-
                     // запрашиваем у пользователя путь для сохранения файла
                     string path = ShowFolderBrowserDialog();
 
-                    SaveInWord save = new SaveInWord();
-
-                    // определяем номер отчёта как количество файлов с именами, начинающимися на "отчёт" за сегодняшний день
-                    string pathFile = Path.Combine(path, $"Отчёт №1. {DateTime.Today.ToShortDateString()}.docx");
-                    var file = new FileInfo(Path.Combine(path, pathFile));
-
-                    int numFiles = 1;
-                    while (file.Exists)
+                    if (path != "/")
                     {
-                        pathFile = Path.Combine(path, $"Отчет №{ numFiles}. { DateTime.Today.ToShortDateString()}.docx");
-                        pathFile.Replace(',', ' ');
-                        file = new FileInfo(Path.Combine(pathFile));
-                        numFiles++;
+                        SaveInWord save = new SaveInWord();
+
+                        // определяем номер отчёта как количество файлов с именами, начинающимися на "отчёт" за сегодняшний день
+                        string pathFile = Path.Combine(path, $"Отчёт №1. {DateTime.Today.ToShortDateString()}.docx");
+                        var file = new FileInfo(Path.Combine(path, pathFile));
+
+                        int numFiles = 1;
+                        while (file.Exists)
+                        {
+                            pathFile = Path.Combine(path, $"Отчет №{numFiles}. {DateTime.Today.ToShortDateString()}.docx");
+                            file = new FileInfo(Path.Combine(pathFile));
+                            numFiles++;
+                        }
+
+                        var coordinates = $"L = {CoorL}, a = {CoorA}, b = {CoorB}";
+                        save.Export(pathFile, imgSecond, coordinates, "ПВХ", ChosenColorantFromImg.Name, Result, imgFirst);
                     }
-
-                    //byte[] imgArr;
-
-                    ////перевод изображения в биты для сохранения в БД
-                    //using (MemoryStream ms = new MemoryStream())
-                    //{
-                    //    imgSecond.Save(ms, ImageFormat.Bmp);
-                    //    imgSecond.Save(ms, ImageFormat.Bmp);
-                    //    imgArr = ms.ToArray();
-                    //}
-
-                    //var coordinates = $"L = {CoorL}, a = {CoorA}, b = {CoorB}";
-                    save.Export(pathFile, imgSecond);
-
-                    //pathFile, coordinates, "ПВХ", ChosenColorantFromImg.Name, Result, imgArr
-
-                    //// Создаем файл
-                    //string fileName = "Отчет за " + DateTime.Now.ToString("dd.MM.yyyy");
-                    //var dialog = new Microsoft.Win32.SaveFileDialog();
-                    //dialog.Filter = "Word Documents (*.docx)|*.docx";
-                    //dialog.FileName = fileName;
-
-                    //if (dialog.ShowDialog() == true)
-                    //{
-                    //    using (WordprocessingDocument wordDoc = WordprocessingDocument.Create(dialog.FileName, WordprocessingDocumentType.Document))
-                    //    {
-                    //        // Добавляем основную часть документа (MainDocumentPart)
-                    //        MainDocumentPart mainPart = wordDoc.AddMainDocumentPart();
-
-                    //        // Создаем новый документ
-                    //        DocumentFormat.OpenXml.Wordprocessing.Document documentElement = new DocumentFormat.OpenXml.Wordprocessing.Document();
-                    //        mainPart.Document = documentElement;
-
-                    //        // Добавляем элемент Body
-                    //        Body body = new Body();
-                    //        documentElement.Append(body);
-
-                    //        // Создаем новый параграф
-                    //        Paragraph paragraph = new Paragraph();
-
-                    //        // Создаем новый run с текстом
-                    //        Run run = new Run(new Text("Hello, world!"));
-
-                    //        // Создаем новый элемент RunProperties (RPr) с необходимыми свойствами
-                    //        RunProperties runProperties = new RunProperties();
-                    //        runProperties.RunFonts = new RunFonts() { Ascii = "Times New Roman", HighAnsi = "Times New Roman" }; // Задаем шрифт
-                    //        runProperties.FontSize = new FontSize() { Val = "30" }; // Задаем размер текста
-
-                    //        // Добавляем элемент RPr в элемент Run
-                    //        run.PrependChild<RunProperties>(runProperties);
-
-                    //        // Добавляем элемент Run в элемент Paragraph
-                    //        paragraph.Append(run);
-
-                    //        // Добавляем параграф в элемент Body
-                    //        body.Append(paragraph);
-
-                    //        // Сохраняем документ
-                    //        mainPart.Document.Save();
-                    //    }
-                    //}
+                    else MessageBox.Show("Файл не сохранился", "Ошибка сохранения файла");
+                   
                 });
             }
         }
@@ -936,7 +878,7 @@ namespace FuzzyProject.ViewModels
             }
             else
             {
-                return ".";
+                return "/";
             }
         }
         #endregion
