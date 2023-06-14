@@ -319,12 +319,13 @@ namespace FuzzyProject.ViewModels
 
                     var coors = new double[] { coorL, coorA, coorB };
 
-                    var result = setVariable.SetCharachteristics(coors, ChosenColorantFromImg.Name);
-                    string recommendation = " ";
+                    var rec = setVariable.Delta(coors, "поливинилхлорид");
+                    //var result = setVariable.SetCharachteristics(coors, ChosenColorantFromImg.Name);
+                    //string recommendation = " ";
 
-                    //вывод рекомендаций
-                    recommends = new ReccomendsForOperator();
-                    recommendation = recommends.GiveRecommend(result);
+                    ////вывод рекомендаций
+                    //recommends = new ReccomendsForOperator();
+                    //recommendation = recommends.GiveRecommend(result);
 
 
                     var date = DateTime.Now.Date;
@@ -350,9 +351,9 @@ namespace FuzzyProject.ViewModels
                     var refImgBitmap = calculate.FromBytesToBitmap(img);
                     var refImgSource = calculate.BitmapToImageSource(refImgBitmap);
 
-                    Result = recommendation;
+                    Result = rec;
                     recommendations = new Recommendations();
-                    recommendationsViewModel = new RecommendationsViewModel(recommendation, refImgSource, recommendations);
+                    recommendationsViewModel = new RecommendationsViewModel(rec, refImgSource, recommendations);
                     recommendations.DataContext = recommendationsViewModel;
                     recommendations.Show();
 
@@ -580,13 +581,14 @@ namespace FuzzyProject.ViewModels
 
                     var coors = new double[] { coorL, coorA, coorB };
 
-                    var result = setVariable.SetCharachteristics(coors, ChosenColorantFromSpect.Name);
-                    string recommendation = " ";
+                    var rec = setVariable.GetDeltas(coors, "Поливинилхлорид");
+                    //var result = setVariable.SetCharachteristics(coors, ChosenColorantFromSpect.Name);
+                    //string recommendation = " ";
 
-                    recommends = new ReccomendsForOperator();
-                    recommendation = recommends.GiveRecommend(result);
+                    //recommends = new ReccomendsForOperator();
+                    //recommendation = recommends.GiveRecommend(result);
 
-                    //перенести потом ниже, когда все рекоммендации добавяться
+                    //перенести потом ниже, когда все рекомендации добавятся
                     byte[] img;
                     using (AppContextDB contextDB = new AppContextDB())
                     {
@@ -598,7 +600,7 @@ namespace FuzzyProject.ViewModels
                     var refImgSource = calculate.BitmapToImageSource(refImgBitmap);
 
                     recommendations = new Recommendations();
-                    recommendationsViewModel = new RecommendationsViewModel(recommendation, refImgSource, recommendations);
+                    recommendationsViewModel = new RecommendationsViewModel(rec, refImgSource, recommendations);
                     recommendations.DataContext = recommendationsViewModel;
                     recommendations.Show();
 
@@ -862,8 +864,43 @@ namespace FuzzyProject.ViewModels
                         var coordinates = $"L = {CoorL}, a = {CoorA}, b = {CoorB}";
                         save.Export(pathFile, imgSecond, coordinates, "ПВХ", ChosenColorantFromImg.Name, Result, imgFirst);
                     }
-                    else MessageBox.Show("Файл не сохранился", "Ошибка сохранения файла");
+                    else return;
                    
+                });
+            }
+        }
+
+        private RelayCommand _reportSpect;
+        public RelayCommand ReportSpect
+        {
+            get
+            {
+                return _reportSpect ??= new RelayCommand(x =>
+                {
+                    // запрашиваем у пользователя путь для сохранения файла
+                    string path = ShowFolderBrowserDialog();
+
+                    if (path != "/")
+                    {
+                        SaveInWord save = new SaveInWord();
+
+                        // определяем номер отчёта как количество файлов с именами, начинающимися на "отчёт" за сегодняшний день
+                        string pathFile = Path.Combine(path, $"Отчёт №1. {DateTime.Today.ToShortDateString()}.docx");
+                        var file = new FileInfo(Path.Combine(path, pathFile));
+
+                        int numFiles = 1;
+                        while (file.Exists)
+                        {
+                            pathFile = Path.Combine(path, $"Отчет №{numFiles}. {DateTime.Today.ToShortDateString()}.docx");
+                            file = new FileInfo(Path.Combine(pathFile));
+                            numFiles++;
+                        }
+
+                        var coordinates = $"L = {SpectCoorL}, a = {SpectCoorA}, b = {SpectCoorB}";
+                        save.ExportSpect(pathFile, imgSpectr, coordinates, "ПВХ", ChosenColorantFromSpect.Name, Result);
+                    }
+                    else return;
+
                 });
             }
         }

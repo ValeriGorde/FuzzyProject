@@ -270,7 +270,7 @@ namespace FuzzyProject.Export
                 File.Delete(tempFiles[i]);
             };
 
-            MessageBoxResult result = MessageBox.Show($"Файл успешно сохранён по пути {fileName}.\n Хотите открыть его сейчас?", "Открытие файла", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            MessageBoxResult result = MessageBox.Show($"Файл успешно сохранён по пути:\n {fileName}.\n Хотите открыть его сейчас?", "Открытие файла", MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (result == MessageBoxResult.Yes)
             {
                 Process.Start(new ProcessStartInfo
@@ -280,6 +280,57 @@ namespace FuzzyProject.Export
                 });
             }
         }
+
+        #region Для спектрофотометра
+        public void ExportSpect(string fileName, Bitmap img, string coordinates, string material, string colorant, string results)
+        {
+            string tempFilePath = System.IO.Path.GetTempFileName() + ".jpg";
+            img.Save(tempFilePath, ImageFormat.Jpeg);
+
+
+            //добавление изображения в документ
+            InsertAPictureWithTextSpect(fileName, tempFilePath, coordinates, material, colorant, results);
+
+            File.Delete(tempFilePath);
+
+            MessageBoxResult result = MessageBox.Show($"Файл успешно сохранён по пути:\n {fileName}.\n Хотите открыть его сейчас?", "Открытие файла", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (result == MessageBoxResult.Yes)
+            {
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = fileName,
+                    UseShellExecute = true
+                });
+            }
+        }
+
+        public static void InsertAPictureWithTextSpect(string filePath, string picPath, string coordinates, string material, string colorant, string results)
+        {
+            using (WordprocessingDocument wordDocument = WordprocessingDocument.Create(filePath, WordprocessingDocumentType.Document))
+            {
+                MainDocumentPart mainPart = wordDocument.AddMainDocumentPart();
+
+
+                AddText(wordDocument, coordinates, material, colorant);
+
+                ImagePart imagePart = mainPart.AddImagePart(ImagePartType.Jpeg);
+
+                using (FileStream stream = new FileStream(picPath, FileMode.Open))
+                {
+                    imagePart.FeedData(stream);
+                }
+
+                CreateImg(wordDocument, mainPart.GetIdOfPart(imagePart), "Изображение оттенка экструдата по цветовым координатам:");
+
+
+                AddResults(wordDocument, results);
+            }
+        }
+        #endregion
+
+
+
+
     }
 }
 

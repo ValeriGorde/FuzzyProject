@@ -1,15 +1,17 @@
 ﻿using FLS;
 using System;
 using System.Collections.Generic;
+using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ToolTip;
 
 namespace FuzzyProject.FuzzyLogic
 {
     internal class SetVariable
     {
-        public double SetCharachteristics(double[] coors, string color)
+        public double SetCharachteristics(double[] coors, string material)
         {
             #region Other Rules
             //LinguisticVariable coorl = new LinguisticVariable("Coorl");
@@ -32,28 +34,11 @@ namespace FuzzyProject.FuzzyLogic
 
             double[] deltas = new double[3];
 
-            if (color == "оранжевый")
+            if (material == "ПВХ")
             {
-                if (coors[0] < 80)
-                {
-                    deltas[0] = coors[0] / 80;
-                }
-                else
-                    deltas[0] = 80 / coors[0];
-                if (coors[1] < 10)
-                {
-                    deltas[1] = coors[1] / 10;
-                }
-                else
-                    deltas[1] = 10 / coors[1];
-                if (coors[2] < 20)
-                {
-                    deltas[2] = coors[2] / 20;
-                }
-                else
-                    deltas[2] = 20 / coors[2];
+
             }
-            else if (color == "голубой")
+            else if (material == "голубой")
             {
                 if (coors[0] < 70)
                 {
@@ -74,7 +59,7 @@ namespace FuzzyProject.FuzzyLogic
                 else
                     deltas[2] = Math.Abs(-34 / coors[2]);
             }
-            else if (color == "белый")
+            else if (material == "белый")
             {
                 if (coors[0] < 86)
                 {
@@ -93,28 +78,6 @@ namespace FuzzyProject.FuzzyLogic
                 }
                 else deltas[2] = (coors[2] / 1) - 1;
             }
-
-            //else if (color == "зелёный")
-            //{
-            //    if (coors[1] < 80)
-            //    {
-            //        deltas[1] = coors[1] / 80;
-            //    }
-            //    else
-            //        deltas[1] = 80 / coors[1];
-            //    if (coors[2] < 80)
-            //    {
-            //        deltas[2] = coors[2] / 80;
-            //    }
-            //    else
-            //        deltas[2] = 80 / coors[2];
-            //    if (coors[3] < 80)
-            //    {
-            //        deltas[3] = coors[3] / 80;
-            //    }
-            //    else
-            //        deltas[3] = 80 / coors[3];
-            //}
             #endregion
 
             #region Linguistic
@@ -171,9 +134,164 @@ namespace FuzzyProject.FuzzyLogic
             double[] refCoors = new double[] { 86, 0, 0 };
 
             double deltaE;
-            deltaE = Math.Sqrt(Math.Pow(coors[0] - refCoors[0], 2) + Math.Pow(coors[1] - refCoors[1], 2) + Math.Pow(coors[2] - refCoors[2], 2))/100;
+            deltaE = Math.Sqrt(Math.Pow(coors[0] - refCoors[0], 2) + Math.Pow(coors[1] - refCoors[1], 2) + Math.Pow(coors[2] - refCoors[2], 2)) / 100;
 
             return deltaE;
+        }
+
+        public string Delta(double[] coors, string material)
+        {
+            double LStarE = 0;
+            double aStarE = 0;
+            double bStarE = 0;
+
+            if (material == "Поливинилхлорид")
+            {
+                LStarE = 85.0;
+                aStarE = 2.0;
+                bStarE = -15.0;
+            }
+            else if (material == "Полиэтилен")
+            {
+                LStarE = 92.0;
+                aStarE = -2.0;
+                bStarE = 3.0;
+            }
+            else if (material == "Полипропилен")
+            {
+                LStarE = 96.0;
+                aStarE = -0.1;
+                bStarE = -2.0;
+            }
+            else if (material == "Поликарбонат")
+            {
+                LStarE = 82.0;
+                aStarE = -0.5;
+                bStarE = -10.0;
+            }
+
+            return EstimateThermalDestruction(coors, LStarE, aStarE, bStarE);
+        }
+
+
+        public string EstimateThermalDestruction(double[] coors, double lStandard, double aStandard, double bStandard)
+        {
+            // определяем нечёткие множества для каждой компоненты L, a и b с погрешностями
+            double lLow = GetMembershipValue(coors[0], lStandard - 10, lStandard - 5, lStandard);
+            double lMedium = GetMembershipValue(coors[0], lStandard - 5, lStandard, lStandard + 5);
+            double lHigh = GetMembershipValue(coors[0], lStandard, lStandard + 5, lStandard + 10);
+
+            double aLow = GetMembershipValue(coors[1], aStandard - 10, aStandard - 5, aStandard);
+            double aMedium = GetMembershipValue(coors[1], aStandard - 2.5, aStandard, aStandard + 2.5);
+            double aHigh = GetMembershipValue(coors[1], aStandard, aStandard + 5, aStandard + 10);
+
+            double bLow = GetMembershipValue(coors[1], bStandard - 10, bStandard - 5, bStandard);
+            double bMedium = GetMembershipValue(coors[1], bStandard - 2.5, bStandard, bStandard + 2.5);
+            double bHigh = GetMembershipValue(coors[1], bStandard, bStandard + 5, bStandard + 10);
+
+            // определяем степени перекрытия между нечёткими множествами
+            double overlapNoDamage = new[] { lLow, aLow, bLow }.Min();
+            double overlapLowDamage = new[] { lMedium, aMedium, bMedium }.Min();
+            double overlapModerateDamage = new[] { lHigh, aHigh, bHigh }.Min();
+            double minOverlap = Math.Min(overlapNoDamage, Math.Min(overlapLowDamage, overlapModerateDamage));
+            double overlapSevereDamage = minOverlap == 0.0 ? 0.0 : 1.0 - minOverlap;
+
+            // определяем степень термической деструкции
+            if (overlapSevereDamage > 0)
+            {
+                return "Сильная деструкция";
+            }
+            else if (overlapModerateDamage > 0.5)
+            {
+                return "Умеренная деструкция";
+            }
+            else if (overlapLowDamage > 0.5)
+            {
+                return "Слабая деструкция";
+            }
+            else
+            {
+                return "Отсутствие деструкции";
+            }
+        }
+
+        // функция для вычисления степени принадлежности значения x к нечётному множеству с треугольной функцией принадлежности и погрешностью
+        public double GetMembershipValue(double x, double a, double b, double c)
+        {
+            if (x <= a  || x >= c )
+            {
+                return 0.0;
+            }
+            else if (x >= b)
+            {
+                return (c - x) / (c - b);
+            }
+            else if (x <= a)
+            {
+                return (x - a) / (b - a);
+            }
+            else
+            {
+                return 1.0 - (x - a ) / 2;
+            }
+        }
+
+
+        public string GetDeltas(double[] coors, string material) 
+        {
+            double LStarE = 0;
+            double aStarE = 0;
+            double bStarE = 0;
+
+            if (material == "Поливинилхлорид")
+            {
+                LStarE = 85.0;
+                aStarE = 2.0;
+                bStarE = -15.0;
+            }
+            else if (material == "Полиэтилен")
+            {
+                LStarE = 92.0;
+                aStarE = -2.0;
+                bStarE = 3.0;
+            }
+            else if (material == "Полипропилен")
+            {
+                LStarE = 96.0;
+                aStarE = -0.1;
+                bStarE = -2.0;
+            }
+            else if (material == "Поликарбонат")
+            {
+                LStarE = 82.0;
+                aStarE = -0.5;
+                bStarE = -10.0;
+            }
+
+            var deltaE = Math.Sqrt((Math.Pow((coors[0] - LStarE), 2) + (Math.Pow((coors[1] - aStarE), 2) + (Math.Pow((coors[2] - bStarE), 2)))))/100;
+
+            // определяем степень термической деструкции
+            if (deltaE >= 0 && deltaE <= 0.05)
+            {
+                return "Действуй не требуется. Продукт соответствует установленным требованиям.";
+            }
+            else if (deltaE > 0.05 && deltaE <= 0.2)
+            {
+                return "Экструдат имеет отклонение от эталонного продукта, что может указывать на наличие слабой термической деструкции.\n" +
+                    "Рекомендуется проверить оборудование и настройки процесса экструзии.";
+            }
+            else if (deltaE > 0.2 && deltaE <= 0.3)
+            {
+                return "Состояние экструдата подвержено умеренной термодеструкции.\n" +
+                    "Возможно, материал не совсем подходит для данного применения или процесс экструзии настроен неправильно.\n" +
+                    "Рекомендуется проверить выбранный материал и настройки процесса экструзии, чтобы избежать ухудшения качества продукции.";
+            }
+            else
+            {
+                return "Обратите внимание на состояние экструдата, так как он имеет признаки серьезной термической деструкции, это может привести к повреждению оборудования и ухудшению качества продукции.\n" +
+                    "Рекомендуется немедленно остановить процесс экструзии и проверить настройки оборудования.";
+            }
+
         }
     }
 }

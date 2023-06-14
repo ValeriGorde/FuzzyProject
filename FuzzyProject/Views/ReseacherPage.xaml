@@ -18,13 +18,13 @@
             <StackPanel>
                 <ToolBar >
                     <Button Command="{Binding Info}" Content="{materialDesign:PackIcon Kind=InformationOutline}" 
-                            Style="{DynamicResource MaterialDesignFlatLightButton}" Height="60"/>
+                            Style="{DynamicResource MaterialDesignFlatDarkButton}" Height="60" />
                     <Separator/>
-                    <Button Content="Информация для оператора" Style="{DynamicResource MaterialDesignFlatLightButton}"
+                    <Button Content="Информация для оператора" Style="{DynamicResource MaterialDesignFlatDarkButton}"
                             Command="{Binding InfoForOperator}" Height="60"/>
                     <Separator/>
                     <Button Content="Сменить пользователя" Command="{Binding Exit}" 
-                            Style="{DynamicResource MaterialDesignFlatLightButton}" Height="60"/>
+                            Style="{DynamicResource MaterialDesignFlatDarkButton}" Height="60"/>
                 </ToolBar>
             </StackPanel>
         </Grid>
@@ -46,7 +46,7 @@
                             </Grid.ColumnDefinitions>
 
                             <StackPanel Grid.Column="0">
-                                <TextBlock Text="Исходное изображение:" HorizontalAlignment="Center" FontWeight="Bold" Margin="0 10 0 0"/>
+                                <TextBlock Text="Исходное изображение экструдата:" HorizontalAlignment="Center" FontWeight="Bold" Margin="0 10 0 0"/>
                                 <Image x:Name="image" Source="{Binding StartImg}" Height="380" Margin="20" MouseDown="Image_MouseDown"/>
                             </StackPanel>
 
@@ -124,9 +124,9 @@
                                         </Grid.RowDefinitions>
 
                                         <StackPanel Grid.Row="0" Orientation="Horizontal">
-                                            <TextBlock Text="Материал: " VerticalAlignment="Center" Margin="10 0 0 0"/>
+                                            <TextBlock Text="Тип полимера: " VerticalAlignment="Center" Margin="10 0 0 0"/>
                                             <ComboBox SelectedItem="{Binding ChosenMaterialFromImg.Name}" ItemsSource="{Binding Material}"
-                                                      Width="120" VerticalAlignment="Center"
+                                                      Width="100" VerticalAlignment="Center"
                                                       SelectedValuePath="Name" DisplayMemberPath="Name"/>
                                         </StackPanel>
 
@@ -155,7 +155,7 @@
                                             <Button Command="{Binding OpenImg}" Content="Открыть" Width="200" Style="{DynamicResource MaterialDesignOutlinedDarkButton}"/>
                                         </StackPanel>
                                         <StackPanel Orientation="Horizontal" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center">
-                                            <Button Command="{Binding GetColor}" Content="Получить цвет" Width="200" Style="{DynamicResource MaterialDesignOutlinedDarkButton}"/>
+                                            <Button Command="{Binding GetColor}" Content="Усреднить цвет" Width="200" Style="{DynamicResource MaterialDesignOutlinedDarkButton}"/>
                                         </StackPanel>
                                         <StackPanel Orientation="Horizontal" Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Center">
                                             <Button Command="{Binding Report}" Content="Создать отчёт" Width="200" Style="{DynamicResource MaterialDesignOutlinedDarkButton}"/>
@@ -281,7 +281,7 @@
                                                 <RowDefinition/>
                                             </Grid.RowDefinitions>
 
-                                            <TextBlock Grid.Row="0" Text="Материал: " VerticalAlignment="Center" Margin="10 0 0 0"/>
+                                            <TextBlock Grid.Row="0" Text="Тип полимера: " VerticalAlignment="Center" Margin="10 0 0 0"/>
                                             <TextBlock Grid.Row="1" Text="Краситель: " VerticalAlignment="Center" Margin="10 0 0 0"/>
                                         </Grid>
 
@@ -315,7 +315,9 @@
                                 <RowDefinition Height="0.2*"/>
                             </Grid.RowDefinitions>
 
-                            <TextBlock Grid.Row="0" Style="{DynamicResource MaterialDesignBody1TextBlock}" FontWeight="DemiBold"  HorizontalAlignment="Center" VerticalAlignment="Bottom" Text="Изображение исследуемого экструдата" />
+                            <TextBlock Grid.Row="0" Style="{DynamicResource MaterialDesignBody1TextBlock}" FontWeight="DemiBold"  
+                                       HorizontalAlignment="Center" VerticalAlignment="Bottom" 
+                                       Text="Оттенок экструдата по его цветовым характеристикам" />
                             <Image Grid.Row="1" Source="{Binding SpectrImg}" Width="400" Height="300" Margin="15" VerticalAlignment="Top"/>
                             <Grid Grid.Row="2">
                                 <Grid>
@@ -329,7 +331,7 @@
                                         <Button Command="{Binding GetSpectrColor}" Content="Получить цвет" Width="180" Style="{DynamicResource MaterialDesignOutlinedDarkButton}"/>
                                     </StackPanel>
                                     <StackPanel HorizontalAlignment="Center" Grid.Column="2" Orientation="Horizontal">
-                                        <Button Command="{Binding ClearSpectrForm}" Content="Создать отчёт" Width="180" Style="{DynamicResource MaterialDesignOutlinedDarkButton}"/>
+                                        <Button Command="{Binding ReportSpect}" Content="Создать отчёт" Width="180" Style="{DynamicResource MaterialDesignOutlinedDarkButton}"/>
                                     </StackPanel>
                                     <StackPanel HorizontalAlignment="Center" Grid.Column="1" Orientation="Horizontal">
                                         <Button Command="{Binding ClearSpectrForm}" Content="Очистить форму" Width="180" Style="{DynamicResource MaterialDesignOutlinedDarkButton}"/>
