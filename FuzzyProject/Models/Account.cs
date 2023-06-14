@@ -16,8 +16,6 @@ namespace FuzzyProject.Models
         public string Password { get; set; }
         public string Role { get; set; }
 
-        // Навигационное свойство
-        public List<Report> Reports { get; set; } = new List<Report>();
 
     }
 }

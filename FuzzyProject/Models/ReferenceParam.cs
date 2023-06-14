@@ -9,18 +9,18 @@ namespace FuzzyProject.Models
 {
     public class ReferenceParam
     {
-        [Key]
-        public int Id { get; set; }
-        public byte[] Image { get; set; }
+        //[Key]
+        //public int Id { get; set; }
+        //public byte[] Image { get; set; }
 
-        //Навигационное свойство для параметра
-        public int ParametersId { get; set; }
-        //Внешний ключ параметра
-        public Parameter Parameters { get; set; }
+        ////Навигационное свойство для параметра
+        //public int ParametersId { get; set; }
+        ////Внешний ключ параметра
+        //public Parameter Parameters { get; set; }
 
-        //Навигационное свойство для красителя
-        public int ColorantId { get; set; }
-        //Внешний ключ красителя
-        public Colorant Colorant { get; set; }
+        ////Навигационное свойство для красителя
+        //public int ColorantId { get; set; }
+        ////Внешний ключ красителя
+        //public Colorant Colorant { get; set; }
     }
 }

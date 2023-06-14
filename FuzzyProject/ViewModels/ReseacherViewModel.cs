@@ -91,12 +91,11 @@ namespace FuzzyProject.ViewModels
                 OnPropertyChanged();
 
                 if (_chosenColorantFromImg != null)
-                {
-                    var reference = context.ReferencesParams.FirstOrDefault(r => r.Colorant.Name == _chosenColorantFromImg.Name);
-                    var parameter = context.Parameters.FirstOrDefault(p => p.Id == reference.ParametersId);
-                    ImgReferenceCoorL = parameter._L;
-                    ImgReferenceCoorA = parameter._A;
-                    ImgReferenceCoorB = parameter._B;
+                { 
+                    //добавить из бд
+                    ImgReferenceCoorL = 80;
+                    ImgReferenceCoorA = 2;
+                    ImgReferenceCoorB = -15;
 
                 }
             }
@@ -340,84 +339,22 @@ namespace FuzzyProject.ViewModels
                         imgArr = ms.ToArray();
                     }
 
-                    //перенести потом ниже, когда все рекомендации добавятся
-                    byte[] img;
-                    using (AppContextDB contextDB = new AppContextDB())
-                    {
-                        var referenceImg = contextDB.ReferencesParams.FirstOrDefault(r => r.Colorant.Name == ChosenColorantFromImg.Name);
-                        img = referenceImg.Image;
-                    }
-
-                    var refImgBitmap = calculate.FromBytesToBitmap(img);
-                    var refImgSource = calculate.BitmapToImageSource(refImgBitmap);
-
-                    Result = rec;
-                    recommendations = new Recommendations();
-                    recommendationsViewModel = new RecommendationsViewModel(rec, refImgSource, recommendations);
-                    recommendations.DataContext = recommendationsViewModel;
-                    recommendations.Show();
-
-                    //using (AppContextDB context = new AppContextDB())
+                    //ИЗМЕНИТЬ КОГДА БД ИСПРАВИТСЯ
+                    //byte[] img;
+                    //using (AppContextDB contextDB = new AppContextDB())
                     //{
-                    //    var material = context.Materials.FirstOrDefault(m => m.Image == imgArr);
-                    //    var param = context.Parameters.FirstOrDefault(p => p._L == CoorL && p._A == CoorA && p._B == CoorB);
-                    //    var color = context.Colorants.FirstOrDefault(c => c.Name == ChosenColorantFromImg.Name);
-
-                    //    Report report = new Report { Date = date, Message = recommendation };
-                    //    context.Reports.Add(report);                      
-
-                    //    if (param == null)
-                    //    {
-                    //        var newParam = new Parameter
-                    //        {
-                    //            _L = CoorL,
-                    //            _A = CoorA,
-                    //            _B = CoorB
-                    //        };
-                    //        context.Parameters.Add(newParam);
-                    //        context.SaveChanges();
-                    //        report.Parameters = newParam;
-                    //    }
-                    //    else if (color == null)
-                    //    {
-                    //        var newColor = new Colorant
-                    //        {
-                    //            Name = ChosenColorantFromImg.Name
-                    //        };
-                    //        context.Colorants.Add(newColor);
-                    //        context.SaveChanges();
-                    //        report.Colorants = newColor;
-                    //    }
-                    //    else if (material == null)
-                    //    {
-                    //        var newMaterial = new Material
-                    //        {
-                    //            Name = ChosenMaterialFromImg.Name,
-                    //            Image = imgArr,
-                    //            ColorantId = ChosenColorantFromImg.Id,
-                    //        };
-                    //        if (param != null) 
-                    //        {
-                    //            newMaterial.ParametersId = param.Id;
-                    //        }
-                    //        else 
-                    //        {
-                    //            param = context.Parameters.FirstOrDefault(p => p._L == CoorL && p._A == CoorA && p._B == CoorB);
-                    //            newMaterial.ParametersId = param.Id;
-                    //        }                          
-
-                    //        context.Materials.Add(newMaterial);
-                    //        context.SaveChanges();
-                    //        report.Material = newMaterial;
-                    //    }
-                    //    else
-                    //    {
-                    //        report.Material = material;
-                    //        report.Parameters = param;
-                    //        report.Colorants = color;
-                    //    }
-                    //    context.SaveChanges();
+                    //    var referenceImg = contextDB.ReferencesParams.FirstOrDefault(r => r.Colorant.Name == ChosenColorantFromImg.Name);
+                    //    img = referenceImg.Image;
                     //}
+
+                    //var refImgBitmap = calculate.FromBytesToBitmap(img);
+                    //var refImgSource = calculate.BitmapToImageSource(refImgBitmap);
+
+                    //Result = rec;
+                    //recommendations = new Recommendations();
+                    //recommendationsViewModel = new RecommendationsViewModel(rec, refImgSource, recommendations);
+                    //recommendations.DataContext = recommendationsViewModel;
+                    //recommendations.Show();
                 });
             }
         }
@@ -435,11 +372,9 @@ namespace FuzzyProject.ViewModels
 
                 if (_chosenColorantFromSpect != null)
                 {
-                    var reference = context.ReferencesParams.FirstOrDefault(r => r.Colorant.Name == _chosenColorantFromSpect.Name);
-                    var parameter = context.Parameters.FirstOrDefault(p => p.Id == reference.ParametersId);
-                    SpectReferenceCoorL = parameter._L;
-                    SpectReferenceCoorA = parameter._A;
-                    SpectReferenceCoorB = parameter._B;
+                    SpectReferenceCoorL = 80;
+                    SpectReferenceCoorA = -5;
+                    SpectReferenceCoorB = 7;
 
                 }
             }
@@ -588,21 +523,21 @@ namespace FuzzyProject.ViewModels
                     //recommends = new ReccomendsForOperator();
                     //recommendation = recommends.GiveRecommend(result);
 
-                    //перенести потом ниже, когда все рекомендации добавятся
-                    byte[] img;
-                    using (AppContextDB contextDB = new AppContextDB())
-                    {
-                        var referenceImg = contextDB.ReferencesParams.FirstOrDefault(r => r.Colorant.Name == ChosenColorantFromSpect.Name);
-                        img = referenceImg.Image;
-                    }
+                    //ЭТОТ МОМЕНТ ИЗМЕНИТЬ КОГДА БД СДЕЛАЮ
+                    //byte[] img;
+                    //using (AppContextDB contextDB = new AppContextDB())
+                    //{
+                    //    var referenceImg = contextDB.ReferencesParams.FirstOrDefault(r => r.Colorant.Name == ChosenColorantFromSpect.Name);
+                    //    img = referenceImg.Image;
+                    //}
 
-                    var refImgBitmap = calculate.FromBytesToBitmap(img);
-                    var refImgSource = calculate.BitmapToImageSource(refImgBitmap);
+                    //var refImgBitmap = calculate.FromBytesToBitmap(img);
+                    //var refImgSource = calculate.BitmapToImageSource(refImgBitmap);
 
-                    recommendations = new Recommendations();
-                    recommendationsViewModel = new RecommendationsViewModel(rec, refImgSource, recommendations);
-                    recommendations.DataContext = recommendationsViewModel;
-                    recommendations.Show();
+                    //recommendations = new Recommendations();
+                    //recommendationsViewModel = new RecommendationsViewModel(rec, refImgSource, recommendations);
+                    //recommendations.DataContext = recommendationsViewModel;
+                    //recommendations.Show();
 
                     var date = DateTime.Now.Date;
                     string parameters = SpectCoorL + " " + SpectCoorA + " " + SpectCoorB;
@@ -614,60 +549,6 @@ namespace FuzzyProject.ViewModels
                         imgSpectr.Save(ms, ImageFormat.Bmp);
                         imgArr = ms.ToArray();
                     }
-
-                    //using (AppContextDB context = new AppContextDB())
-                    //{
-                    //    var material = context.Materials.FirstOrDefault(m => m.Image == imgArr);
-                    //    var param = context.Parameters.FirstOrDefault(p => p._L == SpectCoorL && p._A == SpectCoorA && p._B == SpectCoorB);
-                    //    var color = context.Colorants.FirstOrDefault(c => c.Name == ChosenColorantFromSpect.Name);
-
-
-                    //    Report report = new Report { Date = date, Message = recommendation };
-                    //    context.Reports.Add(report);
-
-                    //    if (param == null)
-                    //    {
-                    //        Parameter paramets = new Parameter
-                    //        {
-                    //            _L = SpectCoorL,
-                    //            _A = SpectCoorA,
-                    //            _B = SpectCoorB
-                    //        };
-                    //        context.Parameters.Add(param);
-                    //        report.Parameters = paramets;
-                    //        context.SaveChanges();
-                    //    }
-                    //    else if (color == null)
-                    //    {
-                    //        Colorant newColorant = new Colorant
-                    //        {
-                    //            Name = ChosenColorantFromSpect.Name
-                    //        };
-                    //        context.Colorants.Add(newColorant);
-                    //        report.Colorants = newColorant;
-                    //        context.SaveChanges();
-                    //    }
-                    //    else if (material == null)
-                    //    {
-                    //        Material newMaterial = new Material
-                    //        {
-                    //            Name = ChosenMaterialFromSpect.Name,
-                    //            Image = imgArr,
-                    //            ColorantId = ChosenColorantFromSpect.Id,
-                    //            ParametersId = param.Id
-                    //        };
-
-                    //        context.Materials.Add(newMaterial);
-                    //        report.Material = newMaterial;
-                    //    }
-                    //    else
-                    //    {
-                    //        report.Material = material;
-                    //        report.Parameters = param;
-                    //        report.Colorants = color;
-                    //    }
-                    //    context.SaveChanges();
-                    //}
                 });
             }
         }
@@ -749,11 +630,9 @@ namespace FuzzyProject.ViewModels
                     {
                         using (AppContextDB context = new AppContextDB())
                         {
-                            ReferenceParam reference;
-                            reference = context.ReferencesParams.FirstOrDefault(r => r.Colorant.Name == ChosenColorantFromSpect.Name);
-                            SpectReferenceCoorL = reference.Parameters._L;
-                            SpectReferenceCoorA = reference.Parameters._A;
-                            SpectReferenceCoorB = reference.Parameters._B;
+                            SpectReferenceCoorL = 85;
+                            SpectReferenceCoorA = 8;
+                            SpectReferenceCoorB = -15;
                         }
                     }
                     else
