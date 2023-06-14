@@ -18,7 +18,7 @@ namespace FuzzyProject.Views
         private void passwordBox_PasswordChanged(object sender, RoutedEventArgs e)
         {
             //это позволяет передать пароль во viewModel
-            ((dynamic)this.DataContext).Password = ((PasswordBox)sender).Password;
+            ((dynamic)DataContext).Password = ((PasswordBox)sender).Password;
         }
     }
 }

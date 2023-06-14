@@ -23,6 +23,8 @@ using Parameter = FuzzyProject.Models.Parameter;
 using System.Reflection.Metadata;
 using System.Text;
 using Microsoft.Win32;
+using FuzzyProject.Export;
+using System.Windows.Controls;
 
 namespace FuzzyProject.ViewModels
 {
@@ -337,7 +339,7 @@ namespace FuzzyProject.ViewModels
                         imgArr = ms.ToArray();
                     }
 
-                    //перенести потом ниже, когда все рекоммендации добавяться
+                    //перенести потом ниже, когда все рекомендации добавятся
                     byte[] img;
                     using (AppContextDB contextDB = new AppContextDB())
                     {
@@ -348,6 +350,7 @@ namespace FuzzyProject.ViewModels
                     var refImgBitmap = calculate.FromBytesToBitmap(img);
                     var refImgSource = calculate.BitmapToImageSource(refImgBitmap);
 
+                    Result = recommendation;
                     recommendations = new Recommendations();
                     recommendationsViewModel = new RecommendationsViewModel(recommendation, refImgSource, recommendations);
                     recommendations.DataContext = recommendationsViewModel;
@@ -837,103 +840,42 @@ namespace FuzzyProject.ViewModels
             {
                 return _report ??= new RelayCommand(x =>
                 {
-                    var dialog = new Microsoft.Win32.SaveFileDialog();
-                    dialog.Filter = "Документ Word|*.docx";
-                    dialog.FileName = $"Отчет №1. {DateTime.Today.ToShortDateString()}.docx";
+                    //var dialog = new Microsoft.Win32.SaveFileDialog();
+                    //dialog.Filter = "Документ Word|*.docx";
+                    //dialog.FileName = $"Отчет №1. {DateTime.Today.ToShortDateString()}.docx";
 
-                    if (dialog.ShowDialog() == true)
+                    // запрашиваем у пользователя путь для сохранения файла
+                    string path = ShowFolderBrowserDialog();
+
+                    SaveInWord save = new SaveInWord();
+
+                    // определяем номер отчёта как количество файлов с именами, начинающимися на "отчёт" за сегодняшний день
+                    string pathFile = Path.Combine(path, $"Отчёт №1. {DateTime.Today.ToShortDateString()}.docx");
+                    var file = new FileInfo(Path.Combine(path, pathFile));
+
+                    int numFiles = 1;
+                    while (file.Exists)
                     {
-                        string folderPath = Path.GetDirectoryName(dialog.FileName);
-
-                        string pathFile = Path.Combine(folderPath, $"Отчет №1. {DateTime.Today.ToShortDateString()}.docx");
-                        var file = new FileInfo(Path.Combine(folderPath, pathFile));
-
-                        int num = 1;
-                        while (file.Exists)
-                        {
-                            pathFile = Path.Combine(pathFile, $"Отчет №{num}. {DateTime.Today.ToShortDateString()}.docx");
-                            pathFile.Replace(',', ' ');
-                            file = new FileInfo(Path.Combine(pathFile));
-                            num++;
-                        };
-
-                        using (WordprocessingDocument wordDocument = WordprocessingDocument.Create(dialog.FileName, WordprocessingDocumentType.Document))
-                        {
-                            
-                            string dateTime = $"Отчёт за {DateTime.Now}";
-
-                            MainDocumentPart mainPart = wordDocument.AddMainDocumentPart();
-                            mainPart.Document = new DocumentFormat.OpenXml.Wordprocessing.Document();
-
-                            Body body = new Body();
-
-                            //создание параграфа для заголовка
-                            Paragraph titleParagraph = new Paragraph();
-                            Run run = new Run();
-
-                            Text text = new Text(dateTime);
-
-                            //стили для заголовка
-                            RunProperties titleProperties = new RunProperties();
-                            RunFonts runFonts = new RunFonts() { Ascii = "Times New Roman", HighAnsi = "Times New Roman" };
-                            FontSize fontSize = new FontSize() { Val = "30" };
-                            Bold bold = new Bold();
-                            Justification justificationTitle = new Justification() { Val = JustificationValues.Center };
-                            titleProperties.Append(runFonts);
-                            titleProperties.Append(bold);
-                            titleProperties.Append(justificationTitle);
-                            titleProperties.Append(fontSize);
-
-                            run.Append(titleProperties);
-                            run.Append(text);
-                            titleParagraph.Append(run);
-
-                            body.AppendChild(titleParagraph);
-
-                            //основной текст:
-                            StringBuilder mainText = new StringBuilder();
-
-                            mainText.Append($"Пользователь: .");
-                            mainText.Append($"Тип материала: . ");
-                            mainText.Append($"Цветовые координаты: {CoorL}, {CoorA}, {CoorB}.");
-                            mainText.Append($"Краситель: {ChosenColorantFromImg.Name}.");
-                            mainText.Append($"Изображение: .");
-                            mainText.Append($"Результаты анализа: .");
-
-                            string[] sentences = mainText.ToString().Split(new[] { '.', '?', '!' }, StringSplitOptions.RemoveEmptyEntries);
-
-                            // Создаем параграф для каждого предложения
-                            foreach (string sentence in sentences)
-                            {
-                                Paragraph paragraph = new Paragraph();
-                                Run runMainText = new Run(new Text(sentence.Trim() + "."));
-
-                                // Задаем шрифт и размер текста
-                                RunProperties runProperties = new RunProperties();
-                                RunFonts runMainFonts = new RunFonts() { Ascii = "Times New Roman", HighAnsi = "Times New Roman" };
-                                FontSize fontSizeMain = new FontSize() { Val = "28" };
-                                runProperties.Append(runMainFonts);
-                                runProperties.Append(fontSizeMain);
-                                runMainText.PrependChild(runProperties);
-
-                                paragraph.Append(runMainText);
-                                body.Append(paragraph);
-                            }
-
-                            //добавление созданного раздела в документ
-                            mainPart.Document.AppendChild(body);
-
-                            //сохранение отчёта
-                            wordDocument.Save();
-                            wordDocument.Dispose();
-
-                            // Уведомляем пользователя о сохранении файла
-                            MessageBox.Show("Файл успешно сохранен");
-                        }
-
+                        pathFile = Path.Combine(path, $"Отчет №{ numFiles}. { DateTime.Today.ToShortDateString()}.docx");
+                        pathFile.Replace(',', ' ');
+                        file = new FileInfo(Path.Combine(pathFile));
+                        numFiles++;
                     }
 
+                    //byte[] imgArr;
 
+                    ////перевод изображения в биты для сохранения в БД
+                    //using (MemoryStream ms = new MemoryStream())
+                    //{
+                    //    imgSecond.Save(ms, ImageFormat.Bmp);
+                    //    imgSecond.Save(ms, ImageFormat.Bmp);
+                    //    imgArr = ms.ToArray();
+                    //}
+
+                    //var coordinates = $"L = {CoorL}, a = {CoorA}, b = {CoorB}";
+                    save.Export(pathFile, imgSecond);
+
+                    //pathFile, coordinates, "ПВХ", ChosenColorantFromImg.Name, Result, imgArr
 
                     //// Создаем файл
                     //string fileName = "Отчет за " + DateTime.Now.ToString("dd.MM.yyyy");
@@ -980,8 +922,21 @@ namespace FuzzyProject.ViewModels
                     //        mainPart.Document.Save();
                     //    }
                     //}
-
                 });
+            }
+        }
+
+        private string ShowFolderBrowserDialog()
+        {
+            FolderBrowserDialog dialog = new FolderBrowserDialog();
+            DialogResult result = dialog.ShowDialog();
+            if (result == System.Windows.Forms.DialogResult.OK && !string.IsNullOrWhiteSpace(dialog.SelectedPath))
+            {
+                return dialog.SelectedPath;
+            }
+            else
+            {
+                return ".";
             }
         }
         #endregion
