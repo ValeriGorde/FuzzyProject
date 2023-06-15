@@ -5,10 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FuzzyProject"
         mc:Ignorable="d"
-        Title="Recommendations" Height="390" Width="510"
+        Title="Recommendations" Height="400" Width="550"
         WindowStartupLocation="CenterScreen">
     <Grid Background="#ffdadada">
-        <Border MinWidth="350" Height="300" Margin="15" Background="White" VerticalAlignment="Center" Padding="30" CornerRadius="20">
+        <Border MinWidth="350" Height="350" Margin="15" Background="White" VerticalAlignment="Center" Padding="30" CornerRadius="20">
             <Border.Effect>
                 <DropShadowEffect BlurRadius="30" Color="LightGray" ShadowDepth="0"/>
             </Border.Effect>
@@ -20,13 +20,13 @@
                 </Grid.RowDefinitions>
                 <Grid Row="0">
                     <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2.6*"/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
 
-                    <StackPanel Grid.Column="0" Orientation="Horizontal">
-                        <TextBlock VerticalAlignment="Top" FontSize="18" FontWeight="Bold" Text="Сообщение оператору экструдера" />
-                        <Button Command="{Binding Close}" Margin="40 0 0 0" Style="{DynamicResource MaterialDesignFlatLightButton}" Content="Выход"  Width="80" HorizontalAlignment="Right" VerticalAlignment="Top"/>
-                    </StackPanel>
+                    <TextBlock Grid.Column="0" VerticalAlignment="Top" FontSize="18" FontWeight="Bold" Text="Сообщение оператору экструдера" />
+                    <Button Grid.Column="1"  Command="{Binding Close}"  Style="{DynamicResource MaterialDesignFlatLightButton}" Content="Выход"  Width="80" HorizontalAlignment="Right" VerticalAlignment="Top"/>
+
                 </Grid>
 
                 <Grid Grid.Row="1">
@@ -62,7 +62,7 @@
                                     <TextBlock  Text="Сообщение:"/>
                                 </Grid>
                                 <Grid Row="1" >
-                                    <TextBlock Text="{Binding RecommendText}" TextWrapping="Wrap" Height="160" Margin="10 0 0 0"></TextBlock>
+                                    <TextBlock Text="{Binding RecommendText}" TextWrapping="Wrap" Height="220" Margin="10 0 0 0"></TextBlock>
                                 </Grid>
                             </Grid>
                         </StackPanel>

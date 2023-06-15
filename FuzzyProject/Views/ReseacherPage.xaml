@@ -47,25 +47,25 @@
 
                             <StackPanel Grid.Column="0">
                                 <TextBlock Text="Исходное изображение экструдата:" HorizontalAlignment="Center" FontWeight="Bold" Margin="0 10 0 0"/>
-                                <Image x:Name="image" Source="{Binding StartImg}" Height="380" Margin="20" MouseDown="Image_MouseDown"/>
+                                <Image x:Name="image" Source="{Binding StartImg}" Height="380" Margin="2" MouseDown="Image_MouseDown"/>
                             </StackPanel>
 
                             <StackPanel Grid.Column="1">
                                 <TextBlock Text="Полученный цвет:" HorizontalAlignment="Center" FontWeight="Bold" Margin="0 10 0 0"/>
-                                <Image Source="{Binding EndImg}" Height="380" Margin="20"/>
+                                <Image Source="{Binding EndImg}" Height="380" Margin="2"/>
                             </StackPanel>
                         </Grid>
 
                         <Grid Grid.Row="1">
                             <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="0.6*"/>
+                                <ColumnDefinition Width="0.6*"/>
                                 <ColumnDefinition/>
-                                <ColumnDefinition/>
-                                <ColumnDefinition/>
-                                <ColumnDefinition Width="1.4*"/>
+                                <ColumnDefinition Width="1.7*"/>
                             </Grid.ColumnDefinitions>
 
                             <Grid Grid.Column="0" Margin="2">
-                                <GroupBox  Header="Параметры загруженного изображения" materialDesign:ElevationAssist.Elevation="Dp6" BorderThickness="1">
+                                <GroupBox  Header="Параметры изображения" materialDesign:ElevationAssist.Elevation="Dp6" BorderThickness="1">
                                     <Grid>
                                         <Grid.RowDefinitions>
                                             <RowDefinition/>
@@ -74,16 +74,16 @@
                                         </Grid.RowDefinitions>
 
                                         <StackPanel Grid.Row="0" Orientation="Horizontal">
-                                            <TextBlock Text="Координата L =" VerticalAlignment="Center" Margin="10 0 0 0"/>
-                                            <TextBox TextAlignment="Center" Text="{Binding CoorL}" Width="70" VerticalAlignment="Center"/>
+                                            <TextBlock Text="Координата L =" VerticalAlignment="Center" />
+                                            <TextBox TextAlignment="Center" Text="{Binding CoorL}" Width="55" VerticalAlignment="Center"/>
                                         </StackPanel>
                                         <StackPanel Grid.Row="1" Orientation="Horizontal">
-                                            <TextBlock Text="Координата a =" VerticalAlignment="Center" Margin="10 0 0 0"/>
-                                            <TextBox TextAlignment="Center" Text="{Binding CoorA}"  Width="70" VerticalAlignment="Center"/>
+                                            <TextBlock Text="Координата a =" VerticalAlignment="Center"/>
+                                            <TextBox TextAlignment="Center" Text="{Binding CoorA}"  Width="55" VerticalAlignment="Center"/>
                                         </StackPanel>
                                         <StackPanel Grid.Row="2" Orientation="Horizontal">
-                                            <TextBlock Text="Координата b =" VerticalAlignment="Center" Margin="10 0 0 0"/>
-                                            <TextBox TextAlignment="Center" Text="{Binding CoorB}" Width="70" VerticalAlignment="Center"/>
+                                            <TextBlock Text="Координата b =" VerticalAlignment="Center"/>
+                                            <TextBox TextAlignment="Center" Text="{Binding CoorB}" Width="55" VerticalAlignment="Center"/>
                                         </StackPanel>
                                     </Grid>
                                 </GroupBox>
@@ -100,16 +100,16 @@
                                         </Grid.RowDefinitions>
 
                                         <StackPanel Grid.Row="0" Orientation="Horizontal">
-                                            <TextBlock Text="Координата *L =" VerticalAlignment="Center" Margin="10 0 0 0"/>
-                                            <TextBox TextAlignment="Center" Text="{Binding ImgReferenceCoorL}" Width="70" VerticalAlignment="Center"/>
+                                            <TextBlock Text="Координата *L =" VerticalAlignment="Center"/>
+                                            <TextBox TextAlignment="Center" Text="{Binding ImgReferenceCoorL}" Width="55" VerticalAlignment="Center"/>
                                         </StackPanel>
                                         <StackPanel Grid.Row="1" Orientation="Horizontal">
-                                            <TextBlock Text="Координата *a =" VerticalAlignment="Center" Margin="10 0 0 0"/>
-                                            <TextBox TextAlignment="Center" Text="{Binding ImgReferenceCoorA}"  Width="70" VerticalAlignment="Center"/>
+                                            <TextBlock Text="Координата *a =" VerticalAlignment="Center"/>
+                                            <TextBox TextAlignment="Center" Text="{Binding ImgReferenceCoorA}"  Width="55" VerticalAlignment="Center"/>
                                         </StackPanel>
                                         <StackPanel Grid.Row="2" Orientation="Horizontal">
-                                            <TextBlock Text="Координата *b =" VerticalAlignment="Center" Margin="10 0 0 0"/>
-                                            <TextBox TextAlignment="Center" Text="{Binding ImgReferenceCoorB}" Width="70" VerticalAlignment="Center"/>
+                                            <TextBlock Text="Координата *b =" VerticalAlignment="Center"/>
+                                            <TextBox TextAlignment="Center" Text="{Binding ImgReferenceCoorB}" Width="55" VerticalAlignment="Center"/>
                                         </StackPanel>
                                     </Grid>
                                 </GroupBox>
@@ -124,16 +124,16 @@
                                         </Grid.RowDefinitions>
 
                                         <StackPanel Grid.Row="1" Orientation="Horizontal">
-                                            <TextBlock Text="Тип полимера: " VerticalAlignment="Center" Margin="10 0 0 0"/>
+                                            <TextBlock Text="Тип полимера: " VerticalAlignment="Center" />
                                             <ComboBox SelectedItem="{Binding ChosenPolymerFromImg}" ItemsSource="{Binding PolymerType}"
-                                                      Width="100" VerticalAlignment="Center"
+                                                      Width="130" VerticalAlignment="Center"
                                                       SelectedValuePath="Name" DisplayMemberPath="Name"/>
                                         </StackPanel>
 
                                         <StackPanel Grid.Row="0" Orientation="Horizontal">
-                                            <TextBlock Text="Краситель: " VerticalAlignment="Center" Margin="10 0 0 0"/>
+                                            <TextBlock Text="Краситель: " VerticalAlignment="Center"/>
                                             <ComboBox SelectedItem="{Binding ChosenColorantFromImg}" ItemsSource="{Binding Colorant}"
-                                                      Width="120" VerticalAlignment="Center"
+                                                      Width="130" VerticalAlignment="Center"
                                                       SelectedValuePath="Name" DisplayMemberPath="Name"/>
                                         </StackPanel>
                                     </Grid>
@@ -144,24 +144,27 @@
                                 <GroupBox  Header="Работа с избражением" materialDesign:ColorZoneAssist.Mode="PrimaryLight" materialDesign:ElevationAssist.Elevation="Dp6" BorderThickness="1">
                                     <Grid>
 
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition/>
+                                        </Grid.ColumnDefinitions>
+                                        
                                         <Grid.RowDefinitions>
-                                            <RowDefinition/>
-                                            <RowDefinition/>
                                             <RowDefinition/>
                                             <RowDefinition/>
                                         </Grid.RowDefinitions>
 
-                                        <StackPanel Orientation="Horizontal" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center">
-                                            <Button Command="{Binding OpenImg}" Content="Открыть" Width="200" Style="{DynamicResource MaterialDesignOutlinedDarkButton}"/>
+                                        <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.Row="0"  VerticalAlignment="Center" HorizontalAlignment="Center">
+                                            <Button Command="{Binding OpenImg}" Content="Открыть" Width="180" Style="{DynamicResource MaterialDesignOutlinedDarkButton}"/>
                                         </StackPanel>
-                                        <StackPanel Orientation="Horizontal" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center">
-                                            <Button Command="{Binding GetColor}" Content="Усреднить цвет" Width="200" Style="{DynamicResource MaterialDesignOutlinedDarkButton}"/>
+                                        <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                            <Button Command="{Binding GetColor}" Content="Усреднить цвет" Width="180" Style="{DynamicResource MaterialDesignOutlinedDarkButton}"/>
                                         </StackPanel>
-                                        <StackPanel Orientation="Horizontal" Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Center">
-                                            <Button Command="{Binding Report}" Content="Создать отчёт" Width="200" Style="{DynamicResource MaterialDesignOutlinedDarkButton}"/>
+                                        <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                            <Button Command="{Binding Report}" Content="Создать отчёт" Width="180" Style="{DynamicResource MaterialDesignOutlinedDarkButton}"/>
                                         </StackPanel>
-                                        <StackPanel Grid.Row =" 3" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
-                                            <Button Command="{Binding Analyse}" Content="Анализ" Width="200"  Style="{DynamicResource MaterialDesignFlatDarkBgButton}"/>
+                                        <StackPanel Grid.Column="1" Grid.Row ="1" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                            <Button Command="{Binding Analyse}" Content="Анализ" Width="180"  Style="{DynamicResource MaterialDesignFlatDarkBgButton}"/>
                                         </StackPanel>
                                     </Grid>
                                 </GroupBox>
@@ -324,7 +327,6 @@
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition/>
                                         <ColumnDefinition/>
-                                        <ColumnDefinition/>
                                     </Grid.ColumnDefinitions>
 
                                     <StackPanel HorizontalAlignment="Center" Grid.Column="0" Orientation="Horizontal">
@@ -333,15 +335,21 @@
                                     <StackPanel HorizontalAlignment="Center" Grid.Column="2" Orientation="Horizontal">
                                         <Button Command="{Binding ReportSpect}" Content="Создать отчёт" Width="180" Style="{DynamicResource MaterialDesignOutlinedDarkButton}"/>
                                     </StackPanel>
-                                    <StackPanel HorizontalAlignment="Center" Grid.Column="1" Orientation="Horizontal">
-                                        <Button Command="{Binding ClearSpectrForm}" Content="Очистить форму" Width="180" Style="{DynamicResource MaterialDesignOutlinedDarkButton}"/>
-                                    </StackPanel>
                                 </Grid>
                             </Grid>
 
                             <Grid Grid.Row="3">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                
+                                <StackPanel HorizontalAlignment="Center" Grid.Column="0" Orientation="Horizontal">
+                                    <Button Command="{Binding AnalyseSpectr}" Content="Анализ" Width="180" Style="{DynamicResource MaterialDesignFlatDarkBgButton}"/>
+                                </StackPanel>
+
                                 <StackPanel HorizontalAlignment="Center" Grid.Column="1" Orientation="Horizontal">
-                                    <Button Command="{Binding AnalyseSpectr}" Content="Анализ" Width="300" Style="{DynamicResource MaterialDesignFlatDarkBgButton}"/>
+                                    <Button Command="{Binding ClearSpectrForm}" Content="Очистить форму" Width="180" Style="{DynamicResource MaterialDesignOutlinedDarkButton}"/>
                                 </StackPanel>
                             </Grid>
                         </Grid>
