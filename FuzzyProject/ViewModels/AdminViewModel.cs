@@ -5,6 +5,7 @@ using FuzzyProject.WorkWithColors;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Windows;
@@ -121,6 +122,7 @@ namespace FuzzyProject.ViewModels
                     ChosenPolymerTypeMaterial = _selectedMaterial.PolymerTypes;
                     ChosenColorantMaterial = _selectedMaterial.Colorants;
                     ChosenParamMaterial = _selectedMaterial.Parameters;
+                    IsReferenceCheck = _selectedMaterial.IsReference;
                 }
             }
         }
@@ -135,6 +137,12 @@ namespace FuzzyProject.ViewModels
                     if (SelectedMaterial != null)
                     {
                         var material = context.Materials.FirstOrDefault(a => a.Id == SelectedMaterial.Id);
+                        if(material.IsReference == true) 
+                        {
+                            MessageBoxResult result = MessageBox.Show("Вы уверены, что хотите удалить эталонный материал?", "Удаление эталона", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                            if (result == MessageBoxResult.No)
+                                return;
+                        }
                         context.Materials.Remove(material);
                         context.SaveChanges();
 
@@ -151,9 +159,9 @@ namespace FuzzyProject.ViewModels
             {
                 return _addMaterial ??= new RelayCommand(x =>
                 {
-                    if (ChosenColorantMaterial != null && ChosenParamMaterial != null && ChosenPolymerTypeMaterial != null)
+                    if (ChosenColorantMaterial != null && ChosenParamMaterial != null && ChosenPolymerTypeMaterial != null && imgMaterial != null)
                     {
-                        var newMaterial = new Material { ColorantId = ChosenColorantMaterial.Id, ParametersId = ChosenParamMaterial.Id, Image = imgMaterial, IsReference = IsReferenceCheck};
+                        var newMaterial = new Material { ColorantId = ChosenColorantMaterial.Id, PolymerTypeId = ChosenPolymerTypeMaterial.Id, ParametersId = ChosenParamMaterial.Id, Image = imgMaterial, IsReference = IsReferenceCheck};
                         context.Materials.Add(newMaterial);
                         context.SaveChanges();
 
@@ -646,6 +654,18 @@ namespace FuzzyProject.ViewModels
                 });
             }
         }
+
+        private RelayCommand _clearPolymerType;
+        public RelayCommand ClearPolymerType
+        {
+            get
+            {
+                return _clearPolymerType ??= new RelayCommand(x =>
+                {
+                    NewPolymerTypeName = "";
+                });
+            }
+        }
         #endregion
 
         #region Colorants
@@ -751,6 +771,19 @@ namespace FuzzyProject.ViewModels
                     {
                         MessageBox.Show("Вы не выбрали краситель!", "Ошибка при удалении записи");
                     }
+                });
+            }
+        }
+
+
+        private RelayCommand _clearColorants;
+        public RelayCommand ClearColorants
+        {
+            get
+            {
+                return _clearColorants ??= new RelayCommand(x =>
+                {
+                    NewColorantName = "";
                 });
             }
         }
@@ -1071,8 +1104,16 @@ namespace FuzzyProject.ViewModels
             {
                 return _about ??= new RelayCommand(x =>
                 {
-                    MessageBox.Show("Данный программный комплекс был выполнен\n" +
-                        "студенткой 494 группы - Гордеевой Валерией Александровной");
+                    MessageBox.Show("Данный программный комплекс был выполнен в соответствии\n" +
+                       "с заданием выпускной квалификационной работы.\n" +
+                       "Тема ВКР: Программный комплекс для анализа цветовых характеристик экструдата на базе нечётких моделей.\n" +
+                       "Цель работы: Разработка программного комплекса,\n" +
+                       "позволяющего провести анализ измеренных цветовых координат экструдата\n" +
+                       "в пространстве CIELab и оценить степень термической деструкции\n" +
+                       "экструдата в производстве неокрашенной полимерной пленки по величине отклонения\n" +
+                       "цвета экструдата от эталона для различных типов полимеров.\n" +
+                       "Работу выполнила студентка 494 группы Гордеева Валерия Александровна\n" +
+                       "Год: 2023\n", "Описание");
                 });
             }
         }

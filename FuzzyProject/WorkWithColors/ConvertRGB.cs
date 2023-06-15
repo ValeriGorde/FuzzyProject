@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DocumentFormat.OpenXml.Drawing;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -175,7 +176,7 @@ namespace FuzzyProject.WorkWithColors
             else if (_b > 255) _b = 255;
 
             int[] colorsRGB = new int[] { (int)_r, (int)_g, (int)_b };
-                        
+
             return colorsRGB;
         }
     }

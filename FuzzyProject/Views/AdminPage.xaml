@@ -19,9 +19,9 @@
                 <StackPanel>
                     <ToolBar >
                         <Button Command="{Binding About}" Content="Справка" 
-                                Style="{DynamicResource MaterialDesignFlatLightButton}" Width="120" Height="60"/>
+                                Style="{DynamicResource MaterialDesignFlatDarkButton}" Width="120" Height="60"/>
                         <Separator/>
-                        <Button Command="{Binding Exit}" Style="{DynamicResource MaterialDesignFlatLightButton}" 
+                        <Button Command="{Binding Exit}" Style="{DynamicResource MaterialDesignFlatDarkButton}" 
                                 Content="Сменить пользователя"  Width="200" Height="60"/>
                     </ToolBar>
                 </StackPanel>
@@ -290,7 +290,8 @@
 
                                 <DataGrid AutoGenerateColumns="False" IsReadOnly="True" SelectedItem="{Binding SelectedMaterial}" ItemsSource= "{Binding Material}" Grid.Column="0" GridLinesVisibility="Vertical" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Visible">
                                     <DataGrid.Columns>
-                                        <DataGridTextColumn Header="Тип полимера" Binding="{Binding PolymerType.Name}" Width="*"/>
+                                        <DataGridTextColumn Header="Тип полимера" Binding="{Binding PolymerTypes.Name}" Width="*"/>
+                                        <DataGridTextColumn Header="Эталон" Binding="{Binding IsReference}" Width="*"/>
                                         <DataGridTextColumn Header="Краситель" Binding="{Binding Colorants.Name}" Width="*"/>
                                         <DataGridTextColumn Header="L" Binding="{Binding Parameters._L}" Width="50"/>
                                         <DataGridTextColumn Header="a" Binding="{Binding Parameters._A}" Width="50"/>
@@ -355,7 +356,7 @@
                                         <ComboBox Grid.Row="0" SelectedItem="{Binding ChosenPolymerTypeMaterial}" ItemsSource="{Binding PolymerType}"
                                                Margin="10 10 10 0" Width="130" VerticalAlignment="Center"
                                                SelectedValuePath="Name" DisplayMemberPath="Name"/>
-                                        <CheckBox Grid.Row="1"  Margin="10 10 10 0" Content="{Binding IsReferenceCheck}"/>
+                                        <CheckBox Grid.Row="1"  Margin="10 10 10 0" IsChecked ="{Binding IsReferenceCheck}"/>
                                         <ComboBox Grid.Row="2" SelectedItem="{Binding ChosenColorantMaterial}" ItemsSource="{Binding Colorant}"
                                                Margin="10 10 10 0" Width="130" VerticalAlignment="Center"
                                                SelectedValuePath="Name" DisplayMemberPath="Name"/>

@@ -123,14 +123,14 @@
                                             <RowDefinition/>
                                         </Grid.RowDefinitions>
 
-                                        <StackPanel Grid.Row="0" Orientation="Horizontal">
+                                        <StackPanel Grid.Row="1" Orientation="Horizontal">
                                             <TextBlock Text="Тип полимера: " VerticalAlignment="Center" Margin="10 0 0 0"/>
-                                            <ComboBox SelectedItem="{Binding ChosenMaterialFromImg.Name}" ItemsSource="{Binding Material}"
+                                            <ComboBox SelectedItem="{Binding ChosenPolymerFromImg}" ItemsSource="{Binding PolymerType}"
                                                       Width="100" VerticalAlignment="Center"
                                                       SelectedValuePath="Name" DisplayMemberPath="Name"/>
                                         </StackPanel>
 
-                                        <StackPanel Grid.Row="1" Orientation="Horizontal">
+                                        <StackPanel Grid.Row="0" Orientation="Horizontal">
                                             <TextBlock Text="Краситель: " VerticalAlignment="Center" Margin="10 0 0 0"/>
                                             <ComboBox SelectedItem="{Binding ChosenColorantFromImg}" ItemsSource="{Binding Colorant}"
                                                       Width="120" VerticalAlignment="Center"
@@ -281,8 +281,8 @@
                                                 <RowDefinition/>
                                             </Grid.RowDefinitions>
 
-                                            <TextBlock Grid.Row="0" Text="Тип полимера: " VerticalAlignment="Center" Margin="10 0 0 0"/>
-                                            <TextBlock Grid.Row="1" Text="Краситель: " VerticalAlignment="Center" Margin="10 0 0 0"/>
+                                            <TextBlock Grid.Row="1" Text="Тип полимера: " VerticalAlignment="Center" Margin="10 0 0 0"/>
+                                            <TextBlock Grid.Row="0" Text="Краситель: " VerticalAlignment="Center" Margin="10 0 0 0"/>
                                         </Grid>
 
                                         <Grid Grid.Column="1">
@@ -291,10 +291,10 @@
                                                 <RowDefinition/>
                                             </Grid.RowDefinitions>
 
-                                            <ComboBox Grid.Row="0" SelectedItem="{Binding ChosenMaterialFromImg.Name}" ItemsSource="{Binding Material}"
+                                            <ComboBox Grid.Row="1" SelectedItem="{Binding ChosenPolymerFromSpect}" ItemsSource="{Binding PolymerType}"
                                                       HorizontalAlignment="Left" Width="160" VerticalAlignment="Center"
                                                       SelectedValuePath="Name" DisplayMemberPath="Name"/>
-                                            <ComboBox Grid.Row="1" SelectedItem="{Binding ChosenColorantFromSpect}" ItemsSource="{Binding Colorant}"
+                                            <ComboBox Grid.Row="0" SelectedItem="{Binding ChosenColorantFromSpect}" ItemsSource="{Binding Colorant}"
                                                       HorizontalAlignment="Left" Width="160" VerticalAlignment="Center"
                                                       SelectedValuePath="Name" DisplayMemberPath="Name"/>
                                         </Grid>

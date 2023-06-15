@@ -122,6 +122,26 @@ namespace FuzzyProject.Migrations
                     b.ToTable("PolymerTypes");
                 });
 
+            modelBuilder.Entity("FuzzyProject.Models.Report", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("MaterialId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MaterialId");
+
+                    b.ToTable("Reports");
+                });
+
             modelBuilder.Entity("FuzzyProject.Models.Material", b =>
                 {
                     b.HasOne("FuzzyProject.Models.Colorant", "Colorants")
@@ -149,9 +169,25 @@ namespace FuzzyProject.Migrations
                     b.Navigation("PolymerTypes");
                 });
 
+            modelBuilder.Entity("FuzzyProject.Models.Report", b =>
+                {
+                    b.HasOne("FuzzyProject.Models.Material", "Material")
+                        .WithMany("Reports")
+                        .HasForeignKey("MaterialId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Material");
+                });
+
             modelBuilder.Entity("FuzzyProject.Models.Colorant", b =>
                 {
                     b.Navigation("Materials");
+                });
+
+            modelBuilder.Entity("FuzzyProject.Models.Material", b =>
+                {
+                    b.Navigation("Reports");
                 });
 
             modelBuilder.Entity("FuzzyProject.Models.Parameter", b =>

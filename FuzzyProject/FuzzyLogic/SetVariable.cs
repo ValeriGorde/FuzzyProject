@@ -237,50 +237,22 @@ namespace FuzzyProject.FuzzyLogic
         }
 
 
-        public string GetDeltas(double[] coors, string material) 
+        public string GetDeltas(double[] coors, double[] refCoors, string material) 
         {
-            double LStarE = 0;
-            double aStarE = 0;
-            double bStarE = 0;
 
-            if (material == "Поливинилхлорид")
-            {
-                LStarE = 85.0;
-                aStarE = 2.0;
-                bStarE = -15.0;
-            }
-            else if (material == "Полиэтилен")
-            {
-                LStarE = 92.0;
-                aStarE = -2.0;
-                bStarE = 3.0;
-            }
-            else if (material == "Полипропилен")
-            {
-                LStarE = 96.0;
-                aStarE = -0.1;
-                bStarE = -2.0;
-            }
-            else if (material == "Поликарбонат")
-            {
-                LStarE = 82.0;
-                aStarE = -0.5;
-                bStarE = -10.0;
-            }
-
-            var deltaE = Math.Sqrt((Math.Pow((coors[0] - LStarE), 2) + (Math.Pow((coors[1] - aStarE), 2) + (Math.Pow((coors[2] - bStarE), 2)))))/100;
+            var deltaE = Math.Sqrt((Math.Pow((coors[0] - refCoors[0]), 2) + (Math.Pow((coors[1] - refCoors[1]), 2) + (Math.Pow((coors[2] - refCoors[2]), 2)))))/100;
 
             // определяем степень термической деструкции
-            if (deltaE >= 0 && deltaE <= 0.05)
+            if (deltaE >= 0 && deltaE <= 0.13)
             {
                 return "Действуй не требуется. Продукт соответствует установленным требованиям.";
             }
-            else if (deltaE > 0.05 && deltaE <= 0.2)
+            else if (deltaE > 0.13 && deltaE <= 0.20)
             {
                 return "Экструдат имеет отклонение от эталонного продукта, что может указывать на наличие слабой термической деструкции.\n" +
                     "Рекомендуется проверить оборудование и настройки процесса экструзии.";
             }
-            else if (deltaE > 0.2 && deltaE <= 0.3)
+            else if (deltaE > 0.20 && deltaE <= 0.25)
             {
                 return "Состояние экструдата подвержено умеренной термодеструкции.\n" +
                     "Возможно, материал не совсем подходит для данного применения или процесс экструзии настроен неправильно.\n" +

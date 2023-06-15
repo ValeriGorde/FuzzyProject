@@ -27,7 +27,5 @@ namespace FuzzyProject.Models
         public int PolymerTypeId { get; set; }
         //Внешний ключ красителя
         public PolymerType PolymerTypes { get; set; }
-
-        //public List<Report> Reports { get; set; } = new List<Report>();
     }
 }

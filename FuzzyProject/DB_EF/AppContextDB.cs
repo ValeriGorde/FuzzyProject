@@ -12,7 +12,6 @@ namespace FuzzyProject.DB_EF
     {
         public DbSet<Account> Accounts { get; set; }
         public DbSet<Material> Materials { get; set; }
-        //public DbSet<ReferenceParam> ReferencesParams { get; set; }
         public DbSet<Colorant> Colorants { get; set; }
         public DbSet<Parameter> Parameters { get; set; }
         public DbSet<PolymerType> PolymerTypes { get; set; }

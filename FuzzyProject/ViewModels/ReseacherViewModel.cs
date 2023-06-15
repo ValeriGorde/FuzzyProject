@@ -50,11 +50,12 @@ namespace FuzzyProject.ViewModels
             login = _login;
             context = new AppContextDB();
 
-            //загрузка красителей и материалов из бд
+            //загрузка из бд
             context.Colorants.Load();
             context.Materials.Load();
+            context.PolymerTypes.Load();
             Colorant = context.Colorants.ToList();
-            Material = context.Materials.ToList();
+            PolymerType = context.PolymerTypes.ToList();
         }
 
         #region From Image
@@ -81,6 +82,17 @@ namespace FuzzyProject.ViewModels
             }
         }
 
+        private List<PolymerType> _polymerType;
+        public List<PolymerType> PolymerType
+        {
+            get { return _polymerType; }
+            set
+            {
+                _polymerType = value;
+                OnPropertyChanged();
+            }
+        }
+
         private Colorant _chosenColorantFromImg;
         public Colorant ChosenColorantFromImg
         {
@@ -89,41 +101,36 @@ namespace FuzzyProject.ViewModels
             {
                 _chosenColorantFromImg = value;
                 OnPropertyChanged();
+            }
+        }
 
-                if (_chosenColorantFromImg != null)
-                { 
-                    //добавить из бд
-                    ImgReferenceCoorL = 80;
-                    ImgReferenceCoorA = 2;
-                    ImgReferenceCoorB = -15;
+        private PolymerType _chosenPolymerFromImg;
+        public PolymerType ChosenPolymerFromImg
+        {
+            get { return _chosenPolymerFromImg; }
+            set
+            {
+                _chosenPolymerFromImg = value;
+                OnPropertyChanged();
 
+                if (_chosenColorantFromImg != null && ChosenPolymerFromImg != null)
+                {
+                    var material = context.Materials.FirstOrDefault(m => m.Colorants == _chosenColorantFromImg && m.PolymerTypes == _chosenPolymerFromImg && m.IsReference == true);
+                    if (material != null)
+                    {
+                        var parametrs = context.Parameters.FirstOrDefault(p => p.Id == material.ParametersId);
+                        ImgReferenceCoorL = parametrs._L;
+                        ImgReferenceCoorA = parametrs._A;
+                        ImgReferenceCoorB = parametrs._B;
+                    }
+                    else
+                        MessageBox.Show("К сожалению, эталонные координаты по данным характеристикам не найдены.\n" +
+                            "Обратитесь к администратору.", "Ошибка получение эталонных координат");
                 }
+                else
+                    MessageBox.Show("Необходимо выбрать краситель, для отображение эталонных характеристик!", "Ошибка получения эталонных координат");
             }
         }
-
-
-        private Material _chosenMaterialFromImg;
-        public Material ChosenMaterialFromImg
-        {
-            get { return _chosenMaterialFromImg; }
-            set
-            {
-                _chosenMaterialFromImg = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private List<Material> _material;
-        public List<Material> Material
-        {
-            get { return _material; }
-            set
-            {
-                _material = value;
-                OnPropertyChanged();
-            }
-        }
-
         private string _result;
         public string Result
         {
@@ -258,10 +265,12 @@ namespace FuzzyProject.ViewModels
                         EndImg = calculate.BitmapToImageSource(newImg);
                         imgSecond = newImg;
 
-                        var colorsLAB = calculate.GetLAB(imgFirst);
+                        var colorsLAB = calculate.GetLAB(newImg);
                         CoorL = colorsLAB[0];
                         CoorA = colorsLAB[1];
                         CoorB = colorsLAB[2];
+
+
                     }
                     else
                     {
@@ -290,16 +299,6 @@ namespace FuzzyProject.ViewModels
             }
         }
 
-        private RelayCommand _saveReport;
-        public RelayCommand SaveReport
-        {
-            get
-            {
-                return _saveReport ??= new RelayCommand(x => { });
-            }
-        }
-
-
         private Recommendations? recommendations = null;
         private RecommendationsViewModel recommendationsViewModel;
 
@@ -310,51 +309,65 @@ namespace FuzzyProject.ViewModels
             {
                 return _analyse ??= new RelayCommand(x =>
                 {
-                    setVariable = new SetVariable();
-
-                    var coorL = Convert.ToDouble(CoorL);
-                    var coorA = Convert.ToDouble(CoorA);
-                    var coorB = Convert.ToDouble(CoorB);
-
-                    var coors = new double[] { coorL, coorA, coorB };
-
-                    var rec = setVariable.Delta(coors, "поливинилхлорид");
-                    //var result = setVariable.SetCharachteristics(coors, ChosenColorantFromImg.Name);
-                    //string recommendation = " ";
-
-                    ////вывод рекомендаций
-                    //recommends = new ReccomendsForOperator();
-                    //recommendation = recommends.GiveRecommend(result);
-
-
-                    var date = DateTime.Now.Date;
-                    string parameters = CoorL + " " + CoorA + " " + CoorB;
-                    byte[] imgArr;
-
-                    //перевод изображения в биты для сохранения в БД
-                    using (MemoryStream ms = new MemoryStream())
+                    if (imgSecond != null && ChosenPolymerFromImg != null && ChosenColorantFromImg != null)
                     {
-                        imgSecond.Save(ms, ImageFormat.Bmp);
-                        imgSecond.Save(ms, ImageFormat.Bmp);
-                        imgArr = ms.ToArray();
+                        setVariable = new SetVariable();
+
+                        var coorL = Convert.ToDouble(CoorL);
+                        var coorA = Convert.ToDouble(CoorA);
+                        var coorB = Convert.ToDouble(CoorB);
+
+                        //поиск эталонов
+                        var material = context.Materials.FirstOrDefault(m => m.IsReference == true
+                        && m.Colorants == ChosenColorantFromImg && m.PolymerTypes == ChosenPolymerFromImg);
+
+                        var referenceParam = context.Parameters.FirstOrDefault(r => r.Id == material.ParametersId);
+
+                        var coors = new double[] { coorL, coorA, coorB };
+                        var refCoors = new double[] { referenceParam._L, referenceParam._A, referenceParam._B };
+
+                        var rec = setVariable.GetDeltas(coors, refCoors, "поливинилхлорид");
+
+                        var date = DateTime.Now.Date;
+                        string parameters = CoorL + " " + CoorA + " " + CoorB;
+                        byte[] imgArr;
+
+                        //перевод изображения в биты для сохранения в БД
+                        using (MemoryStream ms = new MemoryStream())
+                        {
+                            imgSecond.Save(ms, ImageFormat.Bmp);
+                            imgSecond.Save(ms, ImageFormat.Bmp);
+                            imgArr = ms.ToArray();
+                        }
+
+                        byte[] img;
+                        img = material.Image;
+
+                        var refImgBitmap = calculate.FromBytesToBitmap(img);
+                        var refImgSource = calculate.BitmapToImageSource(refImgBitmap);
+
+                        Result = rec;
+                        recommendations = new Recommendations();
+                        recommendationsViewModel = new RecommendationsViewModel(rec, refImgSource, recommendations);
+                        recommendations.DataContext = recommendationsViewModel;
+                        recommendations.Show();
+
+                        //Добавление материала в БД
+                        Parameter newParameter = new Parameter { _L = coorL, _A = coorA, _B = coorB };
+                        context.Parameters.Add(newParameter);
+                        context.SaveChanges();
+
+                        var newMaterial = new Material
+                        {
+                            ColorantId = ChosenColorantFromImg.Id,
+                            PolymerTypeId = ChosenPolymerFromImg.Id,
+                            ParametersId = newParameter.Id,
+                            Image = imgArr,
+                            IsReference = false
+                        };
+                        context.Materials.Add(newMaterial);
+                        context.SaveChanges();
                     }
-
-                    //ИЗМЕНИТЬ КОГДА БД ИСПРАВИТСЯ
-                    //byte[] img;
-                    //using (AppContextDB contextDB = new AppContextDB())
-                    //{
-                    //    var referenceImg = contextDB.ReferencesParams.FirstOrDefault(r => r.Colorant.Name == ChosenColorantFromImg.Name);
-                    //    img = referenceImg.Image;
-                    //}
-
-                    //var refImgBitmap = calculate.FromBytesToBitmap(img);
-                    //var refImgSource = calculate.BitmapToImageSource(refImgBitmap);
-
-                    //Result = rec;
-                    //recommendations = new Recommendations();
-                    //recommendationsViewModel = new RecommendationsViewModel(rec, refImgSource, recommendations);
-                    //recommendations.DataContext = recommendationsViewModel;
-                    //recommendations.Show();
                 });
             }
         }
@@ -369,25 +382,34 @@ namespace FuzzyProject.ViewModels
             {
                 _chosenColorantFromSpect = value;
                 OnPropertyChanged();
-
-                if (_chosenColorantFromSpect != null)
-                {
-                    SpectReferenceCoorL = 80;
-                    SpectReferenceCoorA = -5;
-                    SpectReferenceCoorB = 7;
-
-                }
             }
         }
 
-        private Material _chosenMaterialFromSpect;
-        public Material ChosenMaterialFromSpect
+        private PolymerType _chosenPolymerFromSpect;
+        public PolymerType ChosenPolymerFromSpect
         {
-            get { return _chosenMaterialFromSpect; }
+            get { return _chosenPolymerFromSpect; }
             set
             {
-                _chosenMaterialFromSpect = value;
+                _chosenPolymerFromSpect = value;
                 OnPropertyChanged();
+
+                if (_chosenColorantFromSpect != null && ChosenPolymerFromSpect != null)
+                {
+                    var material = context.Materials.FirstOrDefault(m => m.Colorants == _chosenColorantFromSpect && m.PolymerTypes == _chosenPolymerFromSpect && m.IsReference == true);
+                    if (material != null)
+                    {
+                        var parametrs = context.Parameters.FirstOrDefault(p => p.Id == material.ParametersId);
+                        SpectReferenceCoorL = parametrs._L;
+                        SpectReferenceCoorA = parametrs._A;
+                        SpectReferenceCoorB = parametrs._B;
+                    }
+                    else
+                        MessageBox.Show("К сожалению, эталонные координаты по данным характеристикам не найдены.\n" +
+                            "Обратитесь к администратору.", "Ошибка получение эталонных координат");
+                }
+                else
+                    MessageBox.Show("Необходимо выбрать краситель, для отображение эталонных характеристик!", "Ошибка получения эталонных координат");
             }
         }
 
@@ -514,30 +536,27 @@ namespace FuzzyProject.ViewModels
                     var coorA = Convert.ToDouble(SpectCoorA);
                     var coorB = Convert.ToDouble(SpectCoorB);
 
+                    var material = context.Materials.FirstOrDefault(m => m.IsReference == true
+                        && m.Colorants == ChosenColorantFromSpect && m.PolymerTypes == ChosenPolymerFromSpect);
+
+                    var referenceParam = context.Parameters.FirstOrDefault(r => r.Id == material.ParametersId);
+
                     var coors = new double[] { coorL, coorA, coorB };
+                    var refCoors = new double[] { referenceParam._L, referenceParam._A, referenceParam._B };
 
-                    var rec = setVariable.GetDeltas(coors, "Поливинилхлорид");
-                    //var result = setVariable.SetCharachteristics(coors, ChosenColorantFromSpect.Name);
-                    //string recommendation = " ";
 
-                    //recommends = new ReccomendsForOperator();
-                    //recommendation = recommends.GiveRecommend(result);
+                    var rec = setVariable.GetDeltas(coors, refCoors, ChosenPolymerFromSpect.Name);
 
-                    //ЭТОТ МОМЕНТ ИЗМЕНИТЬ КОГДА БД СДЕЛАЮ
-                    //byte[] img;
-                    //using (AppContextDB contextDB = new AppContextDB())
-                    //{
-                    //    var referenceImg = contextDB.ReferencesParams.FirstOrDefault(r => r.Colorant.Name == ChosenColorantFromSpect.Name);
-                    //    img = referenceImg.Image;
-                    //}
+                    byte[] img;
+                    img = material.Image;
 
-                    //var refImgBitmap = calculate.FromBytesToBitmap(img);
-                    //var refImgSource = calculate.BitmapToImageSource(refImgBitmap);
+                    var refImgBitmap = calculate.FromBytesToBitmap(img);
+                    var refImgSource = calculate.BitmapToImageSource(refImgBitmap);
 
-                    //recommendations = new Recommendations();
-                    //recommendationsViewModel = new RecommendationsViewModel(rec, refImgSource, recommendations);
-                    //recommendations.DataContext = recommendationsViewModel;
-                    //recommendations.Show();
+                    recommendations = new Recommendations();
+                    recommendationsViewModel = new RecommendationsViewModel(rec, refImgSource, recommendations);
+                    recommendations.DataContext = recommendationsViewModel;
+                    recommendations.Show();
 
                     var date = DateTime.Now.Date;
                     string parameters = SpectCoorL + " " + SpectCoorA + " " + SpectCoorB;
@@ -549,6 +568,22 @@ namespace FuzzyProject.ViewModels
                         imgSpectr.Save(ms, ImageFormat.Bmp);
                         imgArr = ms.ToArray();
                     }
+
+                    //Добавление материала в БД
+                    Parameter newParameter = new Parameter { _L = coorL, _A = coorA, _B = coorB };
+                    context.Parameters.Add(newParameter);
+                    context.SaveChanges();
+
+                    var newMaterial = new Material
+                    {
+                        ColorantId = ChosenColorantFromSpect.Id,
+                        PolymerTypeId = ChosenPolymerFromSpect.Id,
+                        ParametersId = newParameter.Id,
+                        Image = imgArr,
+                        IsReference = false
+                    };
+                    context.Materials.Add(newMaterial);
+                    context.SaveChanges();
                 });
             }
         }
@@ -560,43 +595,37 @@ namespace FuzzyProject.ViewModels
             {
                 return _getSpectrColor ??= new RelayCommand(x =>
                 {
-                    if (SpectCoorL != 0 && SpectCoorA != 0 && SpectCoorB != 0)
+                    BrushesL = BrushesA = BrushesB = System.Drawing.Color.Gray.Name.ToString();
+
+                    SpectrImg = null;
+                    double coorL = Convert.ToDouble(SpectCoorL);
+                    double coorA = Convert.ToDouble(SpectCoorA);
+                    double coorB = Convert.ToDouble(SpectCoorB);
+
+                    if (coorL < 0 || coorL > 100)
                     {
-                        BrushesL = BrushesA = BrushesB = System.Drawing.Color.Gray.Name.ToString();
-
-                        SpectrImg = null;
-                        double coorL = Convert.ToDouble(SpectCoorL);
-                        double coorA = Convert.ToDouble(SpectCoorA);
-                        double coorB = Convert.ToDouble(SpectCoorB);
-
-                        if (coorL < 0 || coorL > 100)
-                        {
-                            BrushesL = System.Drawing.Color.Red.Name.ToString();
-                        }
-                        else if (coorA < -127 || coorA > 128)
-                        {
-                            BrushesA = System.Drawing.Color.Red.Name.ToString();
-                        }
-                        else if (coorB < -127 || coorB > 128)
-                        {
-                            BrushesB = System.Drawing.Color.Red.Name.ToString();
-                        }
-                        else
-                        {
-                            ConvertRGB convert = new ConvertRGB();
-                            int[] rgb = convert.GetLabToRGB(coorL, coorA, coorB);
-
-                            calculate = new CalculateImg();
-                            var newImg = calculate.GetColor(rgb[0], rgb[1], rgb[2]);
-                            SpectrImg = calculate.BitmapToImageSource(newImg);
-                            imgSpectr = newImg;
-                        }
+                        BrushesL = System.Drawing.Color.Red.Name.ToString();
+                    }
+                    else if (coorA < -127 || coorA > 128)
+                    {
+                        BrushesA = System.Drawing.Color.Red.Name.ToString();
+                    }
+                    else if (coorB < -127 || coorB > 128)
+                    {
+                        BrushesB = System.Drawing.Color.Red.Name.ToString();
                     }
                     else
                     {
-                        MessageBox.Show("Заполните все поля!", "Ошибка");
-                    }
+                        ConvertRGB convert = new ConvertRGB();
+                        int[] rgb = convert.GetLabToRGB(coorL, coorA, coorB);
+                        //int[] rgb = convert.ConvertLabToRgb(coorL, coorA, coorB);
 
+
+                        calculate = new CalculateImg();
+                        var newImg = calculate.GetColor(rgb[0], rgb[1], rgb[2]);
+                        SpectrImg = calculate.BitmapToImageSource(newImg);
+                        imgSpectr = newImg;
+                    }
                 });
             }
         }
@@ -741,10 +770,10 @@ namespace FuzzyProject.ViewModels
                         }
 
                         var coordinates = $"L = {CoorL}, a = {CoorA}, b = {CoorB}";
-                        save.Export(pathFile, imgSecond, coordinates, "ПВХ", ChosenColorantFromImg.Name, Result, imgFirst);
+                        save.Export(pathFile, imgSecond, coordinates, ChosenPolymerFromImg.Name, ChosenColorantFromImg.Name, Result, imgFirst);
                     }
                     else return;
-                   
+
                 });
             }
         }
@@ -776,7 +805,7 @@ namespace FuzzyProject.ViewModels
                         }
 
                         var coordinates = $"L = {SpectCoorL}, a = {SpectCoorA}, b = {SpectCoorB}";
-                        save.ExportSpect(pathFile, imgSpectr, coordinates, "ПВХ", ChosenColorantFromSpect.Name, Result);
+                        save.ExportSpect(pathFile, imgSpectr, coordinates, ChosenPolymerFromSpect.Name, ChosenColorantFromSpect.Name, Result);
                     }
                     else return;
 

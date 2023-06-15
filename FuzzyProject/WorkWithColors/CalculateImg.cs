@@ -44,6 +44,36 @@ namespace FuzzyProject.WorkWithColors
             }
         }
 
+        public int[] FromBitmapToAverage(Bitmap bmp) 
+        {
+            double total_R = 0.0;
+            double total_G = 0.0;
+            double total_B = 0.0;
+            int numPixels = 0;
+
+            for (int x = 0; x < bmp.Width; x++)
+            {
+                for (int y = 0; y < bmp.Height; y++)
+                {
+                    Color pixelColor = bmp.GetPixel(x, y);
+                    int red = pixelColor.R;
+                    int green = pixelColor.G;
+                    int blue = pixelColor.B;
+
+                    total_R += red;
+                    total_G += green;
+                    total_B += blue;
+                    numPixels++;
+                }
+            }
+
+            int avg_R = (int)(total_R / numPixels);
+            int avg_G = (int)(total_G / numPixels);
+            int avg_B = (int)(total_B / numPixels);
+
+            return new int[] { avg_R, avg_G, avg_B};
+        }
+
         public double[] GetLAB(Bitmap img) 
         {
             var list = FindList(img);
@@ -54,6 +84,7 @@ namespace FuzzyProject.WorkWithColors
 
             convert = new ConvertRGB();
             var colorsLAB = convert.ConvertRGBToLab(color.R, color.G, color.B);
+            
 
             return colorsLAB;
         }
@@ -113,9 +144,6 @@ namespace FuzzyProject.WorkWithColors
 
         public Bitmap Convert(Bitmap img) 
         {
-            //var list = FindList(img);
-            //var maxKey = list.Aggregate((x, y) => x.Value > y.Value ? x : y).Key;
-
             var avrPix = FindAveragePixcel(img);
 
             Bitmap newBitmap = new Bitmap(img.Width, img.Height);
@@ -152,6 +180,63 @@ namespace FuzzyProject.WorkWithColors
             Bitmap newPic = new Bitmap(img);
 
             return newPic;
+        }
+
+
+
+        public int[] FromFistPicToSecond(Bitmap bmp) 
+        {
+
+            // Find the average color of the image
+            double total_R = 0.0;
+            double total_G = 0.0;
+            double total_B = 0.0;
+            int numPixels = 0;
+
+            for (int x = 0; x < bmp.Width; x++)
+            {
+                for (int y = 0; y < bmp.Height; y++)
+                {
+                    Color pixelColor = bmp.GetPixel(x, y);
+                    int red = pixelColor.R;
+                    int green = pixelColor.G;
+                    int blue = pixelColor.B;
+
+                    total_R += red;
+                    total_G += green;
+                    total_B += blue;
+                    numPixels++;
+                }
+            }
+
+            int avg_R = (int)(total_R / numPixels);
+            int avg_G = (int)(total_G / numPixels);
+            int avg_B = (int)(total_B / numPixels);
+
+            return new int[] { avg_R, avg_G, avg_B };
+
+
+            
+
+        }
+
+        public Bitmap NewBitmap(int R, int G, int B) 
+        {
+            Color avgColor = Color.FromArgb(R, G, B);
+
+
+            int size = 100;
+            Bitmap newBmp = new Bitmap(size, size);
+
+            for (int x = 0; x < size; x++)
+            {
+                for (int y = 0; y < size; y++)
+                {
+                    newBmp.SetPixel(x, y, avgColor);
+                }
+            }
+
+            return newBmp;
         }
     }
 }
